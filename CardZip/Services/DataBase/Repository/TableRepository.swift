@@ -1,0 +1,66 @@
+//
+//  RealmService.swift
+//  CardZip
+//
+//  Created by 김태윤 on 2023/10/08.
+//
+
+import Foundation
+import RealmSwift
+@MainActor class TableRepository<T> where T: Object{
+    var realm: Realm!
+    private(set) var tasks: Results<T>!
+    var getTasks:Results<T>!{ realm.objects(T.self) }
+    init?() {
+         realm = try! Realm()
+    }
+    func checkPath(){
+        print(Realm.Configuration.defaultConfiguration.fileURL ?? "경로 없음")
+    }
+    func checkSchemaVersion(){
+        do {
+            let version = try schemaVersionAtURL(realm.configuration.fileURL!)
+            print("Schema version: \(version)")
+        }catch{
+            print(error)
+        }
+    }
+    
+    @discardableResult func create(item: T)-> Self?{
+        do{
+            try realm.write{ realm.add(item) }
+            tasks = realm.objects(T.self)
+        }catch{
+            print("생성 문제")
+            return nil
+        }
+        return self
+    }
+    @discardableResult func delete(item: T)-> Self?{
+        do{
+            try realm.write{
+                realm.delete(item)
+                print("삭제 완료")
+            }
+            tasks = realm.objects(T.self)
+        }catch{
+            print("삭제 안됨")
+            return nil
+        }
+        return self
+    }
+    @discardableResult func filter<U:_HasPersistedType>(by: KeyPath<T,U>) -> Self? where U.PersistedType:SortableType{
+        tasks = tasks.sorted(by: by)
+        return self
+    }
+    @discardableResult func update<U:_HasPersistedType>(item: T,by: WritableKeyPath<T,U>,data: U) -> Self?{
+        var item = item
+        do{
+            try realm.write{ item[keyPath: by] = data }
+        }catch{
+            print("값 문제")
+            return nil
+        }
+        return self
+    }
+}

@@ -12,7 +12,6 @@ protocol ModelStoreAble {
 }
 
 class AnyModelStore<Model: Identifiable>: ModelStoreAble {
-    
     private var models = [Model.ID: Model]()
     
     init(_ models: [Model]) {
@@ -29,9 +28,6 @@ class AnyModelStore<Model: Identifiable>: ModelStoreAble {
         models[item.id] = item
     }
 }
-
-
-
 // 배열 익스텐션 -> 원소들이 Identifiable을 준수하는 것들에 적용되는 함수
 extension Sequence where Element: Identifiable {
     func groupingByID() -> [Element.ID: [Element]] {
