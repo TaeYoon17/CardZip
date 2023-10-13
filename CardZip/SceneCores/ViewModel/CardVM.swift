@@ -6,3 +6,8 @@
 //
 
 import Foundation
+import Combine
+class CardVM{
+    @Published var isFront: Bool = true
+}
+

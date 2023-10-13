@@ -10,11 +10,22 @@ import UIKit
 import Combine
 class CardCell: BaseCell{
     let vm = CardVM()
-    lazy var segmentControl = CardSegmentControl(items: ["Title","Description" ])
-    lazy var wrapperView = CardView(frontView: {
+    var cardItem: CardItem?{
+        didSet{
+            guard let cardItem else {return}
+            print(cardItem)
+            wrapperView.frontView.images = cardItem.imageID
+            wrapperView.frontView.text = cardItem.title
+        }
+    }
+    
+    
+    
+    private lazy var segmentControl = CardSegmentControl(items: ["Title","Description" ])
+    private lazy var wrapperView = CardView(frontView: {
         let view = CardFrontView()
-        view.images = ["getup","rabbit"]
-        view.text = "안녕하세요"
+//        view.images = ["getup","rabbit"]
+//        view.text = "안녕하세요"
         return view
     }(), backView: {
         let view = UIView()

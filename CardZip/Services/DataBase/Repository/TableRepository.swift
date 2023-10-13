@@ -7,10 +7,15 @@
 
 import Foundation
 import RealmSwift
+
+enum RepositoryError: Error{
+    case TableNotFound
+}
+
 @MainActor class TableRepository<T> where T: Object{
     var realm: Realm!
     private(set) var tasks: Results<T>!
-    var getTasks:Results<T>!{ realm.objects(T.self) }
+    var getTasks:Results<T>{ realm.objects(T.self) }
     init?() {
          realm = try! Realm()
     }
@@ -35,6 +40,14 @@ import RealmSwift
             return nil
         }
         return self
+    }
+    func createWithUpdate(item: T){
+        do{
+            try realm.write{ realm.add(item,update: .modified) }
+            tasks = realm.objects(T.self)
+        }catch{
+            print("생성 문제")
+        }
     }
     @discardableResult func delete(item: T)-> Self?{
         do{
@@ -62,5 +75,18 @@ import RealmSwift
             return nil
         }
         return self
+    }
+    func objectByPrimaryKey<U: ObjectId>(primaryKey: U) -> T? {
+            return realm?.object(ofType: T.self, forPrimaryKey: primaryKey)
+    }
+    func getTableBy<U: ObjectId>(tableID: U) -> T?{
+        return realm?.object(ofType: T.self, forPrimaryKey: tableID)
+    }
+    func deleteTableBy<U: ObjectId>(tableID: U?) throws{
+        guard let tableID else { throw RepositoryError.TableNotFound }
+        guard let obj = realm?.object(ofType: T.self, forPrimaryKey: tableID) else{
+            throw RepositoryError.TableNotFound
+        }
+        delete(item: obj)
     }
 }

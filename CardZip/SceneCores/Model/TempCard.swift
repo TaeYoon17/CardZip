@@ -6,3 +6,8 @@
 //
 
 import Foundation
+struct Card:Hashable{
+    var title: String
+    var description: String
+    var imagePath: [String]?
+}

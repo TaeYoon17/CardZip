@@ -27,6 +27,9 @@ class AnyModelStore<Model: Identifiable>: ModelStoreAble {
     func insertModel(item: Model){
         models[item.id] = item
     }
+    func removeModel(_ id:Model.ID){
+        models.removeValue(forKey: id)
+    }
 }
 // 배열 익스텐션 -> 원소들이 Identifiable을 준수하는 것들에 적용되는 함수
 extension Sequence where Element: Identifiable {

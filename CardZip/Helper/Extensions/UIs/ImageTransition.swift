@@ -7,5 +7,10 @@
 
 import UIKit
 extension UIView{
-    func
+    static func imageAppear(view:UIView,acting:(()->Void)?){
+        UIView.transition(with: view,
+                          duration: 0.3,
+                          options: .transitionCrossDissolve,
+                          animations: acting, completion: nil)
+    }
 }

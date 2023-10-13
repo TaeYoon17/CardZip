@@ -9,8 +9,12 @@ import UIKit
 import SnapKit
 
 final class DisclosureItemCell: BaseCell{
-    let titleLabel = UILabel()
-    let indicatorImage = UIImageView(image: .init(systemName: "chevron.right",withConfiguration: UIImage.SymbolConfiguration(font: .monospacedSystemFont(ofSize: 12, weight: .medium))))
+    var title: String?{
+        didSet{
+            guard let title else {return}
+            titleLabel.text = title
+        }
+    }
     var setNumber:Int = 0{
         didSet{
             let text = "\(setNumber) sets"
@@ -25,8 +29,15 @@ final class DisclosureItemCell: BaseCell{
             self.setNumbersLabel.attributedText = attributedString
         }
     }
-    let setNumbersLabel = UILabel()
-    lazy var view = {
+    override var isSelected: Bool{
+        didSet{
+            view.backgroundColor = isSelected ? .bg : .bgSecond
+        }
+    }
+    private let titleLabel = UILabel()
+    private let indicatorImage = UIImageView(image: .init(systemName: "chevron.right",withConfiguration: UIImage.SymbolConfiguration(font: .monospacedSystemFont(ofSize: 12, weight: .medium))))
+    private let setNumbersLabel = UILabel()
+    private lazy var view = {
         let v = UIView()
         v.layer.cornerRadius = 8
         v.layer.cornerCurve = .circular
@@ -66,9 +77,5 @@ final class DisclosureItemCell: BaseCell{
         }
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
-    override var isSelected: Bool{
-        didSet{
-            view.backgroundColor = isSelected ? .bg : .bgSecond
-        }
-    }
+    
 }

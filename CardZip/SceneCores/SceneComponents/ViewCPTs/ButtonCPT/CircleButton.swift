@@ -18,7 +18,7 @@ class CircleButton : UIButton{
     override init(frame: CGRect) {
         super.init(frame: frame)
         var config = UIButton.Configuration.plain()
-        config.baseForegroundColor = .black
+        config.baseForegroundColor = .secondaryLabel
         config.imagePadding = 0
         config.preferredSymbolConfigurationForImage = .init(font: .systemFont(ofSize: 21, weight: .light))
         config.contentInsets = .init(top: 12, leading: 12, bottom: 12, trailing: 12)

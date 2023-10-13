@@ -6,3 +6,6 @@
 //
 
 import Foundation
+enum FetchError:Error{
+    case fetch
+}

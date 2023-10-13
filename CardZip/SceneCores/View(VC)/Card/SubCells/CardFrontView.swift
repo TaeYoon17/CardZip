@@ -10,6 +10,10 @@ import UIKit
 final class CardFrontView: BaseView{
     weak var cardVM: CardVM!
     enum Section { case main}
+    struct Item: Identifiable,Hashable{
+        var id = UUID()
+        var imagePath:String
+    }
     var text: String?{
         didSet{
             guard let text else {return}
@@ -19,10 +23,30 @@ final class CardFrontView: BaseView{
     var images: [String]?{
         didSet{
             guard let images else {return}
+            guard !images.isEmpty else {
+                isShow = false
+                self.showBtn.isHidden = true
+                self.imageLabel.isHidden = true
+                return
+            }
             imageLabel.text = "\(nowImageIndex + 1) / \(images.count)"
-            var snapshot = NSDiffableDataSourceSnapshot<Section,String>()
+            var newDict:[String: UIImage?] = [:]
+            Task{
+                await images.asyncForEach({ newDict[$0] = await UIImage.fetchBy(identifier: $0) })
+                self.imagesDict = newDict
+            }
+            var snapshot = NSDiffableDataSourceSnapshot<Section,Item>()
             snapshot.appendSections([.main])
-            snapshot.appendItems(images, toSection: .main)
+            
+            snapshot.appendItems(images.map{Item(imagePath: $0)}, toSection: .main)
+            dataSource.apply(snapshot,animatingDifferences: true)
+        }
+    }
+    @MainActor private var imagesDict:[String: UIImage?]?{
+        didSet{
+            print("imagesDict",imagesDict)
+            var snapshot = dataSource.snapshot()
+            snapshot.reconfigureItems(snapshot.itemIdentifiers)
             dataSource.apply(snapshot,animatingDifferences: true)
         }
     }
@@ -47,7 +71,7 @@ final class CardFrontView: BaseView{
                 Task{
                     if self.isShow{
                         self.collectionView.isHidden = false
-                        self.imageLabel.textColor = .black
+                        self.imageLabel.textColor = .cardPrimary
                         self.imageTopConstraint?.activate()
                         self.titleCenterConstraint?.deactivate()
                     }else{
@@ -87,7 +111,7 @@ final class CardFrontView: BaseView{
     var titleCenterConstraint: Constraint?
     var imageTopConstraint: Constraint?
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    private var dataSource : UICollectionViewDiffableDataSource<Section,String>!
+    private var dataSource : UICollectionViewDiffableDataSource<Section,Item>!
     override func configureLayout() {
         [collectionView,titleLabel,showBtn,imageLabel].forEach{self.addSubview($0)}
     }
@@ -124,10 +148,13 @@ final class CardFrontView: BaseView{
         collectionView.layer.cornerRadius = 20
         collectionView.layer.cornerCurve = .circular
         collectionView.delegate = self
-        let cellRegistration = UICollectionView.CellRegistration<ImageCell,String> { cell, indexPath, itemIdentifier in
-            cell.image = UIImage(named: itemIdentifier)
+        collectionView.isScrollEnabled = false
+        collectionView.backgroundColor = .lightBg
+        let cellRegistration = UICollectionView.CellRegistration<ImageCell,Item> {[weak self] cell, indexPath, itemIdentifier in
+            guard let imagesDict =  self?.imagesDict else {return}
+            cell.image = imagesDict[itemIdentifier.imagePath] ?? nil
         }
-        dataSource = UICollectionViewDiffableDataSource<Section,String>(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+        dataSource = UICollectionViewDiffableDataSource<Section,Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
         })
     }
@@ -151,22 +178,4 @@ extension CardFrontView: UICollectionViewDelegate{
         print(#function)
     }
 }
-final class ImageCell: BaseCell{
-    var image: UIImage?{
-        didSet{
-            guard let image else {return}
-            imageView.image = image
-        }
-    }
-    private var imageView = UIImageView()
-    override func configureView() { }
-    override func configureLayout() {
-        contentView.addSubview(imageView)
-        imageView.contentMode = .scaleAspectFit
-    }
-    override func configureConstraints() {
-        imageView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-    }
-}
+

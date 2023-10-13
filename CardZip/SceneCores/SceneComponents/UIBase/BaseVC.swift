@@ -10,8 +10,9 @@ import UIKit
 class BaseVC: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureNavigation()
+        
         configureLayout()
+        configureNavigation()
         configureConstraints()
         configureView()
     }
@@ -19,4 +20,20 @@ class BaseVC: UIViewController{
     func configureConstraints(){ }
     func configureView(){ }
     func configureNavigation(){ }
+    
+    
+    func alertLackDatas(title: String?,action:(()->Void)? = nil){
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        alert.addAction(.init(title: "Back", style: .cancel,handler: { _ in
+            action?()
+        }))
+        alert.setAppearance()
+        self.present(alert, animated: true)
+    }
+    func closeAction(){
+        if let navi = navigationController{
+            navi.popViewController(animated: true)
+        }
+        self.dismiss(animated: true)
+    }
 }

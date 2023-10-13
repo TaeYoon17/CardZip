@@ -12,12 +12,10 @@ final class BottomImageBtn: UIButton{
         var config = UIButton.Configuration.plain()
         config.imagePadding = 0
         config.contentInsets = .init(top: 16, leading: 16, bottom: 16, trailing: 16)
-//        var symbolConfig = UIImage.SymbolConfiguration(textStyle: .headline, scale: .large)
-//        var symbolConfig = UIImage.SymbolConfiguration(font: .systemFont(ofSize: 14, weight: .heavy))
-//        config.image = .init(systemName: "xmark",withConfiguration: symbolConfig)
         config.baseForegroundColor = .cardPrimary
         config.cornerStyle = .capsule
         config.background.visualEffect = UIBlurEffect(style: .prominent)
+        self.setShadowLayer()
         self.configuration = config
     }
     convenience init(systemName: String) {
