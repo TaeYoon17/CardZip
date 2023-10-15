@@ -51,10 +51,8 @@ final class AddImageVC: BaseVC{
         let btn = UIButton()
         btn.isUserInteractionEnabled = false
         var config = UIButton.Configuration.plain()
-        config.attributedTitle = AttributedString("0 / 0" , attributes: .init([
-            NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium)
-        ]))
-        config.baseForegroundColor = .black
+        config.attributedTitle = AttributedString("0 / 0" , attributes: .init([ NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium) ]))
+        config.baseForegroundColor = .cardPrimary
         config.contentInsets = .init(top: 8, leading: 20, bottom: 8, trailing: 20)
         config.cornerStyle = .capsule
         config.background.visualEffect = UIBlurEffect(style: .prominent)
@@ -113,14 +111,8 @@ final class AddImageVC: BaseVC{
             }
         }.store(in: &subscription)
     }
-    
-    func sendImageIDs(){
-        /// 1. 스냅샷에서 존재하는 데이터들을 가져온다
-        /// 2. 이미지 Identifier리스트를 Passthrough로 던진다.
-        let snapshot = self.dataSource.snapshot()
-        var items:[String] = snapshot.itemIdentifiers(inSection: .main)
-        items.removeLast() // add 버튼 없애기
-        self.passthorughImgID.send(Array(Set(items)))
+    deinit{
+        print("AddImageVC가 사라짐!!")
     }
 }
 
