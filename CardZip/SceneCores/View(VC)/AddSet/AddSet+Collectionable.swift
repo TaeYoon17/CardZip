@@ -10,6 +10,7 @@ extension AddSetVC:Collectionable{
     func configureCollectionView() {
         collectionView.backgroundColor = .bg
         collectionView.delegate = self
+        collectionView.keyboardDismissMode = .interactive
         //MARK: -- Registration 설정
         let layoutHeaderRegi = layoutHeaderRegistration
         let layoutFooterRegi = layoutFooterRegistration
@@ -43,6 +44,7 @@ extension AddSetVC:Collectionable{
     
     func headerItemBindings(cell:AddSetVC.AddSetCell,item: Item){
         guard var setItem:SetItem = headerModel.fetchByID(item.id) else {return}
+        cell.fieldAccessoryView = appendItemView
         cell.titleAction = { [weak self] in
             guard let self else {return}
             var snapshot = dataSource.snapshot()
@@ -64,9 +66,9 @@ extension AddSetVC:Collectionable{
             photoService.presentPicker(vc: self,multipleSelection: false)
         }
     }
-    
     func cardItemBindings(cell:AddSetVC.AddSetItemCell,item: Item){
         guard var cardItem:CardItem = itemModel.fetchByID(item.id) else {return}
+        cell.fieldAccessoryView = appendItemView
         cell.termAction = { [weak self] in
             guard let self else {return}
             var snapshot = dataSource.snapshot()
@@ -78,10 +80,13 @@ extension AddSetVC:Collectionable{
         cell.definitionAction = { [weak self] in
             guard let self else {return}
             var snapshot = self.dataSource.snapshot()
-            cardItem.description = cell.definitionField.text ?? ""
+            cardItem.definition = cell.definitionField.text ?? ""
             itemModel.insertModel(item: cardItem) // dictionary로 알아서 수정
             snapshot.reconfigureItems([item])
             dataSource.apply(snapshot,animatingDifferences: false)
+        }
+        cell.deleteTapped = { [weak self] in
+            self?.deleteDataSource(deleteItem: item)
         }
         // 이미지 추가 이벤트 처리하기
         cell.addImageTapped = { [weak self] in
@@ -91,7 +96,6 @@ extension AddSetVC:Collectionable{
             // AddImageVC에서 처리한 이미지를 받음
             vc.passthorughImgID.sink {[weak self] imagesID in
                 guard let self else {return}
-                print(imagesID)
                 cardItem.imageID = imagesID
                 itemModel.removeModel(cardItem.id)
                 itemModel.insertModel(item: cardItem) // dictionary로 알아서 수정
@@ -100,12 +104,39 @@ extension AddSetVC:Collectionable{
             navigationController?.pushViewController(vc, animated: true)
         }
     }
+    private var appendItemView: UIView {
+        let view = NavBarView(frame:.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48))
+        view.alpha = 1
+        let btn = BottomImageBtn(systemName: "plus")
+        let doneBtn = UIButton(configuration: .plain())
+        doneBtn.setAttributedTitle(.init(string: "Done".localized, attributes: [
+            .font : UIFont.systemFont(ofSize: 17, weight: .semibold)
+        ]), for: .normal)
+        doneBtn.tintColor = .cardPrimary
+        btn.configuration?.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
+        btn.addAction(.init(handler: { [weak self] _ in
+            self?.appendDataSource()
+            self?.collectionView.scrollToLastItem()
+        }), for: .touchUpInside)
+        doneBtn.addAction(.init(handler: { [weak self] _ in
+            self?.view.endEditing(true)
+//            self?.becomeFirstResponder()
+        }), for: .touchUpInside)
+        view.addSubview(btn)
+        view.addSubview(doneBtn)
+        btn.snp.makeConstraints { $0.center.equalToSuperview() }
+        doneBtn.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(16.5)
+            make.centerY.equalToSuperview()
+        }
+        return view
+    }
     
 }
 //MARK: -- UICollectionViewLayout
 extension AddSetVC{
     var layout: UICollectionViewLayout{
-        let layout = UICollectionViewCompositionalLayout(sectionProvider: { idx, environment in
+        let layout = UICollectionViewCompositionalLayout(sectionProvider: {[weak self] idx, environment in
             let type = SectionType(rawValue: idx)!
             switch type{
             case .cards:
@@ -117,8 +148,8 @@ extension AddSetVC{
                     deleteAction.image = UIImage(systemName: "trash")
                     return .init(actions: [deleteAction])
                 }
+                listConfig.showsSeparators = false
                 listConfig.backgroundColor = .bg
-                
                 let section = NSCollectionLayoutSection.list(using: listConfig, layoutEnvironment: environment)
                 section.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
                 section.interGroupSpacing = 16
@@ -134,8 +165,7 @@ extension AddSetVC{
             }
         })
         let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
-        
-        layoutConfig.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60)), elementKind: "LayoutHeader", alignment: .top), .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60)),elementKind: "LayoutFooter",alignment: .bottom)]
+        layoutConfig.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60)), elementKind: "LayoutHeader", alignment: .top), .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(120)),elementKind: "LayoutFooter",alignment: .bottom)]
         layout.configuration = layoutConfig
         
         return layout

@@ -18,24 +18,25 @@ final class SetListVC: BaseVC{
         var subItems:[SetItem.ID]
     }
     lazy var collectionView = UITableView(frame: .zero, style: .insetGrouped)
-//    (frame: .zero, collectionViewLayout: layout)
     var dataSource: DataSource!
-    
     var sectionModel : AnyModelStore<Section>!
     var setModel: AnyModelStore<SetItem>!
+    @DefaultsState(\.likedSet) var likeKey
+    @DefaultsState(\.recentSet) var recentDbKey
     @MainActor var imageDict:[String: UIImage] = [:]
-    var subscription = Set<AnyCancellable>()
+//    var subscription = Set<AnyCancellable>()
     func initModelSnapshot(){
         // 이걸 고치고 싶다!!
         guard let tasks = repository?.getTasks else{
-            let alert = UIAlertController(title: "Empty Set", message: nil, preferredStyle: .alert)
-            alert.addAction(.init(title: "Back", style: .cancel,handler: { [weak self] _ in
+            let alert = UIAlertController(title: "Empty Set List".localized, message: nil, preferredStyle: .alert)
+            alert.addAction(.init(title: "Back".localized, style: .cancel,handler: { [weak self] _ in
                 self?.navigationController?.popViewController(animated: true)
             }))
             return
         }
         var imgPathes: [String] = []
-        let items = Array(tasks).map {
+        let items:[SetItem] = Array(tasks).compactMap {
+            if $0._id == self.likeKey { return nil}
             if let imagePath = $0.imagePath{ imgPathes.append(imagePath) }
             return SetItem(title: $0.title, setDescription: $0.setDescription,
                     imagePath: $0.imagePath, dbKey: $0._id, cardList: [],cardCount: $0.cardList.count)
@@ -81,15 +82,14 @@ final class SetListVC: BaseVC{
         searchController.delegate = self
         searchController.searchBar.delegate = self
         navigationItem.hidesBackButton = true
-        navigationItem.title = "Sets"
+        navigationItem.title = "MainSets".localized
         navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false // 서치바 숨기기를 끄기
         configureNavigationItem()
     }
     override func configureConstraints() {
         super.configureConstraints()
-        collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        collectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,14 +104,14 @@ final class SetListVC: BaseVC{
         navigationController?.navigationBar.prefersLargeTitles = false
         navBackBtn.removeFromSuperview()
     }
+    deinit{
+        print("SetListVC 삭제됨!")
+    }
 }
 extension SetListVC{
     final class DataSource: UITableViewDiffableDataSource<Section.ID,SetItem.ID> {
         var passthroughDeletItem = PassthroughSubject<SetItem.ID,Never>()
-        // MARK: reordering support
         override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool { true }
-        
-        // MARK: editing support
 
         override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool { true }
 

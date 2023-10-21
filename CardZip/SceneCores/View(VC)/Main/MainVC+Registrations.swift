@@ -19,6 +19,8 @@ extension MainVC{
                 Task{
                     cell.image = await UIImage.fetchBy(identifier: imagePath)
                 }
+            }else{
+                cell.image = nil
             }
         }
     }
@@ -51,7 +53,8 @@ extension MainVC{
             guard let sectionType = SectionType(rawValue: indexPath.section) else {return}
             switch sectionType{
             case .setList:
-                supplementaryView.title = "Sets"
+                print("setListHeaderRegistration","Ssets".localized,"MainSets".localized,"MainFolders".localized)
+                supplementaryView.title = sectionType.title
                 supplementaryView.tapAction = {[weak self] in
                     let vc = SetListVC()
                     self?.navigationController?.pushViewController(vc, animated: true)

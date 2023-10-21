@@ -9,3 +9,6 @@ import Foundation
 enum FetchError:Error{
     case fetch
 }
+enum SettingError: Error{
+    case FailItemable
+}

@@ -57,8 +57,8 @@ extension MainVC: Collectionable{
     }
     @MainActor func initDataSource(){
         var snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>()
-        snapshot.appendSections([.pinned,.setList,.folderList])
-        [Section.ID.pinned,.setList,.folderList].forEach{
+        snapshot.appendSections([.pinned,.setList])
+        [Section.ID.pinned,.setList].forEach{
             if $0 == .folderList {return}
             snapshot.appendItems(sectionStore.fetchByID($0).itemsID, toSection: $0)
         }
@@ -66,8 +66,9 @@ extension MainVC: Collectionable{
     }
     @MainActor func updateDataSource(){
         var snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>()
-        snapshot.appendSections([.pinned,.setList,.folderList])
-        [Section.ID.pinned,.setList,.folderList].forEach{
+//        ,.folderList
+        snapshot.appendSections([.pinned,.setList])
+        [Section.ID.pinned,.setList].forEach{
             snapshot.appendItems(sectionStore.fetchByID($0).itemsID, toSection: $0)
         }
         dataSource.apply(snapshot,animatingDifferences: true)
@@ -97,8 +98,11 @@ extension MainVC{
                 group.contentInsets = .init(top: 0, leading: 8, bottom: 8, trailing: 8)
                 section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 8
-                section.contentInsets = if UIScreen.main.bounds.width > 400{ .init(top: 0, leading: 12, bottom: 0, trailing: 12)
-                }else{ .init(top: 0, leading: 8, bottom: 0, trailing: 8) }
+                if UIScreen.main.bounds.width > 400{
+                    section.contentInsets = .init(top: 12, leading: 12, bottom: 12, trailing: 12)
+                }else{
+                    section.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
+                }
             case .setList:
                 let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.333)))
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: .init(widthDimension: .fractionalWidth(0.9), heightDimension: .estimated(0)), subitems: [item,item,item])

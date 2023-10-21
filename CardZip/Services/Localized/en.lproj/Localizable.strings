@@ -5,4 +5,97 @@
   Created by 김태윤 on 2023/10/04.
   
 */
-"localization_test" = "Localization";
+"AppTitle" = "Card.Zip";
+"New Card Set" = "New Card Set";
+"Add Folder" = "Add Folder";
+//MARK: -- 뷰 컴포넌트 관련
+"Back" = "Back";
+"Done" = "Done";
+"Edit" = "Edit";
+"Create" = "Create";
+"Close" = "Close";
+"Delete" = "Delete";
+"Save" = "Save";
+"Cancel" = "Cancel";
+//MARK: -- 알림 에러처리 관련
+"Empty Set List" = "Empty Set List";
+"Not found card set" = "Not found card set";
+"Not found image" = "Not found image";
+"Cards Empty" = "Cards Empty";
+//-- 세트 추가 뷰
+"Too many datas" = "Too many datas";
+"Do you want to save?" = "Do you want to save?";
+"Save the image" = "Save the image";
+
+//MARK: -- 메인 컬렉션 뷰 섹션 타입
+"MainPinned" = "Pinned";
+"MainSets" = "Sets";
+"MainFolders" = "Folders";
+
+//MARK: -- 핀 타입
+"Pin Starred Card Set" = "Starred Card Set";
+"Pin Recent Card Set" = "Recent Card Set";
+"Pin Memorize Intensively" = "Memorize Intensively";
+"Pin Recent Card Set" = "No Recent Set";
+
+//MARK: -- 세트 추가 뷰
+"Keep Adding" = "Keep Adding";
+"Close Add Card Set??" = "Close Add Card Set??";
+"Don't save it" = "Don't save it";
+"No set title" = "No set title";
+"There are cards with empty terms and descriptions." = "There are cards with empty terms and descriptions.";
+"Enter a set title" = "Enter a set title";
+"Enter a description" = "Enter a description";
+"Image Empty" = "Image Empty";
+"Add Image" = "Add Image";
+"Edit Image" = "Edit Image";
+"Enter a term" = "Enter a term";
+"Enter a definition" = "Enter a definition";
+
+//MARK: -- 이미지 뷰 관련
+"Original" = "Original";
+"Square" = "Square";
+"Photo album" = "Photo album";
+
+// MARK: -- 카드 필터 관련
+"Default" = "All";
+"Unmemorized" = "Unmemorized";
+"Memorize Intensively" = "Memorize Intensively";
+//MARK -- 세트 뷰
+"Shuffle" = "Shuffle";
+"Term" = "Term";
+"Description" = "Description";
+
+// MARK: -- 설정 관련
+// Setting Type
+"Setting" = "Setting";
+"Image" = "Image";
+"Access change" = "Access change";
+"Change accessable photos" = "Change accessable photos";
+// Voice Section
+"Voice default language" = "Voice default language";
+"Speaker" = "Voice";
+"Term default Language" = "Term default language";
+"Description default Language" = "Description default language";
+
+//MARK :-- Information Section
+"Information" = "Information";
+"App privacy policy" = "App privacy policy";
+
+//MARK: -- 이미지 접근 권한 알림
+"authorized" = "authorized";
+"denied" = "denied";
+"limited" = "limited";
+"notDetermined" = "notDetermined";
+"restricted" = "restricted";
+"unknown default" = "unknown default";
+
+//MARK: -- 언어 코드
+"TTS Simplified Chinese" = "Simplified Chinese";
+"TTS English (United Kingdom)" = "English (United Kingdom)";
+"TTS English (United States)" = "English (United States)";
+"TTS French (Standard)" = "French (Standard)";
+"TTS German (Standard)" = "German (Standard)";
+"TTS Japanese" = "Japanese";
+"TTS Korean" = "Korean";
+"TTS Spanish (Spain)" = "Spanish (Spain)";

@@ -10,10 +10,11 @@ import SnapKit
 import Combine
 final class CardView: BaseView{
     var frontView:CardFrontView!
-    var backView:UIView!
+    var backView: CardBackView!
     weak var vm: CardVM!{
         didSet{
             guard let vm else {return}
+            self.frontView.cardVM = vm
             self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(Self.tapped)))
             vm.$isFront.sink {[weak self]  val in
                 self?.flipCard(val)
@@ -36,7 +37,7 @@ final class CardView: BaseView{
     override func configureConstraints() {
         [frontView,backView].forEach{ view in
             view.clipsToBounds = true
-            view.layer.cornerRadius = 20
+            view.layer.cornerRadius = 16.5
             view.layer.cornerCurve = .continuous
             view.snp.makeConstraints { $0.edges.equalToSuperview() }
         }
@@ -45,11 +46,10 @@ final class CardView: BaseView{
         self.addSubview(frontView)
         self.addSubview(backView)
     }
-    init(frontView: CardFrontView, backView: UIView) {
+    init(frontView: CardFrontView, backView: CardBackView) {
         self.frontView = frontView
-        self.frontView.cardVM = vm
+        
         self.backView = backView
-        self.backView.backgroundColor = .bgSecond
         super.init(frame: .zero)
         
     }

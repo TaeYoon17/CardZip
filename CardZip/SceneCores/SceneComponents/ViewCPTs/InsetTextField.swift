@@ -12,9 +12,7 @@ class InsetTextField: UITextField {
     private let clearButtonOffset: CGFloat = 5
     private let clearButtonLeftPadding: CGFloat = 5
     private var isRightPadding : Bool = false
-    override open func textRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.inset(by: commonInsets)
-    }
+    override open func textRect(forBounds bounds: CGRect) -> CGRect { return bounds.inset(by: commonInsets) }
     
     override open func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: commonInsets)

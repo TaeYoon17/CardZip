@@ -6,3 +6,15 @@
 //
 
 import Foundation
+enum App{
+    enum Logo{
+        static let like: String = "star"
+        static let check: String = "bookmark"
+        static let emptyImage: String = "questionmark.circle"
+        static let speaker:String = "speaker"
+    }
+    enum Language{
+        case english
+        case korean
+    }
+}

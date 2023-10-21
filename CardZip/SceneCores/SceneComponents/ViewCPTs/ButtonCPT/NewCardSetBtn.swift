@@ -16,7 +16,7 @@ final class NewCardSetBtn: UIButton{
         config.imagePadding = 4
         config.preferredSymbolConfigurationForImage = .init(font: .systemFont(ofSize: 16, weight: .bold))
         config.image = .init(systemName: "plus.rectangle.on.rectangle")
-        config.attributedTitle = AttributedString("New Card Set" , attributes: .init([
+        config.attributedTitle = AttributedString("New Card Set".localized , attributes: .init([
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16, weight: .medium),
             NSAttributedString.Key.foregroundColor : UIColor.cardPrimary
         ]))

@@ -20,7 +20,7 @@ class ImageCell: BaseCell{
             let ratio =  image.size.height / image.size.width
             originalRatioImageView.snp.makeConstraints { make in
                 make.center.equalToSuperview()
-                let maxMultiply = AppManager.shared.hasNotch() ? 2 : 1.85
+                let maxMultiply = App.Manager.shared.hasNotch() ? 2 : 1.85
                 if ratio > maxMultiply{
                     make.height.equalToSuperview().multipliedBy(0.67)
                     make.width.equalTo(originalRatioImageView.snp.height).multipliedBy(1 / ratio)
@@ -42,12 +42,12 @@ class ImageCell: BaseCell{
     private let originalRatioImageView = UIImageView()
     private let squareView = UIImageView()
     private lazy var emptyImageView = {
-        let v = AddImageVC.InfoView(title: "Image not found", systemName: "questionmark")
+        let v = AddImageVC.InfoView(title: "Not found image".localized, systemName: "questionmark")
         v.isUserInteractionEnabled = false
         return v
     }()
     private lazy var segmentControl = {
-        let control = CardSegmentControl(items: ["Original","Square" ])
+        let control = CardSegmentControl(items: ["Original".localized,"Square".localized ])
         control.selectedSegmentIndex = 0
         return control
     }()
@@ -116,9 +116,9 @@ class ImageCell: BaseCell{
 //        }), for: .touchUpInside)
 //    }
     @objc func imageTapped(_ sender: UITapGestureRecognizer){
-        self.type = switch type{
-        case .original: .square
-        case .square: .original
+        switch type{
+        case .original: self.type = .square
+        case .square: self.type = .original
         }
     }
     @objc func selectionTapped(_ sender: UISegmentedControl){
@@ -135,28 +135,4 @@ class ImageCell: BaseCell{
         }
     }
 }
-final class DeletableImageCell: ImageCell{
-    var deleteAction: (()->())?
-    private let deleteBtn = BottomImageBtn(systemName: "xmark")
-    
-    override func configureConstraints() {
-        super.configureConstraints()
-    }
-    override func configureLayout() {
-        super.configureLayout()
-        contentView.addSubview(deleteBtn)
-    }
-    override func configureView() {
-        super.configureView()
-        configureDeleteBtn()
-    }
-    func configureDeleteBtn(){
-        deleteBtn.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-48)
-        }
-        deleteBtn.addAction(.init(handler: { [weak self] _ in
-            self?.deleteAction?()
-        }), for: .touchUpInside)
-    }
-}
+

@@ -15,43 +15,34 @@ extension CardVC{
         config.baseForegroundColor = .secondaryLabel
         config.imagePadding = 4
         config.preferredSymbolConfigurationForImage = .init(font: .systemFont(ofSize: 14, weight: .heavy))
-        config.image = if let navi = self.navigationController{
-            .init(systemName: "chevron.left")
+         if let navi = self.navigationController{
+             config.image = .init(systemName: "chevron.left")
         }else{
-            .init(systemName: "xmark")
+            config.image = .init(systemName: "xmark")
         }
-        config.attributedTitle = AttributedString("Set Name" , attributes: .init([
+        config.attributedTitle = AttributedString("Set Name".prefixString() , attributes: .init([
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium),
             NSAttributedString.Key.foregroundColor : UIColor.cardPrimary
         ]))
         config.contentInsets = .init(top: 8, leading: 10, bottom: 8, trailing: 10)
         config.cornerStyle = .capsule
+        config.titleLineBreakMode = .byTruncatingTail
+        
         config.background.visualEffect = UIBlurEffect(style: .prominent)
         btn.configuration = config
         btn.layer.shadowColor = UIColor.lightGray.cgColor
         btn.layer.shadowOffset = .zero
         btn.layer.shadowOpacity = 0.5
         btn.layer.shadowRadius = 4
-        //MARK: -- 여기 엑션 수정
-        btn.addAction(.init(handler: { [weak self] _ in
-            if let navi = self?.navigationController{
-                self?.navigationController?.popViewController(animated: true)
-            }else {
-                self?.dismiss(animated: true)
-            }
-        }), for: .touchUpInside)
         return btn
     }
     var CountLabel:UIButton{
         let btn = UIButton()
         btn.isUserInteractionEnabled = false
         var config = UIButton.Configuration.plain()
-        config.attributedTitle = AttributedString("\(cardNumber) / \(setItem?.cardCount ?? 0)", attributes: .init([
-            NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium),
-            NSAttributedString.Key.foregroundColor : UIColor.cardPrimary
-        ]))
-        config.baseForegroundColor = .black
-        config.contentInsets = .init(top: 8, leading: 20, bottom: 8, trailing: 20)
+        config.attributedTitle = AttributedString("\(cardNumber) / \(setItem?.cardCount ?? 0)", attributes: .numberStyle)
+        config.baseForegroundColor = .cardPrimary
+        config.contentInsets = .init(top: 6, leading: 16, bottom: 6, trailing: 16)
         config.cornerStyle = .capsule
         config.background.visualEffect = UIBlurEffect(style: .prominent)
         btn.configuration = config

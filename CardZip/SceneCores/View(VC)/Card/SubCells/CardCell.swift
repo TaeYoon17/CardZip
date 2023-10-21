@@ -8,40 +8,66 @@
 import SnapKit
 import UIKit
 import Combine
+protocol CardActionsDelegate:NSObject{
+    func checkAction(isCheck: Bool)
+    func heartAction(isHeart: Bool)
+    func speakerAction()
+    func tagAction()
+}
 class CardCell: BaseCell{
     let vm = CardVM()
     var cardItem: CardItem?{
         didSet{
             guard let cardItem else {return}
-            print(cardItem)
-            wrapperView.frontView.images = cardItem.imageID
-            wrapperView.frontView.text = cardItem.title
+            Task{
+                wrapperView.frontView.images = cardItem.imageID
+                wrapperView.frontView.text = cardItem.title
+                wrapperView.backView.mean = cardItem.definition
+            }
+            vm.isHeart = cardItem.isLike
+            vm.isChecked = cardItem.isChecked
+            heartBtn.isTapped = cardItem.isLike
+            checkBtn.isTapped = cardItem.isChecked
         }
     }
-    
-    
-    
-    private lazy var segmentControl = CardSegmentControl(items: ["Title","Description" ])
-    private lazy var wrapperView = CardView(frontView: {
-        let view = CardFrontView()
-//        view.images = ["getup","rabbit"]
-//        view.text = "안녕하세요"
-        return view
-    }(), backView: {
-        let view = UIView()
-        view.backgroundColor = .systemOrange
-        return view
-    }())
-    let checkBtn = IconBtn(systemName: "checkmark")
-    let heartBtn = IconBtn(systemName: "heart")
-    let speakerBtn = IconBtn(systemName: "speaker")
+    private lazy var segmentControl = CardSegmentControl(items: ["Term".localized,"Description".localized ])
+    private lazy var wrapperView = CardView(frontView: CardFrontView(), backView: CardBackView())
+    lazy var checkBtn = {
+        let btn = IconBtn(systemName: "bookmark")
+        btn.configuration?.attributedTitle = .init("Unmemorized".localized, attributes: .init([
+            .font : UIFont.systemFont(ofSize: 12, weight: .regular),
+        ]))
+        btn.addAction(.init(handler: { [weak self] _ in
+            btn.isTapped.toggle()
+            self?.vm.isChecked = btn.isTapped
+        }), for: .touchUpInside)
+        return btn
+    }()
+    lazy var heartBtn = {
+//        let btn = IconBtn(systemName: "heart")
+        let btn = IconBtn(systemName: "star")
+        btn.configuration?.attributedTitle = .init("Pin Memorize Intensively".localized, attributes: .init([
+            .font : UIFont.systemFont(ofSize: 12, weight: .regular),
+        ]))
+        btn.addAction(.init(handler: { [weak self] _ in
+            btn.isTapped.toggle()
+            self?.vm.isHeart = btn.isTapped
+        }), for: .touchUpInside)
+        return btn
+    }()
+    let speakerBtn = {
+        let btn = IconBtn(systemName: "speaker")
+        return btn
+    }()
     let tagBtn = IconBtn(systemName: "tag")
     lazy var stView = {
-        let stView = UIStackView(arrangedSubviews: [speakerBtn,heartBtn,checkBtn,tagBtn])
+        //MARK: -- 나중에 추가할 기능
+//speakerBtn        ,tagBtn
+        let stView = UIStackView(arrangedSubviews: [heartBtn,checkBtn])
         stView.axis = .horizontal
         stView.spacing = 8
-        stView.alignment = .center
-        stView.distribution = .equalCentering
+        stView.alignment = .fill
+        stView.distribution = .fillEqually
         return stView
     }()
     override init(frame: CGRect) { super.init(frame: frame) }
@@ -64,9 +90,9 @@ class CardCell: BaseCell{
             make.height.equalTo(32)
         }
         stView.snp.makeConstraints { make in
-            make.top.equalTo(wrapperView.snp.bottom).offset(16)
+            make.top.equalTo(wrapperView.snp.bottom).offset(20)
             make.centerX.equalTo(wrapperView)
-            make.width.equalTo(wrapperView).multipliedBy(0.75)
+            make.width.equalTo(wrapperView).inset(20)
         }
     }
     override func configureView() {

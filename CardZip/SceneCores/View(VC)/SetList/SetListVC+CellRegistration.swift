@@ -10,8 +10,8 @@ import SnapKit
 //MARK: -- CELL REGISTRATION
 extension SetListVC{
     var setItemRegistration: UICollectionView.CellRegistration<UICollectionViewListCell,SetItem.ID>{
-        UICollectionView.CellRegistration { cell, indexPath, itemIdentifier in
-            guard let item = self.setModel.fetchByID(itemIdentifier) else { return }
+        UICollectionView.CellRegistration {[weak self] cell, indexPath, itemIdentifier in
+            guard let self,let item = self.setModel.fetchByID(itemIdentifier) else { return }
             var content = cell.defaultContentConfiguration()
             content.text = item.title
             content.textProperties.numberOfLines = 1
@@ -26,31 +26,17 @@ extension SetListVC{
             content.imageProperties.preferredSymbolConfiguration = .init(textStyle: .title2)
             var backConfig = cell.defaultBackgroundConfiguration()
             Task{
-                let image: UIImage = if let imagePath = item.imagePath,let thumbImage = self.imageDict[imagePath]{
-                    thumbImage
+                let image: UIImage
+                if let imagePath = item.imagePath,let thumbImage = self.imageDict[imagePath]{
+                    image = thumbImage
                 }else{
-                    UIImage(systemName: "questionmark.square")!
+                    image = UIImage(systemName: "questionmark.circle")!
                 }
                 content.image = image
                 backConfig.customView = BackView(image: image)
                 cell.contentConfiguration = content
                 cell.backgroundConfiguration = backConfig
             }
-//            Task{ @MainActor in // 이걸 앞으로 빼서 이미지를 할당시켜놓기
-//                if let imagePath = item.imagePath{
-//                    let image = await UIImage.fetchBy(identifier: imagePath)
-//                    content.image = if let image{
-//                        await image.byPreparingThumbnail(ofSize: .init(width: 60, height: 60))
-//                    }else{
-//                        UIImage(systemName: "questionmark.square")
-//                    }
-//                    backConfig.customView = BackView(image: image)
-//                }else{
-////                    content.image = UIImage(systemName: "questionmark.square")
-//                }
-//                cell.contentConfiguration = content
-//                cell.backgroundConfiguration = backConfig
-//            }
             cell.contentConfiguration = content
             cell.backgroundConfiguration = backConfig
         }
@@ -62,6 +48,7 @@ final class BackView:BaseView{
     let imageView = {
         let v = UIImageView()
         v.contentMode = .scaleAspectFill
+        v.tintColor = .cardSecondary
         return v
     }()
     let colorView = {

@@ -11,11 +11,20 @@ import RealmSwift
     
     func update(card:CardTable,item:CardItem){
         try! self.realm.write({
-            card.definition = item.description
+            card.definition = item.definition
             card.term = item.title
             card.imagePathes.removeAll()
+            card.isLike = item.isLike
+            card.isCheck = item.isChecked
             item.imageID.forEach {  card.imagePathes.append($0) }
         })
     }
-    
+    func updateExceptImage(card:CardTable,item:CardItem){
+        try! self.realm.write({
+            card.definition = item.definition
+            card.term = item.title
+            card.isLike = item.isLike
+            card.isCheck = item.isChecked
+        })
+    }
 }

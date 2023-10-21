@@ -23,15 +23,15 @@ extension UIImage.Configuration{
 //MARK: -- 엘범 이미지 고유 아이디로 UIImage 가져오기
 extension UIImage{
     static func fetchBy(identifier assetIdentifier:String) async -> UIImage?{
-        if let asset: PHAsset = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: nil).firstObject{
+        let options = PHFetchOptions()
+        options.wantsIncrementalChangeDetails = false
+        if let asset: PHAsset = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: options).firstObject{
             let manager = PHImageManager.default()
             do{
                 let data = try await manager.fetchAssets(asset: asset)
                 let image = UIImage(data: data)
                 return await image?.byPreparingForDisplay()
-            }catch{
-                return nil
-            }
+            }catch{ return nil }
         }
         return nil
     }

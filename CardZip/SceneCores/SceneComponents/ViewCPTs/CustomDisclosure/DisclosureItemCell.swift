@@ -41,11 +41,12 @@ final class DisclosureItemCell: BaseCell{
         let v = UIView()
         v.layer.cornerRadius = 8
         v.layer.cornerCurve = .circular
-        v.backgroundColor = .white
+        v.backgroundColor = .bgSecond
         return v
     }()
     override func configureView() {
         super.configureView()
+
         titleLabel.font = .boldSystemFont(ofSize: 17)
         setNumbersLabel.font = .boldSystemFont(ofSize: 14)
         setNumbersLabel.textColor = .cardPrimary

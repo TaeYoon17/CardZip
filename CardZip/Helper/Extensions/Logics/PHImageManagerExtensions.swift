@@ -7,11 +7,11 @@
 
 import Photos
 extension PHImageManager{
-    func fetchAssets(asset: PHAsset) async throws -> Data{
+    func fetchAssets(asset: PHAsset,deliveryMode:PHImageRequestOptionsDeliveryMode = .opportunistic ) async throws -> Data{
         try await withCheckedThrowingContinuation{ continueation in
             let option = PHImageRequestOptions()
-            option.isSynchronous = false
-            requestImageDataAndOrientation(for: asset, options: nil) { imageData, _, _, _ in
+            option.deliveryMode = deliveryMode
+            requestImageDataAndOrientation(for: asset, options: option) { imageData, _, _, _ in
                 if let imageData{
                     continueation.resume(returning: imageData)
                 }else{

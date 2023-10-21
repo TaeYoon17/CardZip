@@ -5,4 +5,93 @@
   Created by 김태윤 on 2023/10/04.
   
 */
-"localization_test" = "지역화";
+"AppTitle" = "Card.Zip";
+"New Card Set" = "카드 세트 추가";
+"Add Folder" = "폴더 추가";
+//MARK: -- 뷰 컴포넌트 관련
+"Back" = "뒤로가기";
+"Done" = "완료";
+"Edit" = "수정";
+"Create" = "생성하기";
+"Close" = "닫기";
+"Delete" = "삭제";
+"Save" = "저장";
+"Cancel" = "취소";
+//MARK: -- 알림 에러처리 관련
+"Empty Set List" = "세트가 없습니다";
+"Not found card set" = "카드 세트를 찾을 수 없습니다";
+"Not found image" = "이미지를 찾을 수 없습니다";
+"Cards Empty" = "카드가 없습니다";
+//-- 세트 추가 뷰
+"Too many datas" = "데이터가 너무 많습니다";
+"Do you want to save?" = "저장 하시겠습니까?";
+"Save the image" = "이미지를 저장합니다";
+//MARK: -- 메인 컬렉션 뷰 섹션 타입
+"MainPinned" = "핀";
+"MainSets" = "세트 목록";
+"MainFolders" = "폴더 목록";
+//MARK: -- 핀 타입
+"Pin Starred Card Set" = "별표 카드";
+"Pin Recent Card Set" = "최근 카드 세트";
+"Pin Memorize Intensively" = "집중 암기 카드";
+"Pin No Recent Set" = "최근 학습 세트가 없음";
+//MARK: -- 세트 추가 뷰
+"Keep Adding" = "계속 추가하기";
+"Close Add Card Set??" = "돌아가시겠습니까??";
+"Don't save it" = "저장되지 않습니다";
+"No set title" = "세트 이름이 없습니다";
+"There are cards with empty terms and descriptions." = "용어와 설명이 비어 있는 카드가 있습니다.";
+"Enter a set title" = "세트 이름";
+"Enter a description" = "세트 설명";
+"Image Empty" = "이미지 없음";
+"Add Image" = "이미지 추가";
+"Edit Image" = "이미지 수정";
+"Enter a term" = "용어";
+"Enter a definition" = "의미";
+//MARK: -- 이미지 뷰 관련
+"Original" = "원본 비율";
+"Square" = "정방형";
+"Photo album" = "사진 앨범";
+
+// MARK: -- 카드 필터 관련
+"Default" = "전체";
+"Unmemorized" = "미암기 카드";
+//MARK -- 세트 뷰
+"Shuffle" = "셔플";
+"Term" = "용어";
+"Description" = "의미";
+
+// MARK: -- 설정 관련
+// Setting Section
+"Setting" = "설정";
+"Image" = "이미지";
+"Access change" = "접근 권한 변경";
+"Change accessable photos" = "앱 접근 사진 변경";
+
+// Voice Section
+"Voice default language" = "음성 기본 언어";
+"Speaker" = "음성";
+"Term default Language" = "용어 기본 언어";
+"Description default Language" = "의미 기본 언어";
+
+// Information Section
+"Information" = "정보";
+"App privacy policy" = "개인정보 처리방침";
+
+//MARK: -- 이미지 접근 권한 알림
+"authorized" = "전체 허가";
+"denied" = "거부";
+"limited" = "제한됨";
+"notDetermined" = "결정 안됨";
+"restricted" = "제한됨";
+"unknown default" = "알 수 없는 오류";
+
+//MARK: -- Language Code
+"TTS Chinese (Simplified)" = "중국어 (간체)";
+"TTS English (United Kingdom)" = "영어 (영국)";
+"TTS English (United States)" = "영어 (미국)";
+"TTS French (Standard)" = "프랑스어 (일반)";
+"TTS German (Standard)" = "독일어 (일반)";
+"TTS Japanese" = "일본어";
+"TTS Korean" = "한국어";
+"TTS Spanish (Spain)" = "스페인어 (스페인)";

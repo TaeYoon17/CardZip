@@ -20,16 +20,23 @@ struct FolderListItem: Identifiable{
 }
 
 final class MainVC: BaseVC {
-    enum SectionType: Int, CaseIterable{ case pinned,setList,folderList }
+    enum SectionType: Int, CaseIterable{ 
+        case pinned,setList,folderList
+        var title:String{
+            let data:String
+            switch self{
+            case .pinned: data = "MainPinned"
+            case .setList: data = "MainSets"
+            case .folderList: data = "MainFolders"
+            }
+            return .localized(data)
+        }
+    }
     struct Section:Identifiable{
         var id: SectionType
         var itemsID: [Item]
         var title:String{
-            return switch id{
-            case .pinned: "Pinned"
-            case .setList: "Sets"
-            case .folderList: "Folder"
-            }
+            id.title
         }
     }
     struct Item: Identifiable,Hashable{
@@ -39,7 +46,7 @@ final class MainVC: BaseVC {
     lazy var collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: layout)
     var dataSource : UICollectionViewDiffableDataSource<Section.ID,Item>!
     @DefaultsState(\.recentSet) var recentSetTableId
-    
+    @DefaultsState(\.likedSet) var likedSetTableId
     
     var sectionStore: AnyModelStore<Section>!
     var folderItemStore: AnyModelStore<FolderListItem>!
@@ -47,12 +54,13 @@ final class MainVC: BaseVC {
     
     func initStores(){
         let folderItems = (2...50).map{FolderListItem(title: "Try do this!", setNumber: $0)}
-        let pinnedItems:[PinnedItem] = [.init(type: .recent, setItem: SetItem.getByTableId(recentSetTableId)),.init(type: .heart, setItem: nil)]
+        let pinnedItems:[PinnedItem] = [.init(type: .recent, setItem: SetItem.getByTableId(recentSetTableId)),.init(type: .heart, setItem: .getByTableId(likedSetTableId))]
         self.folderItemStore = .init(folderItems)
         self.pinnedItemStore = .init(pinnedItems)
         self.sectionStore = .init([.init(id: .pinned, itemsID: pinnedItems.map{Item(id: $0.id, type: .pinned)} ),
                                    .init(id: .setList, itemsID: []),
-                                   .init(id: .folderList, itemsID: folderItems.map{Item(id: $0.id, type: .folderList)} )])
+//                                   .init(id: .folderList, itemsID: folderItems.map{Item(id: $0.id, type: .folderList)} )
+        ])
     }
     
     lazy var settingBtn = {
@@ -99,8 +107,7 @@ final class MainVC: BaseVC {
             guard isExist != oldValue else {return}
             Task{
                 if isExist{  updateDataSource()
-                }else{ initDataSource()
-                }
+                }else{ initDataSource() }
                 self.collectionView.collectionViewLayout = layout
             }
         }
@@ -108,12 +115,14 @@ final class MainVC: BaseVC {
  
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("MainVC didLoad")
     }
     override func configureLayout() {
         super.configureLayout()
         initStores()
-        [collectionView,navBarView,settingBtn,navStack,addCardSetBtn,addFolderBtn].forEach({view.addSubview($0)})
+//        .addFolderBtn
+        [collectionView,navBarView,settingBtn,
+//         navStack,
+         addCardSetBtn].forEach({view.addSubview($0)})
     }
     override func configureConstraints() {
         super.configureConstraints()
@@ -122,17 +131,18 @@ final class MainVC: BaseVC {
         }
         addCardSetBtn.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.leading.equalToSuperview().inset(16)
-        }
-        addFolderBtn.snp.makeConstraints { make in
-            make.centerY.equalTo(addCardSetBtn)
+//            make.leading.equalToSuperview().inset(16)
             make.trailing.equalToSuperview().inset(16)
         }
+// MARK: -- Add Folder Btn
+//        addFolderBtn.snp.makeConstraints { make in
+//            make.centerY.equalTo(addCardSetBtn)
+//            make.trailing.equalToSuperview().inset(16)
+//        }
     }
     override func configureNavigation(){
         navigationItem.largeTitleDisplayMode = .automatic
-        navigationItem.title = "Card.Zip"
-        
+        navigationItem.title = "AppTitle".localized
     }
     override func configureView() {
         super.configureView()
@@ -143,21 +153,32 @@ final class MainVC: BaseVC {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.appendView(type: .left, view: settingBtn)
-        navigationController?.appendView(type: .right, view: navStack)
-        let pinnedItems:[PinnedItem] = sectionStore.fetchByID(.pinned).itemsID.map { item in
-            pinnedItemStore.fetchByID(item.id)
+//        navigationController?.appendView(type: .right, view: navStack)
+        let pinnedItems:[PinnedItem] = sectionStore.fetchByID(.pinned).itemsID.compactMap {
+            guard var pinnedItem = pinnedItemStore.fetchByID($0.id) else {return nil}
+            switch pinnedItem.type{
+                case .heart: pinnedItem.setItem = .getByTableId(likedSetTableId)
+                case .recent: pinnedItem.setItem = SetItem.getByTableId(recentSetTableId)
+            }
+            return pinnedItem
         }
-        guard var recentItem:PinnedItem = pinnedItems.first(where: { $0.type == .recent }) else { return }
-        recentItem.setItem = SetItem.getByTableId( recentSetTableId)
-        pinnedItemStore.insertModel(item: recentItem)
+//        let recentItems = pinnedItems.map { item in
+//            var item = item
+//            switch item.type{
+//            case .heart: item.setItem = .getByTableId(likedSetTableId)
+//            case .recent: item.setItem = SetItem.getByTableId( recentSetTableId)
+//            }
+//            return item
+//        }
+        pinnedItems.forEach({pinnedItemStore.insertModel(item: $0)})
         var snapshot = dataSource.snapshot()
-        snapshot.reconfigureItems([Item(id: recentItem.id, type: .pinned)])
+        snapshot.reconfigureItems(pinnedItems.map{Item(id: $0.id, type: .pinned)})
         dataSource.apply(snapshot,animatingDifferences: true)
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
         settingBtn.removeFromSuperview()
-        navStack.removeFromSuperview()
+//        navStack.removeFromSuperview()
     }
 }

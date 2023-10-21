@@ -12,9 +12,24 @@ extension SetVC: Collectionable{
         self.collectionView.delegate = self
         self.collectionView.backgroundColor = .bg
         let cellRegistration = cardListRegistration
+        let cellHeaderRegi = setCardHeaderReusable
         let collectionHeader = setHeaderReusable
-        dataSource = UICollectionViewDiffableDataSource<Section.ID,Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+        dataSource = UICollectionViewDiffableDataSource<Section.ID,Item>(collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
+            
             let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+            guard let self,var card = cardModel?.fetchByID(itemIdentifier.id) else { return .init()}
+            cell.likeAction = { [weak self] isLike in
+                if card.isLike != isLike{
+                    card.isLike = isLike
+                    self?.updateCard(item: &card)
+                }
+            }
+            cell.checkAction = {[weak self] isCheck in
+                if card.isChecked != isCheck{
+                    card.isChecked = isCheck
+                    self?.updateCard(item: &card)
+                }
+            }
             return cell
         })
         dataSource.supplementaryViewProvider =  {[weak self]collectionView, kind, indexPath in
@@ -22,16 +37,21 @@ extension SetVC: Collectionable{
             case "LayoutHeader":
                 let view: TopHeaderReusableView =  collectionView.dequeueConfiguredReusableSupplementary(using: collectionHeader, for: indexPath)
                 view.shuffleAction = {[weak self] in
-                    let vc = CardVC()
-                    vc.setItem = self?.setItem
-                    vc.modalPresentationStyle = .fullScreen
-                    self?.present(vc, animated: true)
+//                    let vc = CardVC()
+//                    vc.studyType = .random
+//                    vc.setItem = self?.setItem
+//                    let nav = UINavigationController(rootViewController: vc)
+//                    nav.modalPresentationStyle = .fullScreen
+//                    self?.present(nav, animated: true)
+                    self?.selectAction()
                 }
+                return view
+            case UICollectionView.elementKindSectionHeader:
+                let view =  collectionView.dequeueConfiguredReusableSupplementary(using: cellHeaderRegi, for: indexPath)
                 return view
             default: return nil
             }
         }
-        
         initModel()
     }
     
@@ -39,15 +59,21 @@ extension SetVC: Collectionable{
 extension SetVC{
     var layout:UICollectionViewLayout{
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1)))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(100)), subitems: [item])
-        group.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(128)), subitems: [item])
+        group.contentInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16)
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 12
+        let headerSupplement: NSCollectionLayoutBoundarySupplementaryItem = .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(48)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        headerSupplement.pinToVisibleBounds = true
+        section.contentInsets = .init(top: 8, leading: 0, bottom: 8, trailing: 0)
+        section.boundarySupplementaryItems = [headerSupplement]
+        
         let layout = UICollectionViewCompositionalLayout(section: section)
         let header: NSCollectionLayoutBoundarySupplementaryItem = .init(layoutSize: .init(widthDimension: .fractionalWidth(1),
                                                                                           heightDimension: .fractionalWidth(0.75)),
                                                                         elementKind: "LayoutHeader", alignment: .top)
         let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
+        
         layoutConfig.boundarySupplementaryItems = [header]
         layout.configuration = layoutConfig
         return layout

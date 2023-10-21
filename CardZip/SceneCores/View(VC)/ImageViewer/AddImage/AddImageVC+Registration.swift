@@ -20,18 +20,19 @@ extension AddImageVC{
         UICollectionView.CellRegistration{[weak self] cell, indexPath, itemIdentifier in
             cell.action = { [weak self] in
                 let actionSheet = CustomAlertController(actionList: [
-                    .init(title: "Library",
+                    .init(title: "Photo album".localized,
                           systemName:  "folder.badge.plus",
                           completion: {[weak self] in
                               guard let self else {return}
                               photoService.presentPicker(vc: self,multipleSelection: true,prevIdentifiers: getCurrentImageIds())
                           }),
-                    .init(title: "Search", systemName: "magnifyingglass", completion: { [weak self] in
-                        print("구글 검색")
-                    }),
-                    .init(title: "Camera", systemName: "camera", completion: { [weak self] in
-                        print("카메라")
-                    })
+                    //MARK: -- 사진 첨부 기능 추가
+//                    .init(title: "Search", systemName: "magnifyingglass", completion: { [weak self] in
+//                        print("구글 검색")
+//                    }),
+//                    .init(title: "Camera", systemName: "camera", completion: { [weak self] in
+//                        print("카메라")
+//                    })
                 ])
                 self?.present(actionSheet, animated: true)
             }

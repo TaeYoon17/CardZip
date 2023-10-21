@@ -7,7 +7,3 @@
 
 import SnapKit
 import UIKit
-
-extension CardVC:UICollectionViewDelegate{
-    
-}

@@ -12,7 +12,7 @@ final class AddFolderBtn: UIButton{
         super.init(frame: frame)
         var config = UIButton.Configuration.plain()
         config.baseForegroundColor = .cardPrimary
-        config.attributedTitle = AttributedString("Add Folder" , attributes: .init([
+        config.attributedTitle = AttributedString("Add Folder".localized , attributes: .init([
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16, weight: .regular),
             NSAttributedString.Key.foregroundColor : UIColor.cardPrimary
         ]))

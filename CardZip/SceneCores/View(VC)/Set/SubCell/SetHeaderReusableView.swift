@@ -10,16 +10,33 @@ import SnapKit
 final class TopHeaderReusableView: UICollectionReusableView{
     var image : UIImage?{
         didSet{
-            guard let image else {return}
             imageView.image = image
+            imageView.tintColor = .secondary
+        }
+    }
+    var errorMessage:String = ""{
+        didSet{
+            errorLabel.text = errorMessage
+            if errorMessage != ""{
+                imageView.contentMode = .center
+                errorLabel.textColor = .secondary
+                errorLabel.textColor = .cardPrimary
+            }else{
+                imageView.contentMode = .scaleAspectFill
+            }
         }
     }
     var collectionTitle: String = ""{
-        didSet{ titleLabel.text = collectionTitle }
+        didSet{ 
+            titleLabel.text = collectionTitle
+            titleLabel.textColor = .cardPrimary
+        }
     }
     var shuffleAction:(()->Void)?
     var collectionDescription: String?{
-        didSet{ descriptionLabel.text = collectionDescription }
+        didSet{ descriptionLabel.text = collectionDescription
+            descriptionLabel.textColor = .cardPrimary
+        }
     }
     var collectionType = "Set"
     private let contentView = UIView()
@@ -28,7 +45,13 @@ final class TopHeaderReusableView: UICollectionReusableView{
     private let descriptionLabel = UILabel()
     private let typeLabel = UILabel()
     private let textBoxView = UIView()
-    private let playBtn = NavBarButton(systemName: "shuffle")
+    private let errorLabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 28, weight: .semibold)
+        return label
+    }()
+    let playBtn = NavBarButton(title: "Shuffle".localized, systemName: "shuffle")
+    var imageHeight: Constraint?
 //    "play" ,"menucard"
     private lazy var stView = {
         let stView = UIStackView(arrangedSubviews: [typeLabel,titleLabel,descriptionLabel])
@@ -48,8 +71,8 @@ final class TopHeaderReusableView: UICollectionReusableView{
     
     func configureLayout(){
         self.addSubview(contentView)
-        [imageView,textBoxView].forEach{contentView.addSubview($0)}
-        [playBtn,stView].forEach({ textBoxView.addSubview($0)})
+        [imageView,errorLabel,textBoxView].forEach{contentView.addSubview($0)}
+        [stView,playBtn].forEach({ textBoxView.addSubview($0)})
     }
     func configureConstraints(){
         contentView.snp.makeConstraints { make in
@@ -68,17 +91,29 @@ final class TopHeaderReusableView: UICollectionReusableView{
             make.top.equalToSuperview()
             make.bottom.equalToSuperview()
         }
-        playBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(16)
-            make.centerY.equalToSuperview()
+        
+        errorLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(16)
+            make.leading.equalToSuperview().inset(16)
         }
+        
         stView.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(16)
             make.centerY.equalToSuperview()
-            make.top.greaterThanOrEqualToSuperview().inset(4)
-            make.bottom.lessThanOrEqualToSuperview().inset(4)
+            make.top.greaterThanOrEqualToSuperview().inset(8)
+            make.bottom.lessThanOrEqualToSuperview().inset(8)
+            make.width.equalToSuperview().multipliedBy(0.6)
+        }
+        playBtn.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(16)
+            make.centerY.equalToSuperview()
+//            make.trailing.lessThanOrEqualTo(playBtn.snp.leading).inset(-32)
+            
         }
         textBoxView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        stView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        playBtn.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        playBtn.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
     
     func configureView(){
@@ -86,14 +121,18 @@ final class TopHeaderReusableView: UICollectionReusableView{
         contentView.layer.cornerRadius = 16.5
         contentView.layer.masksToBounds = true
         self.setShadowLayer()
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .bgSecond
         imageView.contentMode = . scaleAspectFill
         imageView.clipsToBounds = true
         titleLabel.font = .systemFont(ofSize: 21, weight: .bold)
         descriptionLabel.font = .systemFont(ofSize: 17, weight: .medium)
-        titleLabel.text = "안녕하세요"
-        descriptionLabel.text = "이건 인사하는 텍스트에용"
-        typeLabel.text = "하이욤"
+        titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.minimumScaleFactor = 0.95
+        titleLabel.text = ""
+        descriptionLabel.text = ""
+        //MARK: -- 여기 수정하기
+        titleLabel.numberOfLines = 0
+        descriptionLabel.numberOfLines = 0
         [titleLabel,descriptionLabel,typeLabel].forEach({$0.textColor = .black})
         let visualView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialLight))
         visualView.alpha = 0.3333
@@ -102,7 +141,7 @@ final class TopHeaderReusableView: UICollectionReusableView{
         textBoxView.insertSubview(visualView, at: 0)
         visualView.snp.makeConstraints{$0.edges.equalToSuperview()}
         playBtn.configuration?.baseForegroundColor = .cardPrimary
-        playBtn.configuration?.attributedTitle = .init("Shuffle", attributes: .init([
+        playBtn.configuration?.attributedTitle = .init("Shuffle".localized, attributes: .init([
             NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .subheadline)
         ]))
         playBtn.configuration?.preferredSymbolConfigurationForImage = .init(font: .preferredFont(forTextStyle: .headline), scale: .medium)

@@ -14,10 +14,12 @@ final class CardFrontView: BaseView{
         var id = UUID()
         var imagePath:String
     }
+    private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    private var dataSource : UICollectionViewDiffableDataSource<Section,Item>!
     var text: String?{
         didSet{
-            guard let text else {return}
-            titleLabel.text = text
+            self.titleLabel.text = text
+            self.titleLabel.alpha = 1
         }
     }
     var images: [String]?{
@@ -27,6 +29,7 @@ final class CardFrontView: BaseView{
                 isShow = false
                 self.showBtn.isHidden = true
                 self.imageLabel.isHidden = true
+                self.titleLabel.isHidden = false
                 return
             }
             imageLabel.text = "\(nowImageIndex + 1) / \(images.count)"
@@ -37,23 +40,52 @@ final class CardFrontView: BaseView{
             }
             var snapshot = NSDiffableDataSourceSnapshot<Section,Item>()
             snapshot.appendSections([.main])
-            
             snapshot.appendItems(images.map{Item(imagePath: $0)}, toSection: .main)
             dataSource.apply(snapshot,animatingDifferences: true)
         }
     }
     @MainActor private var imagesDict:[String: UIImage?]?{
         didSet{
-            print("imagesDict",imagesDict)
             var snapshot = dataSource.snapshot()
             snapshot.reconfigureItems(snapshot.itemIdentifiers)
             dataSource.apply(snapshot,animatingDifferences: true)
         }
     }
+    private var isShow = true{
+        didSet{
+            UIView.animate(withDuration: 0.2) {
+                self.showBtn.transform = CGAffineTransform(rotationAngle: self.isShow ? 0 : .pi)
+                if self.isShow{
+                    self.collectionView.alpha = 1
+                    self.imageLabel.textColor = .cardPrimary
+                }else{
+                    self.collectionView.alpha = 0
+                    self.imageLabel.textColor = .lightGray
+                }
+            }completion: { _ in
+                Task{
+                    if self.isShow{
+                        self.collectionView.isHidden = false
+                        self.imageTopConstraint?.activate()
+                        self.titleCenterConstraint?.deactivate()
+                    }else{
+                        self.collectionView.isHidden = true
+                        self.imageTopConstraint?.deactivate()
+                        self.titleCenterConstraint?.activate()
+                    }
+                    UIView.animate(withDuration: 0.2) { self.titleLabel.alpha = 1 }
+                }
+            }
+        }
+    }
+    var nowImageIndex = 0{ didSet{ imageLabel.text = "\(nowImageIndex + 1) / \(images?.count ?? 0)" } }
+    
     private var titleLabel = {
         let label = UILabel()
-        label.font = .monospacedSystemFont(ofSize: 32, weight: .medium)
-        label.text = "Option"
+        label.font = .monospacedSystemFont(ofSize: 36, weight: .semibold)
+        label.alpha = 0
+        label.numberOfLines = 0
+        label.text = "Not Found Term"
         return label
     }()
     private lazy var stView = {
@@ -64,31 +96,6 @@ final class CardFrontView: BaseView{
         stView.spacing = 8
         return stView
     }()
-    private var isShow = true{
-        didSet{
-            UIView.animate(withDuration: 0.2) {
-                self.showBtn.transform = CGAffineTransform(rotationAngle: self.isShow ? 0 : .pi)
-                Task{
-                    if self.isShow{
-                        self.collectionView.isHidden = false
-                        self.imageLabel.textColor = .cardPrimary
-                        self.imageTopConstraint?.activate()
-                        self.titleCenterConstraint?.deactivate()
-                    }else{
-                        self.collectionView.isHidden = true
-                        self.imageLabel.textColor = .lightGray
-                        self.imageTopConstraint?.deactivate()
-                        self.titleCenterConstraint?.activate()
-                    }
-                }
-            }
-        }
-    }
-    var nowImageIndex = 0{
-        didSet{
-            imageLabel.text = "\(nowImageIndex + 1) / \(images?.count ?? 0)"
-        }
-    }
     private lazy var showBtn = {
         let btn = UIButton()
         var config = UIButton.Configuration.plain()
@@ -97,23 +104,59 @@ final class CardFrontView: BaseView{
         config.cornerStyle = .capsule
         config.baseForegroundColor = UIColor.cardPrimary
         config.preferredSymbolConfigurationForImage = .init(scale: .small)
-        config.background.backgroundColor = .bg
+        config.background.visualEffect = UIBlurEffect(style: .prominent)
         config.contentInsets = .init(top: 4, leading: 4, bottom: 4, trailing: 4)
         btn.configuration = config
         return btn
     }()
+    private lazy var speakerBtn = {
+        let btn = UIButton()
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "speaker")
+        config.imagePadding = 0
+        config.cornerStyle = .capsule
+        config.baseForegroundColor = UIColor.cardPrimary
+        config.preferredSymbolConfigurationForImage = .init(scale: .medium)
+        config.background.visualEffect = UIBlurEffect(style: .prominent)
+        config.contentInsets = .init(top: 4, leading: 4, bottom: 4, trailing: 4)
+        btn.configuration = config
+        btn.addAction(.init(handler: { [weak self] _ in
+            guard let self else {return}
+            TTS.shared.textToSpeech(text: self.text ?? "", language: App.Manager.shared.termLanguageCode ?? .ko)
+            UIView.animate(withDuration: 0.6) { [weak self] in
+                btn.configuration?.image = UIImage(systemName: "speaker.fill")
+                btn.configuration?.baseForegroundColor = .secondary
+            }completion: { _ in
+                btn.configuration?.image = UIImage(systemName: "speaker")
+                btn.configuration?.baseForegroundColor = .cardPrimary
+            }
+        }), for: .touchUpInside)
+        return btn
+    }()
     private lazy var imageLabel = {
         let label = UILabel()
-        label.text = "\(nowImageIndex + 1) / 3"
+        label.text = "\(nowImageIndex + 1) / \(images?.count ?? 0)"
         label.font = .systemFont(ofSize: 16)
         return label
     }()
+    private lazy var expandImageBtn = {
+        let btn = UIButton()
+        var config = UIButton.Configuration.plain()
+        config.image = .init(systemName: "arrow.up.left.and.arrow.down.right")
+        config.baseForegroundColor = .cardPrimary
+        config.background.visualEffect = UIBlurEffect(style: .prominent)
+        config.cornerStyle = .capsule
+        btn.configuration = config
+        btn.addAction(.init(handler: { [weak self] _ in
+            print("버튼이 눌림")
+        }), for: .touchUpInside)
+        return btn
+    }()
     var titleCenterConstraint: Constraint?
     var imageTopConstraint: Constraint?
-    private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    private var dataSource : UICollectionViewDiffableDataSource<Section,Item>!
+    
     override func configureLayout() {
-        [collectionView,titleLabel,showBtn,imageLabel].forEach{self.addSubview($0)}
+        [collectionView,titleLabel,showBtn,speakerBtn,imageLabel].forEach{self.addSubview($0)}
     }
     override func configureConstraints() {
         showBtn.snp.makeConstraints { make in
@@ -134,18 +177,21 @@ final class CardFrontView: BaseView{
             self.titleCenterConstraint = make.centerY.equalToSuperview().constraint
             make.centerX.equalToSuperview()
         }
-        imageTopConstraint?.activate()
-        titleCenterConstraint?.deactivate()
+        speakerBtn.snp.makeConstraints { make in
+            make.leading.top.equalToSuperview().inset(20)
+        }
+        self.imageTopConstraint?.activate()
+        self.titleCenterConstraint?.deactivate()
     }
     override func configureView() {
         configureCollectionView()
-        self.backgroundColor = .lightBg
-        showBtn.addAction(.init(handler: { [weak self] _ in
+        self.backgroundColor = .bg
+        showBtn.addAction(UIAction(handler: { [weak self] _ in
             self?.isShow.toggle()
-        }), for: .touchUpInside)
+        }), for: .touchUpInside)   
     }
     func configureCollectionView(){
-        collectionView.layer.cornerRadius = 20
+        collectionView.layer.cornerRadius = 16.5
         collectionView.layer.cornerCurve = .circular
         collectionView.delegate = self
         collectionView.isScrollEnabled = false
@@ -154,11 +200,24 @@ final class CardFrontView: BaseView{
             guard let imagesDict =  self?.imagesDict else {return}
             cell.image = imagesDict[itemIdentifier.imagePath] ?? nil
         }
-        dataSource = UICollectionViewDiffableDataSource<Section,Item>(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
-            collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+        dataSource = UICollectionViewDiffableDataSource<Section,Item>(collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
+            let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+            cell.expandAction = {[weak self] in
+                guard let self else {return}
+                print(nowImageIndex)
+                if let cardVM{
+                    cardVM.showDetailImage.send(nowImageIndex)
+                }else{
+                    print("cardVM이 없다!!")
+                }
+            }
+            return cell
         })
     }
 }
+
+
+
 extension CardFrontView: UICollectionViewDelegate{
     var layout: UICollectionViewLayout{
         let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))

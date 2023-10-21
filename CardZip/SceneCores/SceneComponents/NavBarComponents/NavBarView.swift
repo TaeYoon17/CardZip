@@ -15,7 +15,7 @@ final class NavBarView: UIView{
         addSubview(visualBgView)
         visualBgView.snp.makeConstraints({$0.edges.equalToSuperview()})
         visualBgView.alpha = 0.3333
-        backgroundColor = .bg.withAlphaComponent(0.9)
+        backgroundColor = .bg?.withAlphaComponent(0.9)
         alpha = 0
     }
     required init?(coder: NSCoder) {

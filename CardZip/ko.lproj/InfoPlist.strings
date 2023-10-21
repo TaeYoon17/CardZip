@@ -1,0 +1,8 @@
+/* 
+  InfoPlist.strings
+  CardZip
+
+  Created by 김태윤 on 2023/10/20.
+  
+*/
+"NSPhotoLibraryUsageDescription" = "카드 및 카드 세트에 이미지를 포함하려면 이 권한이 필요합니다.";

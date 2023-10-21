@@ -9,7 +9,7 @@ import UIKit
 extension UIAlertController{
     func setAppearance(){
         view.tintColor = .secondaryLabel
-        view.backgroundColor = .bg.withAlphaComponent(0.75)
+        view.backgroundColor = .bg?.withAlphaComponent(0.75)
         view.layer.cornerRadius = 16.5
     }
 }

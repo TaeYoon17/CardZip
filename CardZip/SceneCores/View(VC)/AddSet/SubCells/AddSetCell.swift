@@ -11,6 +11,13 @@ import Combine
 import TextFieldEffects
 extension AddSetVC{
     final class AddSetCell:BaseCell{
+        weak var fieldAccessoryView: UIView?{
+            didSet{
+                guard let fieldAccessoryView else {return}
+                self.titleField.inputAccessoryView = fieldAccessoryView
+                self.descriptionField.inputAccessoryView = fieldAccessoryView
+            }
+        }
         var title:String?{
             didSet{
                 guard let title else {return}
@@ -26,7 +33,6 @@ extension AddSetVC{
         var image: UIImage?{
             didSet{
                 if let image{
-                    
                     emptyBtn.alpha = 0
                     editBtn.alpha = 1
                     UIView.imageAppear(view: editBtn) {
@@ -43,6 +49,7 @@ extension AddSetVC{
         //MARK: -- Action Delegate
         var titleAction:(()->Void)?
         var descriptionAction: (()->Void)?
+        var editBeginAction:(()->Void)?
         var imageTappedAction: (()->Void)?{
             didSet{
                 guard let imageTappedAction else {return}
@@ -59,11 +66,18 @@ extension AddSetVC{
             field.layer.cornerCurve = .circular
             field.layer.cornerRadius = 8
             field.addAction(.init(handler: { [weak self] _ in
+                self?.editBeginAction?()
+                field.placeholder = ""
+            }), for: .editingDidBegin)
+            field.addAction(.init(handler: { [weak self] _ in
+                field.placeholder = "Enter a set title".localized
+            }), for: .editingDidEnd)
+            field.addAction(.init(handler: { [weak self] _ in
                 self?.titleAction?()
             }), for: .editingChanged)
+            field.delegate = self
             return field
         }()
-        
         lazy var descriptionField = {
             let field = InsetTextField(rightPadding: true)
             field.font = .systemFont(ofSize: 17,weight: .medium)
@@ -72,13 +86,19 @@ extension AddSetVC{
             field.layer.cornerCurve = .circular
             field.layer.cornerRadius = 8
             field.addAction(.init(handler: { [weak self] _ in
+                self?.editBeginAction?()
+                field.placeholder = ""
+            }), for: .editingDidBegin)
+            field.addAction(.init(handler: { [weak self] _ in
                 self?.descriptionAction?()
             }), for: .editingChanged)
+            field.addAction(.init(handler: { [weak self] _ in
+                field.placeholder = "Enter a description".localized
+            }), for: .editingDidEnd)
             return field
         }()
         private lazy var emptyBtn = {
             let emptyBtn = EmptyImageBtn()
-            
             return emptyBtn
         }()
         private lazy var editBtn = EditImageView()
@@ -90,15 +110,15 @@ extension AddSetVC{
             super.configureConstraints()
             [emptyBtn,editBtn].forEach{ imageView in
                 imageView.snp.makeConstraints { make in
-                make.top.centerX.equalToSuperview().offset(8)
-                make.width.equalTo(imageView.snp.height)
-                make.height.equalTo(128)
-            }
+                    make.top.centerX.equalToSuperview().offset(8)
+                    make.width.equalTo(imageView.snp.height)
+                    make.height.equalTo(128)
+                }
             }
             titleField.snp.makeConstraints { make in
                 make.top.equalTo(emptyBtn.snp.bottom).offset(16)
                 make.horizontalEdges.equalToSuperview().inset(8)
-//                make.bottom.equalTo(descriptionField.snp.top)
+                //                make.bottom.equalTo(descriptionField.snp.top)
             }
             descriptionField.snp.makeConstraints { make in
                 make.top.equalTo(titleField.snp.bottom).offset(16)
@@ -109,8 +129,8 @@ extension AddSetVC{
         override func configureView() {
             super.configureView()
             contentView.backgroundColor = .lightBg
-            titleField.placeholder = "Enter a set name"
-            descriptionField.placeholder = "Enter a description"
+            titleField.placeholder = "Enter a set title".localized
+            descriptionField.placeholder = "Enter a description".localized
             editBtn.alpha = 0
             Task{
                 contentView.layer.cornerRadius = 16
@@ -121,6 +141,26 @@ extension AddSetVC{
         
     }
 }
+extension AddSetVC.AddSetCell: UITextFieldDelegate{
+    
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+       // 백스페이스 처리
+       if let char = string.cString(using: String.Encoding.utf8) {
+              let isBackSpace = strcmp(char, "\\b")
+              if isBackSpace == -92 {
+                  return true
+              }
+        }
+        switch textField{
+        case titleField:
+            return textField.text!.count < 24
+        case self.descriptionField:
+            return textField.text!.count < 48
+        default: return true
+        }
+    }
+}
 fileprivate extension AddSetVC.AddSetCell{
     final class EmptyImageBtn:UIButton{
         var imageTappedAction : (()->Void)?
@@ -128,7 +168,7 @@ fileprivate extension AddSetVC.AddSetCell{
             super.init(frame: frame)
             
             var config = UIButton.Configuration.filled()
-            config.attributedTitle = .init("Image Empty", attributes: .init([
+            config.attributedTitle = .init("Image Empty".localized, attributes: .init([
                 NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .subheadline)
             ]))
             config.image = .init(systemName: "photo")
@@ -137,7 +177,7 @@ fileprivate extension AddSetVC.AddSetCell{
             config.imagePlacement = .top
             config.imagePadding = 8
             config.titlePadding = 8
-            config.baseForegroundColor = .cardPrimary
+            config.baseForegroundColor = UIColor.cardPrimary
             config.baseBackgroundColor = .secondary
             config.cornerStyle = .dynamic
             configuration = config
@@ -154,17 +194,18 @@ fileprivate extension AddSetVC.AddSetCell{
             fatalError("Hello world")
         }
     }
-    final class EditImageView: UIView{ 
+    final class EditImageView: UIView{
         var image:UIImage?{
             didSet{
                 guard let image else {return}
+                imageView.tintColor = .cardPrimary
                 imageView.image = image
             }
         }
         private var imageView: UIImageView = .init()
         private let label = {
             let label = UILabel()
-            label.text = "Edit Image"
+            label.text = "Edit Image".localized
             label.textColor = .white
             label.textAlignment = .center
             label.font = .preferredFont(forTextStyle: .subheadline )

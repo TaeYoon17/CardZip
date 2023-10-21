@@ -9,6 +9,15 @@ import UIKit
 import SnapKit
 
 class NavBarButton:UIButton{
+    var title:String?{
+        didSet{
+            guard let title else { return }
+            self.configuration?.attributedTitle = AttributedString(title , attributes: .init([
+                NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium),
+                NSAttributedString.Key.foregroundColor : UIColor.cardPrimary
+            ]))
+        }
+    }
     private override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -37,7 +46,7 @@ class NavBarButton:UIButton{
         config.image = .init(systemName: systemName)
         config.attributedTitle = AttributedString(title , attributes: .init([
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium),
-            NSAttributedString.Key.foregroundColor : UIColor.black
+            NSAttributedString.Key.foregroundColor : UIColor.cardPrimary
         ]))
         config.contentInsets = .init(top: 8, leading: 10, bottom: 8, trailing: 10)
         config.cornerStyle = .capsule

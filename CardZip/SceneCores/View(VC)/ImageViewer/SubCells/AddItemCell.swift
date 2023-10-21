@@ -11,7 +11,7 @@ import SnapKit
 extension AddImageVC{
     final class AddItemCell: BaseCell{
         private lazy var addView = {
-            let v = InfoView(title: "Add Image", systemName: "photo.on.rectangle.angled")
+            let v = InfoView(title: "Add Image".localized, systemName: "photo.on.rectangle.angled")
             v.action = self.action
             return v
         }()

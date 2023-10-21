@@ -9,37 +9,47 @@ import SnapKit
 import UIKit
 enum PinType:String{
     case recent = "Recent Card Set"
-    case heart = "Hearted Card Set"
+    case heart = "Starred Card Set"
+    var localized:String{ "Pin \(self.rawValue)".localized }
+    var title:String{
+        switch self{
+        case .heart:
+            return "Pin Memorize Intensively".localized
+        case .recent: return .localized("Pin Recent Card Set")
+        default: return ""
+        }
+    }
 }
 final class PinnedSetCell: UICollectionViewCell{
     var pinType: PinType?{
         didSet{
             guard let pinType else {return}
-            typeLabel.text = pinType.rawValue
-            titleLabel.text = switch pinType{
-            case .heart: "Cards you liked"
-            case .recent: "No Recent Set"
-            default: ""
-            }
+            typeLabel.text = pinType.localized
+            titleLabel.text = pinType.title
         }
     }
     
     var setItem: SetItem?{
         didSet{
-            guard let setItem else {return}
-            titleLabel.text = setItem.title
-            descriptionLabel.text = setItem.setDescription
-            amounLabel.text = "\(setItem.cardCount) / 500"
-            
+            if let setItem{
+                titleLabel.text = setItem.title
+                descriptionLabel.text = setItem.setDescription
+                amounLabel.text = "\(setItem.cardCount) / 100"
+            }else{
+                titleLabel.text = pinType?.title
+                descriptionLabel.text = ""
+                amounLabel.text = ""
+            }
         }
     }
     var image: UIImage?{
         didSet{
-            
             if let image{
-                albumImageView.image = image
-                tempView.backgroundColor = .lightBg.withAlphaComponent(0.66)
-                effectView.alpha = 0.33
+                UIView.imageAppear(view: albumImageView) {
+                    self.albumImageView.image = image
+                }
+                self.tempView.backgroundColor = .lightBg.withAlphaComponent(0.66)
+                self.effectView.alpha = 0.33
             }else{
                 albumImageView.image = image
                 tempView.backgroundColor = .clear
@@ -54,7 +64,7 @@ final class PinnedSetCell: UICollectionViewCell{
     private let descriptionLabel = UILabel()
     private let amounLabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: (label.text?.count ?? 0) > 6 ? 28 : 32, weight: .medium)
+        label.font = .systemFont(ofSize: (label.text?.count ?? 0) > 6 ? 26 : 28, weight: .medium)
         label.minimumScaleFactor = 0.4
         return label
     }()
@@ -62,8 +72,6 @@ final class PinnedSetCell: UICollectionViewCell{
     let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .prominent))
     private lazy var blurView = {
         let v = UIView()
-//        tempView.backgroundColor = .lightBg.withAlphaComponent(0.66)
-//        effectView.alpha = 0.33
         tempView.backgroundColor = .clear
         effectView.alpha = 0
         albumImageView.contentMode = .scaleAspectFill
@@ -72,9 +80,7 @@ final class PinnedSetCell: UICollectionViewCell{
         albumImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        tempView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        tempView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         
         
@@ -122,7 +128,7 @@ final class PinnedSetCell: UICollectionViewCell{
         }
         descriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).inset(-4)
-            make.leading.equalTo(titleLabel).inset(4)
+            make.leading.equalTo(titleLabel)
             make.bottom.lessThanOrEqualToSuperview().inset(8)
             make.trailing.lessThanOrEqualTo(amounLabel.snp.leading).offset(-2)
         }
@@ -142,15 +148,15 @@ final class PinnedSetCell: UICollectionViewCell{
         titleLabel.font = .systemFont(ofSize: 24,weight: .semibold)
         typeLabel.textColor = .secondaryLabel
         indicatorImageView.tintColor = .cardPrimary
-        titleLabel.numberOfLines = 1
-        descriptionLabel.font = .systemFont(ofSize: 14, weight: .light)
+        titleLabel.numberOfLines = 2
+        descriptionLabel.font = .systemFont(ofSize: 16, weight: .light)
         descriptionLabel.textAlignment = .left
         descriptionLabel.numberOfLines = 0
-        titleLabel.text = switch pinType{
-        case .heart: "Cards you liked"
-        case .recent: "No Recent Set"
-        default: ""
-        }
+//        titleLabel.text = switch pinType{
+//        case .heart: "Cards you liked"
+//        case .recent: "No Recent Set"
+//        default: ""
+//        }
     }
 }
 

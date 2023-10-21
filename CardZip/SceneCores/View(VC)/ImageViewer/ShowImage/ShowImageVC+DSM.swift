@@ -20,5 +20,4 @@ extension ShowImageVC{
         for str in ids{ newSelection[str] = await .fetchBy(identifier: str) }
         self.selection = newSelection
     }
-    
 }

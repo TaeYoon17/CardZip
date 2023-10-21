@@ -6,8 +6,9 @@
 //
 
 import UIKit
-
+import Combine
 class BaseVC: UIViewController{
+    var subscription = Set<AnyCancellable>()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,16 +25,15 @@ class BaseVC: UIViewController{
     
     func alertLackDatas(title: String?,action:(()->Void)? = nil){
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        alert.addAction(.init(title: "Back", style: .cancel,handler: { _ in
-            action?()
-        }))
+        if let action{ alert.addAction(.init(title: "Back", style: .cancel,handler: { _ in action() }))
+        }else{ alert.addAction(.init(title: "Back", style: .cancel)) }
         alert.setAppearance()
         self.present(alert, animated: true)
     }
     func closeAction(){
-        if let navi = navigationController{
-            navi.popViewController(animated: true)
-        }
+        if let navi = navigationController{ navi.popViewController(animated: true) }
         self.dismiss(animated: true)
     }
+
 }
+

@@ -15,7 +15,7 @@ enum RepositoryError: Error{
 @MainActor class TableRepository<T> where T: Object{
     var realm: Realm!
     private(set) var tasks: Results<T>!
-    var getTasks:Results<T>{ realm.objects(T.self) }
+    @MainActor var getTasks:Results<T>{ realm.objects(T.self) }
     init?() {
          realm = try! Realm()
     }
@@ -88,5 +88,6 @@ enum RepositoryError: Error{
             throw RepositoryError.TableNotFound
         }
         delete(item: obj)
+        print("Repository 데이터 삭제 완료")
     }
 }

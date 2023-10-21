@@ -1,0 +1,8 @@
+/* 
+  InfoPlist.strings
+  CardZip
+
+  Created by 김태윤 on 2023/10/20.
+  
+*/
+"NSPhotoLibraryUsageDescription" = "You need this permission to include images on your cards and sets.";

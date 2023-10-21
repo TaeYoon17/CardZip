@@ -11,11 +11,11 @@ import SnapKit
 extension AddSetVC{
     var setCardRegistration: UICollectionView.CellRegistration<AddSetItemCell,Item>{
         UICollectionView.CellRegistration {[weak self] cell, indexPath, itemIdentifier in
-            guard var cardItem = self?.itemModel.fetchByID(itemIdentifier.id) else {return}
+            guard let cardItem = self?.itemModel.fetchByID(itemIdentifier.id) else {return}
 //            print(cardItem.title)
             // 초기화시 설정할 의미 및 뜻
                 cell.term = cardItem.title
-                cell.definition = cardItem.description
+                cell.definition = cardItem.definition
             if let imageID = cardItem.imageID.first{
                 Task{
                     cell.image = await UIImage.fetchBy(identifier: imageID)?.byPreparingThumbnail(ofSize: .init(width: 44, height: 44))
@@ -32,14 +32,17 @@ extension AddSetVC{
     }
     var setHeaderRegistration: UICollectionView.CellRegistration< AddSetCell,Item>{
         UICollectionView.CellRegistration {[weak self] cell, indexPath, itemIdentifier in
-            guard let headerItem = self?.headerModel.fetchByID(itemIdentifier.id),
-                  let imagePath = headerItem.imagePath else { return }
+            guard let headerItem = self?.headerModel.fetchByID(itemIdentifier.id) else {return}
             cell.title = headerItem.title
             cell.setDescription = headerItem.setDescription
+            guard let imagePath = headerItem.imagePath else { return }
             Task{
-                cell.image = await .fetchBy(identifier: imagePath)
                 
-                
+                if let image = await UIImage.fetchBy(identifier: imagePath){
+                    cell.image = image
+                }else {
+                    cell.image = .init(systemName: App.Logo.emptyImage)
+                }
             }
         }
     }
