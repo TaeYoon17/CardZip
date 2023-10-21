@@ -10,8 +10,12 @@ import SnapKit
 final class TopHeaderReusableView: UICollectionReusableView{
     var image : UIImage?{
         didSet{
-            imageView.image = image
-            imageView.tintColor = .secondary
+            UIView.imageAppear(view: imageView) {[weak self ] in
+                guard let self else {return}
+                imageView.image = image
+                imageView.tintColor = .secondary
+            }
+
         }
     }
     var errorMessage:String = ""{

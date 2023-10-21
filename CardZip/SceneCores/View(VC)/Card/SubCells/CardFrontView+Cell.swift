@@ -12,11 +12,14 @@ extension CardFrontView{
         var expandAction: (()->Void)?
         var image: UIImage?{
             didSet{
-                if let image{
-                    imageView.image = image
-                }else{
-                    imageView.image = UIImage(systemName: "questionmark.circle")
-                    imageView.tintColor = .cardPrimary
+                UIView.imageAppear(view: imageView) {[weak self] in
+                    guard let self else {return}
+                    if let image{
+                        imageView.image = image
+                    }else{
+                        imageView.image = UIImage(systemName: "questionmark.circle")
+                        imageView.tintColor = .cardPrimary
+                    }
                 }
             }
         }

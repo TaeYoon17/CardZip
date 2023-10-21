@@ -8,11 +8,12 @@
 import SnapKit
 import UIKit
 import Lottie
-class SplashController: BaseVC{
+final class SplashController: BaseVC{
     @DefaultsState(\.recentSet) var recent
     @DefaultsState(\.likedSet) var liked
     let repository = CardSetRepository()
     let animationView = LottieAnimationView()
+    weak var window: UIWindow?
     override func configureLayout() {
         super.configureLayout()
         view.addSubview(animationView)
@@ -39,7 +40,6 @@ class SplashController: BaseVC{
     func pushVC(){
         let vc = MainVC()
         let nav = UINavigationController(rootViewController: vc)
-// MARK: -- 앱 최초 시작시 바로 최근 학습 카드로 넘어가는 로직
         if let recent,let recentTable = repository?.getTableBy(tableID: recent){
             let setItem = SetItem(table: recentTable)
             let setVC = SetVC()
@@ -49,7 +49,22 @@ class SplashController: BaseVC{
                 Task{ setVC.selectAction() }
             }
         }
-        UIApplication.shared.windows.first?.rootViewController = nav
-        UIApplication.shared.windows.first?.makeKeyAndVisible()
+        Task{
+            try await Task.sleep(nanoseconds: 1000)
+            window?.rootViewController = nav
+            window?.makeKeyAndVisible()
+            
+            guard let window else {
+                print("no window")
+                return
+            }
+            let options: UIView.AnimationOptions = .transitionCrossDissolve
+            let duration: TimeInterval = 0.4
+            UIView.transition(with: window, duration: duration, options: options, animations: {}, completion:{[weak self] completed in
+                guard let self else {return}
+                // MARK: -- 앱 최초 시작시 바로 최근 학습 카드로 넘어가는 로직
+                
+            })
+        }
     }
 }

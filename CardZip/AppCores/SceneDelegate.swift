@@ -38,7 +38,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if App.Manager.shared.termLanguageCode == nil{
             App.Manager.shared.termLanguageCode = .ko
         }
-        window?.rootViewController = SplashController()
+        let vc = SplashController()
+        vc.window = window
+        window?.rootViewController = vc
         window?.makeKeyAndVisible()
     }
 
