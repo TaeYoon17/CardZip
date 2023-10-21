@@ -12,7 +12,7 @@ import AVFoundation
 final class TTS{
     static let shared = TTS()
     private init(){}
-    let synthesizer = AVSpeechSynthesizer()
+    var synthesizer = AVSpeechSynthesizer()
     enum LanguageType:String,CaseIterable{
         case ko = "ko-KR"
         case en_usa = "en-US"
@@ -48,5 +48,10 @@ final class TTS{
         utterance.voice = AVSpeechSynthesisVoice(language: language.rawValue)
         utterance.rate = 0.4
         synthesizer.speak(utterance)
+        Task.detached {
+            try await Task.sleep(for:.seconds(2))
+            self.synthesizer = AVSpeechSynthesizer()
+        }
+        
     }
 }
