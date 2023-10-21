@@ -130,7 +130,11 @@ final class MainVC: BaseVC {
             make.edges.equalToSuperview()
         }
         addCardSetBtn.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            if App.Manager.shared.hasNotch(){
+                make.bottom.equalTo(view.safeAreaLayoutGuide).inset(8)
+            }else{
+                make.bottom.equalTo(view.safeAreaLayoutGuide)
+            }
 //            make.leading.equalToSuperview().inset(16)
             make.trailing.equalToSuperview().inset(16)
         }

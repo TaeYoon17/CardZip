@@ -48,6 +48,7 @@
 		633BD4B52AD7EB8A006D6955 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633BD4B42AD7EB8A006D6955 /* Sequence.swift */; };
 		633BD4B72AD7F1E1006D6955 /* CardFrontView+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633BD4B62AD7F1E1006D6955 /* CardFrontView+Cell.swift */; };
 		633BD4B92AD7FCC9006D6955 /* CardVC+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633BD4B82AD7FCC9006D6955 /* CardVC+Delegate.swift */; };
+		633DA7392AE3C06D0047C138 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 633DA7382AE3C06D0047C138 /* Lottie */; };
 		63552A3B2AD4DCAB00A7063A /* CardItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63552A3A2AD4DCAB00A7063A /* CardItem.swift */; };
 		63552A3D2AD4DD8A00A7063A /* SetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63552A3C2AD4DD8A00A7063A /* SetItem.swift */; };
 		63552A402AD51FDA00A7063A /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63552A3F2AD51FDA00A7063A /* PhotoService.swift */; };
@@ -105,6 +106,8 @@
 		63730F8A2AD29EFD00BC8F35 /* CardVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F892AD29EFD00BC8F35 /* CardVM.swift */; };
 		63730F8C2AD2A8DF00BC8F35 /* BottomImageBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F8B2AD2A8DF00BC8F35 /* BottomImageBtn.swift */; };
 		6373B2A72AE37BA7009A39FA /* SettingItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6373B2A62AE37BA7009A39FA /* SettingItemCell.swift */; };
+		6373B2AB2AE3CBF0009A39FA /* SplashController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6373B2AA2AE3CBF0009A39FA /* SplashController.swift */; };
+		6373B2AF2AE3CE85009A39FA /* Splash.json in Resources */ = {isa = PBXBuildFile; fileRef = 6373B2AE2AE3CE85009A39FA /* Splash.json */; };
 		639352072ACE41CF00F8B31B /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639352062ACE41CF00F8B31B /* MainVC.swift */; };
 		639352092ACE423500F8B31B /* MainVC+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639352082ACE423500F8B31B /* MainVC+Collectionable.swift */; };
 		6393520B2ACE42BC00F8B31B /* ModelStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393520A2ACE42BC00F8B31B /* ModelStructures.swift */; };
@@ -235,6 +238,8 @@
 		63730F892AD29EFD00BC8F35 /* CardVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardVM.swift; sourceTree = "<group>"; };
 		63730F8B2AD2A8DF00BC8F35 /* BottomImageBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomImageBtn.swift; sourceTree = "<group>"; };
 		6373B2A62AE37BA7009A39FA /* SettingItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItemCell.swift; sourceTree = "<group>"; };
+		6373B2AA2AE3CBF0009A39FA /* SplashController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashController.swift; sourceTree = "<group>"; };
+		6373B2AE2AE3CE85009A39FA /* Splash.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Splash.json; sourceTree = "<group>"; };
 		637543762AE2AD110021C370 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		639352062ACE41CF00F8B31B /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		639352082ACE423500F8B31B /* MainVC+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainVC+Collectionable.swift"; sourceTree = "<group>"; };
@@ -263,7 +268,6 @@
 		63E50EF72AD98279003E0800 /* AddSetVC+ViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddSetVC+ViewConfig.swift"; sourceTree = "<group>"; };
 		63EAED4D2ADD05EA00046C44 /* EditableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableVC.swift; sourceTree = "<group>"; };
 		63F4195D2AE2CF8000D450F7 /* AppColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColor.swift; sourceTree = "<group>"; };
-		63F419632AE2E53A00D450F7 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ko; path = ko.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63F419642AE2E53A00D450F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63F419652AE2F58100D450F7 /* SettingLanguageDS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingLanguageDS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -273,6 +277,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				633DA7392AE3C06D0047C138 /* Lottie in Frameworks */,
 				63A3D4332ACE3C6B00E6B10E /* RealmSwift in Frameworks */,
 				631331832AD46B6300459515 /* TextFieldEffects in Frameworks */,
 				63A3D4312ACE3C6B00E6B10E /* Realm in Frameworks */,
@@ -685,6 +690,8 @@
 				635C3BCA2ADFD9A300994BD8 /* App.swift */,
 				63730F6C2AD28D3100BC8F35 /* UserDefults.swift */,
 				63F4195D2AE2CF8000D450F7 /* AppColor.swift */,
+				6373B2AA2AE3CBF0009A39FA /* SplashController.swift */,
+				6373B2AE2AE3CE85009A39FA /* Splash.json */,
 			);
 			path = AppCores;
 			sourceTree = "<group>";
@@ -764,6 +771,7 @@
 				63A3D4302ACE3C6B00E6B10E /* Realm */,
 				63A3D4322ACE3C6B00E6B10E /* RealmSwift */,
 				631331822AD46B6300459515 /* TextFieldEffects */,
+				633DA7382AE3C06D0047C138 /* Lottie */,
 			);
 			productName = CardZip;
 			productReference = 632A48462ACCE81B00413AF4 /* CardZip.app */;
@@ -798,6 +806,7 @@
 				632A48C02ACD3B6200413AF4 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				63A3D42F2ACE3C6B00E6B10E /* XCRemoteSwiftPackageReference "realm-swift" */,
 				631331812AD46B6300459515 /* XCRemoteSwiftPackageReference "TextFieldEffects" */,
+				633DA7372AE3C06D0047C138 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			productRefGroup = 632A48472ACCE81B00413AF4 /* Products */;
 			projectDirPath = "";
@@ -815,6 +824,7 @@
 			files = (
 				630947892AE259A90095BFEA /* InfoPlist.strings in Resources */,
 				632A48562ACCE81C00413AF4 /* LaunchScreen.storyboard in Resources */,
+				6373B2AF2AE3CE85009A39FA /* Splash.json in Resources */,
 				632A48BB2ACD0FA500413AF4 /* Localizable.strings in Resources */,
 				632A48632ACCED4B00413AF4 /* .gitignore in Resources */,
 				632A48532ACCE81C00413AF4 /* Assets.xcassets in Resources */,
@@ -932,6 +942,7 @@
 				635C3BD92AE035C800994BD8 /* CardVC+DSM.swift in Sources */,
 				630947932AE288AE0095BFEA /* Setting+Information.swift in Sources */,
 				632A48652ACCED6A00413AF4 /* API_Key.swift in Sources */,
+				6373B2AB2AE3CBF0009A39FA /* SplashController.swift in Sources */,
 				6357EA4C2ADBBB6F005ED852 /* ShowImageVC+Registration.swift in Sources */,
 				633BB4672AD6EB04005E8E09 /* UINavigationControllerExtensions.swift in Sources */,
 				631331732AD3F3D400459515 /* InfoView.swift in Sources */,
@@ -965,7 +976,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				632A48552ACCE81C00413AF4 /* Base */,
-				63F419632AE2E53A00D450F7 /* ko */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -1211,6 +1221,14 @@
 				minimumVersion = 5.6.0;
 			};
 		};
+		633DA7372AE3C06D0047C138 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.3.3;
+			};
+		};
 		63A3D42F2ACE3C6B00E6B10E /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -1231,6 +1249,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 632A48C02ACD3B6200413AF4 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		633DA7382AE3C06D0047C138 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 633DA7372AE3C06D0047C138 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 		63A3D4302ACE3C6B00E6B10E /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;

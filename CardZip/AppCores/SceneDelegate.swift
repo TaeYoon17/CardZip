@@ -12,7 +12,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     @DefaultsState(\.recentSet) var recent
     @DefaultsState(\.likedSet) var liked
-    
     let repository = CardSetRepository()
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -23,20 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UITextField.appearance().tintColor = .cardPrimary
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        
-        let vc = MainVC()
-        let nav = UINavigationController(rootViewController: vc)
-// MARK: -- 앱 최초 시작시 바로 최근 학습 카드로 넘어가는 로직
-        if let recent,let recentTable = repository?.getTableBy(tableID: recent){
-            let setItem = SetItem(table: recentTable)
-            let setVC = SetVC()
-            setVC.setItem = setItem
-            vc.navigationController?.pushViewController(setVC, animated: false)
-            if setItem.cardCount > 0{
-                Task{ setVC.selectAction() }
-            }
-        }
-        
 //MARK: -- 앱을 깔고 처음 시작 할 때 코드
         if liked == nil{
             let card = CardSetTable(title: "Pin Memorize Intensively".localized, description: "")
@@ -53,7 +38,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if App.Manager.shared.termLanguageCode == nil{
             App.Manager.shared.termLanguageCode = .ko
         }
-        window?.rootViewController = nav
+        window?.rootViewController = SplashController()
         window?.makeKeyAndVisible()
     }
 
