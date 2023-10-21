@@ -23,8 +23,8 @@ class BaseVC: UIViewController{
     func configureNavigation(){ }
     
     
-    func alertLackDatas(title: String?,action:(()->Void)? = nil){
-        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+    func alertLackDatas(title: String?,message: String? = nil,action:(()->Void)? = nil){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         if let action{ alert.addAction(.init(title: "Back", style: .cancel,handler: { _ in action() }))
         }else{ alert.addAction(.init(title: "Back", style: .cancel)) }
         alert.setAppearance()

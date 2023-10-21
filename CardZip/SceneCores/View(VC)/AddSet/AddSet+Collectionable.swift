@@ -6,7 +6,7 @@
 //
 
 import UIKit
-extension AddSetVC:Collectionable{
+extension AddSetVC:Collectionable,UICollectionViewDelegate{
     func configureCollectionView() {
         collectionView.backgroundColor = .bg
         collectionView.delegate = self

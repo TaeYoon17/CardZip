@@ -34,10 +34,12 @@ final class SplashController: BaseVC{
         animationView.animation = LottieAnimation.named("Splash")
         animationView.loopMode = .playOnce
         animationView.play {[weak self] completed in
-            self?.pushVC()
+            Task{
+                try? await self?.pushVC()
+            }
         }
     }
-    func pushVC(){
+    @MainActor func pushVC() async throws{
         let vc = MainVC()
         let nav = UINavigationController(rootViewController: vc)
         if let recent,let recentTable = repository?.getTableBy(tableID: recent){
@@ -49,22 +51,15 @@ final class SplashController: BaseVC{
                 Task{ setVC.selectAction() }
             }
         }
-        Task{
-            try await Task.sleep(nanoseconds: 1000)
-            window?.rootViewController = nav
-            window?.makeKeyAndVisible()
-            
-            guard let window else {
-                print("no window")
-                return
-            }
-            let options: UIView.AnimationOptions = .transitionCrossDissolve
-            let duration: TimeInterval = 0.4
-            UIView.transition(with: window, duration: duration, options: options, animations: {}, completion:{[weak self] completed in
-                guard let self else {return}
-                // MARK: -- 앱 최초 시작시 바로 최근 학습 카드로 넘어가는 로직
-                
-            })
-        }
+        window?.rootViewController = nav
+        window?.makeKeyAndVisible()
+        guard let window else { return }
+        let options: UIView.AnimationOptions = .transitionCrossDissolve
+        let duration: TimeInterval = 0.4
+        UIView.transition(with: window, duration: duration, options: options, animations: {}, completion:{[weak self] completed in
+            guard let self else {return}
+            // MARK: -- 앱 최초 시작시 바로 최근 학습 카드로 넘어가는 로직
+        })
     }
+    
 }

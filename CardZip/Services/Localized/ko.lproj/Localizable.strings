@@ -85,9 +85,13 @@
 "notDetermined" = "결정 안됨";
 "restricted" = "제한됨";
 "unknown default" = "알 수 없는 오류";
+// 이미지 권한 알림 내용
+"Album images are not available" = "앨범 이미지를 사용할 수 없습니다.";
+"You can change album access by going into the app settings" = "앱 설정으로 들어가면 앨범 접근 권한을 변경할 수 있습니다";
+
 
 //MARK: -- Language Code
-"TTS Chinese (Simplified)" = "중국어 (간체)";
+"TTS Simplified Chinese" = "중국어 (간체)";
 "TTS English (United Kingdom)" = "영어 (영국)";
 "TTS English (United States)" = "영어 (미국)";
 "TTS French (Standard)" = "프랑스어 (일반)";

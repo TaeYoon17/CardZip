@@ -89,6 +89,8 @@
 "notDetermined" = "notDetermined";
 "restricted" = "restricted";
 "unknown default" = "unknown default";
+"Album images are not available" = "Album images are not available";
+"You can change album access by going into the app settings" = "You can change album access by going into the app settings";
 
 //MARK: -- 언어 코드
 "TTS Simplified Chinese" = "Simplified Chinese";

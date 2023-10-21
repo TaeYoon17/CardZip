@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Combine
+import Photos
 final class AddSetVC: EditableVC{
     enum VC_TYPE {case add, edit}
     enum SectionType:Int{ case header,cards }
@@ -127,6 +128,20 @@ final class AddSetVC: EditableVC{
             guard let str = val.first, vc == self else {return}
             configureSetImage(str: str)
         }.store(in: &subscription)
+        
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        Task{
+            if await !photoService.isValidAuthorization(){
+                self.alertLackDatas(title: "Album images are not available".localized,
+                                    message: "You can change album access by going into the app settings".localized )
+            }
+        }
     }
     deinit{ print("AddSetVC 사라지기 완료!!") }
     override func configureView() {

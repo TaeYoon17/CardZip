@@ -131,17 +131,14 @@
 		63A3D44A2ACE3FC500E6B10E /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A3D4492ACE3FC500E6B10E /* BaseView.swift */; };
 		63A3D44C2ACE3FE300E6B10E /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A3D44B2ACE3FE300E6B10E /* BaseVC.swift */; };
 		63ABC0C02ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ABC0BF2ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift */; };
-		63E50EF12AD95FB2003E0800 /* AddSetVC+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E50EF02AD95FB2003E0800 /* AddSetVC+Delegate.swift */; };
 		63E50EF32AD96A75003E0800 /* AddSetVC+DSM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E50EF22AD96A75003E0800 /* AddSetVC+DSM.swift */; };
 		63E50EF62AD9820A003E0800 /* ErrorPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */; };
-		63E50EF82AD98279003E0800 /* AddSetVC+ViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E50EF72AD98279003E0800 /* AddSetVC+ViewConfig.swift */; };
 		63EAED4E2ADD05EA00046C44 /* EditableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EAED4D2ADD05EA00046C44 /* EditableVC.swift */; };
 		63F4195E2AE2CF8000D450F7 /* AppColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F4195D2AE2CF8000D450F7 /* AppColor.swift */; };
 		63F419662AE2F58100D450F7 /* SettingLanguageDS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F419652AE2F58100D450F7 /* SettingLanguageDS.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		630947862AE2596B0095BFEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6309478E2AE288690095BFEA /* Setting+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Setting+Image.swift"; sourceTree = "<group>"; };
 		630947902AE2889B0095BFEA /* Setting+Speaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Setting+Speaker.swift"; sourceTree = "<group>"; };
 		630947922AE288AE0095BFEA /* Setting+Information.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Setting+Information.swift"; sourceTree = "<group>"; };
@@ -240,6 +237,8 @@
 		6373B2A62AE37BA7009A39FA /* SettingItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingItemCell.swift; sourceTree = "<group>"; };
 		6373B2AA2AE3CBF0009A39FA /* SplashController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashController.swift; sourceTree = "<group>"; };
 		6373B2B02AE3D0B3009A39FA /* Splash.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Splash.json; sourceTree = "<group>"; };
+		6373B2B32AE3FCDA009A39FA /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6373B2BE2AE40639009A39FA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		637543762AE2AD110021C370 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		639352062ACE41CF00F8B31B /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		639352082ACE423500F8B31B /* MainVC+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainVC+Collectionable.swift"; sourceTree = "<group>"; };
@@ -262,10 +261,8 @@
 		63A3D4492ACE3FC500E6B10E /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		63A3D44B2ACE3FE300E6B10E /* BaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
 		63ABC0BF2ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardVC+AttributeStringExtension.swift"; sourceTree = "<group>"; };
-		63E50EF02AD95FB2003E0800 /* AddSetVC+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddSetVC+Delegate.swift"; sourceTree = "<group>"; };
 		63E50EF22AD96A75003E0800 /* AddSetVC+DSM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddSetVC+DSM.swift"; sourceTree = "<group>"; };
 		63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPolicy.swift; sourceTree = "<group>"; };
-		63E50EF72AD98279003E0800 /* AddSetVC+ViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddSetVC+ViewConfig.swift"; sourceTree = "<group>"; };
 		63EAED4D2ADD05EA00046C44 /* EditableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableVC.swift; sourceTree = "<group>"; };
 		63F4195D2AE2CF8000D450F7 /* AppColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColor.swift; sourceTree = "<group>"; };
 		63F419642AE2E53A00D450F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -373,9 +370,9 @@
 				63A3D4362ACE3CB700E6B10E /* Helper */,
 				63A3D42A2ACE3C0900E6B10E /* SceneCores */,
 				632A484D2ACCE81B00413AF4 /* ViewController.swift */,
-				630947862AE2596B0095BFEA /* Info.plist */,
 				6309478B2AE259A90095BFEA /* InfoPlist.strings */,
 				632A48622ACCED4B00413AF4 /* .gitignore */,
+				6373B2BE2AE40639009A39FA /* Info.plist */,
 			);
 			path = CardZip;
 			sourceTree = "<group>";
@@ -527,8 +524,6 @@
 				63E50EF22AD96A75003E0800 /* AddSetVC+DSM.swift */,
 				631331792AD3FA7A00459515 /* AddSet+Collectionable.swift */,
 				6313317B2AD3FB4F00459515 /* AddSet+Registrations.swift */,
-				63E50EF02AD95FB2003E0800 /* AddSetVC+Delegate.swift */,
-				63E50EF72AD98279003E0800 /* AddSetVC+ViewConfig.swift */,
 			);
 			path = AddSet;
 			sourceTree = "<group>";
@@ -922,7 +917,6 @@
 				631E53932ADAA42B0010E11E /* CardBackView.swift in Sources */,
 				6365712E2AD6DAA6008126C4 /* SetListVC+Delegate.swift in Sources */,
 				635C3BD12ADFFB0500994BD8 /* NavTitleView.swift in Sources */,
-				63E50EF12AD95FB2003E0800 /* AddSetVC+Delegate.swift in Sources */,
 				63A3D4482ACE3F9A00E6B10E /* BaseCell.swift in Sources */,
 				63A3D4392ACE3CCD00E6B10E /* CircleButton.swift in Sources */,
 				63730F6D2AD28D3100BC8F35 /* UserDefults.swift in Sources */,
@@ -931,7 +925,6 @@
 				63730F642AD274F800BC8F35 /* DisclosureHeader.swift in Sources */,
 				6357EA4E2ADBBBDA005ED852 /* ShowImageVC+DSM.swift in Sources */,
 				63ABC0C02ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift in Sources */,
-				63E50EF82AD98279003E0800 /* AddSetVC+ViewConfig.swift in Sources */,
 				636571342AD6DC69008126C4 /* SetCardListCell.swift in Sources */,
 				6357EA592ADBE2F4005ED852 /* SettingVC+Delegate.swift in Sources */,
 				6357EA512ADBC3A4005ED852 /* DeletableImageCell.swift in Sources */,
@@ -968,6 +961,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				63F419642AE2E53A00D450F7 /* en */,
+				6373B2B32AE3FCDA009A39FA /* ko */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

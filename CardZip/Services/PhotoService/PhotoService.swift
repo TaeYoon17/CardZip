@@ -39,27 +39,49 @@ final class PhotoService{
         viewController?.present(picker, animated: true)
     }
     
-    func checkAuthorization(){
-        let requiredAccessLevel: PHAccessLevel = .readWrite
-        PHPhotoLibrary.requestAuthorization(for: requiredAccessLevel) { authorizationStatus in
-            switch authorizationStatus {
-            case .limited:
-                print("limited authorization granted")
-            case .authorized:
-                print("authorized")
-            default:
-                //FIXME: Implement handling for all authorizationStatus
-                print("Unimplemented")
-            }
-        }
+    func isValidAuthorization() async -> Bool{
+        // Observe photo library changes
+        await withCheckedContinuation({ continuation in
+                switch authorizationStatus{
+                case .notDetermined:
+                    let requiredAccessLevel: PHAccessLevel = .readWrite
+                    PHPhotoLibrary.requestAuthorization(for: requiredAccessLevel) { authorizationStatus in
+                        switch authorizationStatus {
+                        case .limited, .authorized: continuation.resume(returning: true)
+                        default: continuation.resume(returning: false)
+                        }
+                    }
+                default: continuation.resume(returning: true)
+                }
+        })
     }
+
+//    func fetchAssets(asset: PHAsset,deliveryMode:PHImageRequestOptionsDeliveryMode = .opportunistic ) async throws -> Data{
+//        try await withCheckedThrowingContinuation{ continueation in
+//            let option = PHImageRequestOptions()
+//            option.deliveryMode = deliveryMode
+//            requestImageDataAndOrientation(for: asset, options: option) { imageData, _, _, _ in
+//                if let imageData{
+//                    continueation.resume(returning: imageData)
+//                }else{
+//                    continueation.resume(throwing: FetchError.fetch)
+//                }
+//            }
+//        }
+//    }
+//
+    func checkAuthorization() async{
+        
+    }
+    
     func presentToLibrary(vc: UIViewController){
         PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: vc)
     }
     func deinitToLibrary(vc: PHPhotoLibraryChangeObserver){
         PHPhotoLibrary.shared().unregisterChangeObserver(vc)
     }
-    var authorizationStatus:PHAuthorizationStatus{ PHPhotoLibrary.authorizationStatus(for: .readWrite) }
+    var authorizationStatus:PHAuthorizationStatus{ PHPhotoLibrary.authorizationStatus(for: .readWrite)
+    }
 }
 extension PhotoService: PHPickerViewControllerDelegate{
     // 델리게이트 구현 사항
