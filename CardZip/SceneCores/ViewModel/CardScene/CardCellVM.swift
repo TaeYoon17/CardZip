@@ -31,7 +31,7 @@ final class CardCellVM{
         Task{
             var newDict:[String: UIImage?] = [:]
             await images.asyncForEach({
-                newDict[$0] = await UIImage.fetchBy(identifier: $0,ofSize: .init(width: 600, height: 600))
+                newDict[$0] = await UIImage.fetchBy(identifier: $0,ofSize: .init(width: 720, height: 720))
             })
             self.imagesDict = newDict
         }

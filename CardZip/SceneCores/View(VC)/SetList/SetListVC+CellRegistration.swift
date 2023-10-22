@@ -25,18 +25,14 @@ extension SetListVC{
             content.imageProperties.tintColor = .cardPrimary
             content.imageProperties.preferredSymbolConfiguration = .init(textStyle: .title2)
             var backConfig = cell.defaultBackgroundConfiguration()
-            Task{
-                let image: UIImage
-                if let imagePath = item.imagePath,let thumbImage = self.imageDict[imagePath]{
-                    image = thumbImage
-                }else{
-                    image = UIImage(systemName: "questionmark.circle")!
-                }
-                content.image = image
-                backConfig.customView = BackView(image: image)
-                cell.contentConfiguration = content
-                cell.backgroundConfiguration = backConfig
+            let image: UIImage
+            if let imagePath = item.imagePath,let thumbImage = self.imageDict[imagePath]{
+                image = thumbImage
+            }else{
+                image = UIImage(systemName: "questionmark.circle")!
             }
+            content.image = image
+            backConfig.customView = BackView(image: image)
             cell.contentConfiguration = content
             cell.backgroundConfiguration = backConfig
         }
@@ -53,7 +49,7 @@ final class BackView:BaseView{
     }()
     let colorView = {
         let v = UIView()
-//        v.backgroundColor = .bg.withAlphaComponent(0.9)
+        //        v.backgroundColor = .bg.withAlphaComponent(0.9)
         v.backgroundColor = .bgSecond.withAlphaComponent(0.95)
         return v
     }()

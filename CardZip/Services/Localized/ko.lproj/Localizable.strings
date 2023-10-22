@@ -34,7 +34,7 @@
 "Pin Starred Card Set" = "별표 카드";
 "Pin Recent Card Set" = "최근 카드 세트";
 "Pin Memorize Intensively" = "집중 암기 카드";
-"Pin No Recent Set" = "최근 학습 세트가 없음";
+"No Pin Recent Card Set" = "최근 학습이 없습니다";
 //MARK: -- 세트 추가 뷰
 "Keep Adding" = "계속 추가하기";
 "Close Add Card Set??" = "돌아가시겠습니까??";

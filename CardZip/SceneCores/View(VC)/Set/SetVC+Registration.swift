@@ -40,7 +40,7 @@ extension SetVC{
                 supplementaryView.collectionDescription = setItem.setDescription
                 Task{
                     if let imagePath = setItem.imagePath{
-                        if  let image = await UIImage.fetchBy(identifier: imagePath){
+                        if  let image = await UIImage.fetchBy(identifier: imagePath,ofSize: .init(width: 600, height: 600)){
                             supplementaryView.image = image
                             supplementaryView.errorMessage = ""
                         }else{

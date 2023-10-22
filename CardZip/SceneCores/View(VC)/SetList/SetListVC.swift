@@ -23,10 +23,21 @@ final class SetListVC: BaseVC{
     var setModel: AnyModelStore<SetItem>!
     @DefaultsState(\.likedSet) var likeKey
     @DefaultsState(\.recentSet) var recentDbKey
-    @MainActor var imageDict:[String: UIImage] = [:]
+    @MainActor var imageDict:[String: UIImage] = [:]{
+        didSet{
+            var snapshot = dataSource.snapshot()
+            snapshot.reloadItems(snapshot.itemIdentifiers)
+            dataSource.apply(snapshot,animatingDifferences: true)
+            
+            self.activitiIndicator.stopAnimating()
+            self.view.isUserInteractionEnabled = true
+        }
+    }
 //    var subscription = Set<AnyCancellable>()
     func initModelSnapshot(){
         // 이걸 고치고 싶다!!
+        self.view.isUserInteractionEnabled = false
+        self.activitiIndicator.startAnimating()
         guard let tasks = repository?.getTasks else{
             let alert = UIAlertController(title: "Empty Set List".localized, message: nil, preferredStyle: .alert)
             alert.addAction(.init(title: "Back".localized, style: .cancel,handler: { [weak self] _ in
@@ -47,17 +58,17 @@ final class SetListVC: BaseVC{
         var newDict:[String:UIImage] = [:]
         Task{
             for imgPath in imgPathes{
-                newDict[imgPath] = await .fetchBy(identifier: imgPath)?
-                                        .byPreparingThumbnail(ofSize: .init(width: 66, height: 66))
+                newDict[imgPath] = await .fetchBy(identifier: imgPath,ofSize: .init(width: 360, height: 360))?
             }
             self.imageDict = newDict
-            await dataSource.apply({
+        }
+            dataSource.apply({
                 var snapshot = NSDiffableDataSourceSnapshot<Section.ID,SetItem.ID>()
                 snapshot.appendSections([.main])
                 snapshot.appendItems(itemIDs, toSection: .main)
                 return snapshot
             }(),animatingDifferences: true)
-        }
+        
     }
     lazy var navBackBtn = {
         let btn = NavBarButton(systemName:  "chevron.left")

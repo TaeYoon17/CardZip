@@ -15,7 +15,7 @@ enum PinType:String{
         switch self{
         case .heart:
             return "Pin Memorize Intensively".localized
-        case .recent: return .localized("Pin Recent Card Set")
+        case .recent: return "No Pin Recent Card Set".localized
         default: return ""
         }
     }

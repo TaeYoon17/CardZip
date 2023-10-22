@@ -98,6 +98,7 @@ final class CardFrontView: BaseView{
     
     private var titleLabel = {
         let label = UILabel()
+        label.textAlignment = .center
         label.font = .monospacedSystemFont(ofSize: 36, weight: .semibold)
         label.alpha = 0
         label.numberOfLines = 0
@@ -192,7 +193,8 @@ final class CardFrontView: BaseView{
         self.titleLabel.snp.makeConstraints { make in
             self.imageTopConstraint = make.top.equalTo(collectionView.snp.bottom).offset(16).constraint
             self.titleCenterConstraint = make.centerY.equalToSuperview().constraint
-            make.centerX.equalToSuperview()
+//            make.centerX.equalToSuperview()
+            make.horizontalEdges.equalToSuperview().inset(8)
         }
         speakerBtn.snp.makeConstraints { make in
             make.leading.top.equalToSuperview().inset(20)

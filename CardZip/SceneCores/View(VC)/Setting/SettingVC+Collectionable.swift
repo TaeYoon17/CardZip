@@ -57,24 +57,27 @@ extension SettingVC:Collectionable{
                 cell.accessories = accessories
             }
             guard let item = self?.itemModel.fetchByID(itemIdentifier) else {return}
+            
             switch item.parent {
             case .image:
                 if item.rawValue == ImageType.access.rawValue{
-                    accessories.append(.label(text: self?.nowAuthorization.name ?? ""))
+                    accessories.append(.labelAccessory(text: self?.nowAuthorization.name ?? ""))
+                    
                 }
             case .speaker:
                 guard let speakerType = SettingType.Speaker(rawValue: item.rawValue) else {return}
                 switch speakerType{
                 case .meaning:
-                    accessories.append(.label(text: App.Manager.shared.descriptionLanguageCode?.name ?? ""))
+                    accessories.append(.labelAccessory(text: App.Manager.shared.descriptionLanguageCode?.name ?? ""))
                 case .term:
-                    accessories.append(.label(text: App.Manager.shared.termLanguageCode?.name ?? ""))
+                    accessories.append(.labelAccessory(text: App.Manager.shared.termLanguageCode?.name ?? ""))
                 }
             case .info:
                 break
             }
         }
     }
+
     private func fetchItemable(id: UUID) throws -> any SettingItemAble{
         guard let it = itemModel.fetchByID(id) else {throw SettingError.FailItemable}
         let itemable : SettingItemAble?
@@ -89,3 +92,8 @@ extension SettingVC:Collectionable{
 }
 
 
+fileprivate extension UICellAccessory{
+    static func labelAccessory(text:String)->Self{
+        UICellAccessory.label(text: text,options: .init(font: .preferredFont(forTextStyle: .subheadline)))
+    }
+}
