@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Combine
 final class CardSegmentControl: UISegmentedControl{
-    weak var vm: CardVM!{
+    weak var vm: CardCellVM!{
         didSet{
             guard let vm else {return}
             self.addTarget(self, action: #selector(Self.controlTapped(_:)), for: .valueChanged)

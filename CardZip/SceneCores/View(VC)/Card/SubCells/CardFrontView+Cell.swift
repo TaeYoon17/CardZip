@@ -40,11 +40,12 @@ extension CardFrontView{
                 }else{
                     print("실행하지 못함")
                 }
-                
             }), for: .touchUpInside)
             return btn
         }()
-        override func configureView() { }
+        override func configureView() {
+            
+        }
         override func configureLayout() {
             contentView.addSubview(imageView)
             imageView.contentMode = .scaleAspectFit

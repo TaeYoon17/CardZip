@@ -35,6 +35,19 @@ extension UIImage{
         }
         return nil
     }
+    static func fetchBy(identifier assetIdentifier:String,ofSize: CGSize) async -> UIImage?{
+        let options = PHFetchOptions()
+        options.wantsIncrementalChangeDetails = false
+        if let asset: PHAsset = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: options).firstObject{
+            let manager = PHImageManager.default()
+            do{
+                let data = try await manager.fetchAssets(asset: asset)
+                let image = UIImage(data: data)
+                return await image?.byPreparingThumbnail(ofSize: ofSize)
+            }catch{ return nil }
+        }
+        return nil
+    }
 }
 //MARK: -- 이미지 부를때 애니메이션
 

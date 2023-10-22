@@ -7,8 +7,20 @@
 
 import SnapKit
 import UIKit
+import Combine
 final class CardFrontView: BaseView{
-    weak var cardVM: CardVM!
+    weak var cardVM: CardCellVM!{
+        didSet{
+            guard let cardVM else {return}
+            applyImages(images: cardVM.cardItem.imageID)
+//            self.imagesDict = cardVM.imagesDict
+            self.imagesDict = cardVM.imagesDict
+            cardVM.$imagesDict.sink { val in
+                self.imagesDict = val
+            }.store(in: &subscription)
+        }
+    }
+    var subscription = Set<AnyCancellable>()
     enum Section { case main}
     struct Item: Identifiable,Hashable{
         var id = UUID()
@@ -22,33 +34,37 @@ final class CardFrontView: BaseView{
             self.titleLabel.alpha = 1
         }
     }
-    var images: [String]?{
-        didSet{
-            guard let images else {return}
-            guard !images.isEmpty else {
-                isShow = false
-                self.showBtn.isHidden = true
-                self.imageLabel.isHidden = true
-                self.titleLabel.isHidden = false
-                return
-            }
-            imageLabel.text = "\(nowImageIndex + 1) / \(images.count)"
-            var newDict:[String: UIImage?] = [:]
-            Task{
-                await images.asyncForEach({ newDict[$0] = await UIImage.fetchBy(identifier: $0) })
-                self.imagesDict = newDict
-            }
-            var snapshot = NSDiffableDataSourceSnapshot<Section,Item>()
-            snapshot.appendSections([.main])
-            snapshot.appendItems(images.map{Item(imagePath: $0)}, toSection: .main)
-            dataSource.apply(snapshot,animatingDifferences: true)
+    func applyImages(images: [String]){
+        
+        if images.isEmpty {
+            isShow = false
+            self.showBtn.isHidden = true
+            self.imageLabel.isHidden = true
+            return
+        }else{
+            isShow = true
+            self.showBtn.isHidden = false
+            self.imageLabel.isHidden = false
         }
+        imageLabel.text = "\(nowImageIndex + 1) / \(images.count)"
+//        Task{
+//            var newDict:[String: UIImage?] = [:]
+//            await images.asyncForEach({
+//                newDict[$0] = await UIImage.fetchBy(identifier: $0)?.preparingThumbnail(of: .init(width: 480, height: 480))
+//            })
+//            self.imagesDict = newDict
+//        }
+        var snapshot = NSDiffableDataSourceSnapshot<Section,Item>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(images.map{Item(imagePath: $0)}, toSection: .main)
+        dataSource.apply(snapshot,animatingDifferences: true)
     }
     @MainActor private var imagesDict:[String: UIImage?]?{
         didSet{
+            guard let imagesDict, imagesDict != oldValue else {return}
             var snapshot = dataSource.snapshot()
             snapshot.reconfigureItems(snapshot.itemIdentifiers)
-            dataSource.apply(snapshot,animatingDifferences: true)
+            dataSource.apply(snapshot,animatingDifferences: false)
         }
     }
     private var isShow = true{
@@ -78,7 +94,7 @@ final class CardFrontView: BaseView{
             }
         }
     }
-    var nowImageIndex = 0{ didSet{ imageLabel.text = "\(nowImageIndex + 1) / \(images?.count ?? 0)" } }
+    var nowImageIndex = 0{ didSet{ imageLabel.text = "\(nowImageIndex + 1) / \(cardVM?.cardItem.imageID.count ?? 0)" } }
     
     private var titleLabel = {
         let label = UILabel()
@@ -135,7 +151,6 @@ final class CardFrontView: BaseView{
     }()
     private lazy var imageLabel = {
         let label = UILabel()
-        label.text = "\(nowImageIndex + 1) / \(images?.count ?? 0)"
         label.font = .systemFont(ofSize: 16)
         return label
     }()
@@ -157,8 +172,10 @@ final class CardFrontView: BaseView{
     
     override func configureLayout() {
         [collectionView,titleLabel,showBtn,speakerBtn,imageLabel].forEach{self.addSubview($0)}
+        
     }
     override func configureConstraints() {
+        super.configureConstraints()
         showBtn.snp.makeConstraints { make in
             make.trailing.top.equalToSuperview().inset(20)
         }
@@ -198,7 +215,9 @@ final class CardFrontView: BaseView{
         collectionView.backgroundColor = .lightBg
         let cellRegistration = UICollectionView.CellRegistration<ImageCell,Item> {[weak self] cell, indexPath, itemIdentifier in
             guard let imagesDict =  self?.imagesDict else {return}
-            cell.image = imagesDict[itemIdentifier.imagePath] ?? nil
+            if let image = imagesDict[itemIdentifier.imagePath]{
+                cell.image = image
+            }
         }
         dataSource = UICollectionViewDiffableDataSource<Section,Item>(collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
             let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)

@@ -15,19 +15,37 @@ protocol CardActionsDelegate:NSObject{
     func tagAction()
 }
 class CardCell: BaseCell{
-    let vm = CardVM()
+    weak var cardVM: CardVM!{
+        didSet{
+            guard let cardVM else {return}
+//            vm.cardVM = cardVM
+        }
+    }
+    var vm: CardCellVM?{
+        didSet{
+            guard let vm else {return }
+            wrapperView.vm = vm
+            segmentControl.vm = vm
+//            wrapperView.frontView.images = vm.cardItem.imageID
+            wrapperView.frontView.text = vm.cardItem.title
+            wrapperView.backView.mean = vm.cardItem.definition
+            heartBtn.isTapped = vm.cardItem.isLike
+            checkBtn.isTapped = vm.cardItem.isChecked
+        }
+    }
+    var subscription = Set<AnyCancellable>()
     var cardItem: CardItem?{
         didSet{
             guard let cardItem else {return}
-            Task{
-                wrapperView.frontView.images = cardItem.imageID
-                wrapperView.frontView.text = cardItem.title
-                wrapperView.backView.mean = cardItem.definition
-            }
-            vm.isHeart = cardItem.isLike
-            vm.isChecked = cardItem.isChecked
-            heartBtn.isTapped = cardItem.isLike
-            checkBtn.isTapped = cardItem.isChecked
+//            Task{
+//                wrapperView.frontView.images = cardItem.imageID
+//                wrapperView.frontView.text = cardItem.title
+//                wrapperView.backView.mean = cardItem.definition
+//            }
+//            vm.isHeart = cardItem.isLike
+//            vm.isChecked = cardItem.isChecked
+//            heartBtn.isTapped = cardItem.isLike
+//            checkBtn.isTapped = cardItem.isChecked
         }
     }
     private lazy var segmentControl = CardSegmentControl(items: ["Term".localized,"Description".localized ])
@@ -39,7 +57,8 @@ class CardCell: BaseCell{
         ]))
         btn.addAction(.init(handler: { [weak self] _ in
             btn.isTapped.toggle()
-            self?.vm.isChecked = btn.isTapped
+//            self?.vm.isChecked = btn.isTapped
+            self?.vm?.cardItem.isChecked = btn.isTapped
         }), for: .touchUpInside)
         return btn
     }()
@@ -51,7 +70,8 @@ class CardCell: BaseCell{
         ]))
         btn.addAction(.init(handler: { [weak self] _ in
             btn.isTapped.toggle()
-            self?.vm.isHeart = btn.isTapped
+//            self?.vm.isHeart = btn.isTapped
+            self?.vm?.cardItem.isLike = btn.isTapped
         }), for: .touchUpInside)
         return btn
     }()
@@ -96,8 +116,12 @@ class CardCell: BaseCell{
         }
     }
     override func configureView() {
-        wrapperView.vm = vm
-        segmentControl.vm = vm
-        self.segmentControl.selectedSegmentIndex = vm.isFront ? 0 : 1
+//        wrapperView.vm = vm
+//        segmentControl.vm = vm
+        self.segmentControl.selectedSegmentIndex = (vm?.isFront ?? true) ? 0 : 1
+        vm?.showDetailImage.sink {[weak self] number in
+            guard let self,let cardItem else {return}
+            cardVM.passthroughExpandImage.send((cardItem,number))
+        }.store(in: &subscription)
     }
 }

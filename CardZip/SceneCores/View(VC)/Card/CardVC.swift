@@ -9,8 +9,8 @@ import UIKit
 import SnapKit
 import Combine
 enum StudyType{ case random,basic, check}
+
 final class CardVC: BaseVC{
-    
     enum SectionType{case main}
     struct Section:Identifiable{
         let id:SectionType
@@ -18,6 +18,7 @@ final class CardVC: BaseVC{
     }
     var studyType: StudyType = .basic
     var startCardNumber:Int? = 0
+    var startItem:CardItem?
     var passthorughCompletion = PassthroughSubject<Void,Never>()
     var setItem: SetItem!{
         didSet{
@@ -34,7 +35,7 @@ final class CardVC: BaseVC{
             countLabel.configuration?.attributedTitle = AttributedString(str, attributes: .numberStyle)
         }
     }
-    
+    var vm = CardVM()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     var dataSource: UICollectionViewDiffableDataSource<Section.ID,CardItem.ID>!
     private let setRepository = CardSetRepository()
@@ -58,6 +59,12 @@ final class CardVC: BaseVC{
         case .check: cardTables = Array(setTable.cardList.where { table in table.isCheck })
         }
         let cardItems:[CardItem] = cardTables.map({ CardItem(table: $0) })
+        // 검색해도 첫 아이템을 찾도록 대응
+        self.startCardNumber = cardItems.firstIndex {
+            if let startItem = startItem?.dbKey, let dbKey = $0.dbKey{
+                return startItem == dbKey
+            }else {return false}
+        }
         cardsModel = .init(cardItems)
         sectionModel = .init([Section(id: .main, subItems: cardItems.map{$0.id})])
         initDataSource()
@@ -127,7 +134,18 @@ final class CardVC: BaseVC{
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: true)
-        
+        vm.passthroughExpandImage.sink {[weak self] cardItem, number in
+            let vc = ShowImageVC()
+            vc.cardItem = cardItem
+            vc.setName = self?.setItem.title
+            vc.startNumber = number
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }.store(in: &subscription)
+        vm.passthroughCardItem.sink {[weak self] card in
+            guard let self else {return}
+            self.cardsModel.insertModel(item: card)
+            self.changedCardIDs.insert(card.id)
+        }.store(in: &subscription)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

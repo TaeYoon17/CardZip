@@ -7,3 +7,7 @@
 
 import SnapKit
 import UIKit
+extension CardVC:UICollectionViewDataSourcePrefetching{
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    }
+}

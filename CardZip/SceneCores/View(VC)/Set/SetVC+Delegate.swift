@@ -10,14 +10,46 @@ import UIKit
 import Combine
 extension SetVC: UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectAction(startNumber: indexPath.row)
+//        switch vm.studyType{
+//        case .basic:
+//            if let item = dataSource.itemIdentifier(for: indexPath){
+//
+//            }
+//        case .check: selectAction(startNumber: indexPath.row)
+//        case .random: selectAction()
+//        }
+//        selectAction()
+        if let item = dataSource.itemIdentifier(for: indexPath){
+            selectAction(cardItem: item)
+        }else{
+            selectAction()
+        }
         collectionView.deselectItem(at: indexPath, animated: true)
     }
     func selectAction(startNumber: Int = 0){
         let vc = CardVC()
         vc.setItem = setItem
         vc.studyType = vm.studyType
-        vc.startCardNumber = startNumber
+//        vc.startCardNumber = startNumber
+        vc.passthorughCompletion.sink { [weak self]  in
+            guard let self else {return}
+                self.initModel()
+                switch self.vm.studyType{
+                case .basic,.random: self.initDataSource()
+                case .check: self.initCheckedDataSource()
+            }
+        }.store(in: &subscription)
+        
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true)
+    }
+    func selectAction(cardItem: Item){
+        let vc = CardVC()
+        vc.setItem = setItem
+        vc.studyType = vm.studyType
+        vc.startItem = cardModel?.fetchByID(cardItem.id)
+//        vc.startCardNumber = startNumber
         vc.passthorughCompletion.sink { [weak self]  in
             guard let self else {return}
                 self.initModel()

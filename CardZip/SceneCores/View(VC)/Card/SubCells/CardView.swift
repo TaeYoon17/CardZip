@@ -11,7 +11,7 @@ import Combine
 final class CardView: BaseView{
     var frontView:CardFrontView!
     var backView: CardBackView!
-    weak var vm: CardVM!{
+    weak var vm: CardCellVM!{
         didSet{
             guard let vm else {return}
             self.frontView.cardVM = vm
@@ -48,7 +48,6 @@ final class CardView: BaseView{
     }
     init(frontView: CardFrontView, backView: CardBackView) {
         self.frontView = frontView
-        
         self.backView = backView
         super.init(frame: .zero)
         

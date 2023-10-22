@@ -10,8 +10,10 @@ import SnapKit
 extension CardVC{
     var cellRegistration:UICollectionView.CellRegistration<CardCell,CardItem.ID>{ 
         UICollectionView.CellRegistration{[weak self] cell, indexPath, itemIdentifier in
-            guard let cardItem = self?.cardsModel.fetchByID(itemIdentifier) else {return}
+            guard let self,let cardItem = cardsModel.fetchByID(itemIdentifier) else {return}
             cell.cardItem = cardItem
+            cell.cardVM = vm
+            cell.vm = CardCellVM(cardVM: vm, item: cardItem)
         }
     }
 }
