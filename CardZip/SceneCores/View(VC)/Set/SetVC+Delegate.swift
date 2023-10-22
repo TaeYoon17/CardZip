@@ -34,9 +34,13 @@ extension SetVC: UICollectionViewDelegate{
         vc.passthorughCompletion.sink { [weak self]  in
             guard let self else {return}
                 self.initModel()
+            Task{
+                var snapshot: Snapshot
                 switch self.vm.studyType{
-                case .basic,.random: self.initDataSource()
-                case .check: self.initCheckedDataSource()
+                case .basic,.random: snapshot = try await self.initDataSource()
+                case .check: snapshot = try await self.initCheckedDataSource()
+                }
+                await self.dataSource.apply(snapshot,animatingDifferences: true)
             }
         }.store(in: &subscription)
         
@@ -53,9 +57,13 @@ extension SetVC: UICollectionViewDelegate{
         vc.passthorughCompletion.sink { [weak self]  in
             guard let self else {return}
                 self.initModel()
+            Task{
+                var snapshot:Snapshot
                 switch self.vm.studyType{
-                case .basic,.random: self.initDataSource()
-                case .check: self.initCheckedDataSource()
+                case .basic,.random: snapshot = try await self.initDataSource()
+                case .check: snapshot = try await self.initCheckedDataSource()
+                }
+                await self.dataSource.apply(snapshot,animatingDifferences: true)
             }
         }.store(in: &subscription)
         let nav = UINavigationController(rootViewController: vc)

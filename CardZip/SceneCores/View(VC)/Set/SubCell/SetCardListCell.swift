@@ -92,18 +92,22 @@ final class SetCardListCell: BaseCell{
         return stView
     }()
     override func configureLayout() {
-        [mainStView,bottomBtnStView].forEach{self.contentView.addSubview($0)}
+        [bottomBtnStView,mainStView].forEach{self.contentView.addSubview($0)}
     }
     override func configureConstraints() {
         mainStView.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().inset(12)
-            make.width.equalToSuperview().multipliedBy(0.8)
-            make.bottom.lessThanOrEqualTo(bottomBtnStView.snp.top)
+            make.top.leading.trailing.equalToSuperview().inset(12)
+            
+            make.bottom.lessThanOrEqualTo(bottomBtnStView.snp.top).priority(.high)
 //            make.bottom.equalToSuperview().inset(12)
         }
         bottomBtnStView.snp.makeConstraints { make in
             make.bottom.trailing.equalToSuperview().inset(8)
         }
+        descriptionLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+//        mainStView.setContentCompressionResistancePriority(.def, for: .vertical)
+        bottomBtnStView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        speakerBtn.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
     }
     override func configureView() {
         self.contentView.backgroundColor = .bgSecond

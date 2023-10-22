@@ -554,6 +554,15 @@
 			path = AddImage;
 			sourceTree = "<group>";
 		};
+		6386E0C32AE5781A0044F7DF /* Splash */ = {
+			isa = PBXGroup;
+			children = (
+				6373B2AA2AE3CBF0009A39FA /* SplashController.swift */,
+				6373B2B02AE3D0B3009A39FA /* Splash.json */,
+			);
+			path = Splash;
+			sourceTree = "<group>";
+		};
 		639352042ACE409D00F8B31B /* ViewCPTs */ = {
 			isa = PBXGroup;
 			children = (
@@ -687,6 +696,7 @@
 		63A3D43A2ACE3CF400E6B10E /* AppCores */ = {
 			isa = PBXGroup;
 			children = (
+				6386E0C32AE5781A0044F7DF /* Splash */,
 				63E50EF42AD981FF003E0800 /* ErrorPolicy */,
 				632A48522ACCE81C00413AF4 /* Assets.xcassets */,
 				632A48542ACCE81C00413AF4 /* LaunchScreen.storyboard */,
@@ -696,8 +706,6 @@
 				635C3BCA2ADFD9A300994BD8 /* App.swift */,
 				63730F6C2AD28D3100BC8F35 /* UserDefults.swift */,
 				63F4195D2AE2CF8000D450F7 /* AppColor.swift */,
-				6373B2AA2AE3CBF0009A39FA /* SplashController.swift */,
-				6373B2B02AE3D0B3009A39FA /* Splash.json */,
 			);
 			path = AppCores;
 			sourceTree = "<group>";

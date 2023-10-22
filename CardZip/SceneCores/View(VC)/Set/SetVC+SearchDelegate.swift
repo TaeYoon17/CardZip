@@ -40,21 +40,55 @@ extension SetVC: UISearchControllerDelegate,UISearchBarDelegate{
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         guard let searchController = navigationItem.searchController else {return}
         searchController.searchBar.isHidden = true
+        vm.searchText = ""
         willDismissSearchController(searchController)
-        initDataSource()
+        Task{
+            let snapshot = try await initDataSource()
+            await dataSource.apply(snapshot,animatingDifferences: true)
+        }
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard !searchText.isEmpty else {
-            initDataSource()
+            Task{
+                let snapshot = try await initDataSource()
+                await dataSource.apply(snapshot,animatingDifferences: true)
+            }
             return
         }
+        vm.searchText = searchText
+        searchAction(text: searchText)
+    }
+    @MainActor func searchAction(text:String){
         var snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>()
         guard let filterItems = sectionModel?.fetchByID(.main).sumItem.filter ({ item in
             guard let card = self.cardModel?.fetchByID(item.id) else {return false}
-            return card.title.contains(searchText) || card.definition.contains(searchText)
+            return card.title.contains(text) || card.definition.contains(text)
         }) else {return}
         snapshot.appendSections([.main])
         snapshot.appendItems(filterItems, toSection: .main)
         dataSource.apply(snapshot,animatingDifferences: true)
+    }
+//    @MainActor func searchAction(text:String) async{
+//        guard !text.isEmpty else {return }
+//        var snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>()
+//        guard let filterItems = sectionModel?.fetchByID(.main).sumItem.filter ({ item in
+//            guard let card = self.cardModel?.fetchByID(item.id) else {return false}
+//            return card.title.contains(text) || card.definition.contains(text)
+//        }) else {return}
+//        snapshot.appendSections([.main])
+//        snapshot.appendItems(filterItems, toSection: .main)
+//        await dataSource.apply(snapshot,animatingDifferences: true)
+//    }
+    @MainActor func searchAction(text:String) async throws -> Snapshot{
+        guard !text.isEmpty else { throw DataSourceError.SnapshotQueryInvalid}
+        let snapshot = dataSource.snapshot()
+        let filterItems = snapshot.itemIdentifiers(inSection: .main).filter { item in
+            guard let card = self.cardModel?.fetchByID(item.id) else {return false}
+            return card.title.contains(text) || card.definition.contains(text)
+        }
+        var newSnapshot = Snapshot()
+        newSnapshot.appendSections([.main])
+        newSnapshot.appendItems(filterItems,toSection: .main)
+        return newSnapshot
     }
 }

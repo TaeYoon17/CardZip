@@ -10,8 +10,6 @@ import UIKit
 import Combine
 final class CardCellVM{
     weak var cardVM: CardVM?
-//    @Published var isHeart: Bool = false
-//    @Published var isChecked: Bool = false
     @Published var isFront: Bool = true
     @Published var cardItem:CardItem
     var showDetailImage = PassthroughSubject<Int,Never>()
@@ -20,8 +18,7 @@ final class CardCellVM{
     init(cardVM: CardVM, item: CardItem) {
         self.cardVM = cardVM
         self.cardItem = item
-        showDetailImage.sink {[weak self] value in
-            guard let self else {return}
+        showDetailImage.sink {value in
             cardVM.passthroughExpandImage.send((item,value))
         }.store(in: &subscription)
         $cardItem.sink { item in
@@ -34,7 +31,7 @@ final class CardCellVM{
         Task{
             var newDict:[String: UIImage?] = [:]
             await images.asyncForEach({
-                newDict[$0] = await UIImage.fetchBy(identifier: $0,ofSize: .init(width: 360, height: 360))
+                newDict[$0] = await UIImage.fetchBy(identifier: $0,ofSize: .init(width: 600, height: 600))
             })
             self.imagesDict = newDict
         }

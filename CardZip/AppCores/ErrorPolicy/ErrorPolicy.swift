@@ -12,3 +12,7 @@ enum FetchError:Error{
 enum SettingError: Error{
     case FailItemable
 }
+enum DataSourceError: Error{
+    case EmptySnapshot
+    case SnapshotQueryInvalid
+}

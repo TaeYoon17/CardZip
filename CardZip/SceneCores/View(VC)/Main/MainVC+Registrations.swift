@@ -17,7 +17,7 @@ extension MainVC{
             cell.setItem = item.setItem
             if let imagePath = item.setItem?.imagePath{
                 Task{
-                    cell.image = await UIImage.fetchBy(identifier: imagePath)
+                    cell.image = await UIImage.fetchBy(identifier: imagePath,ofSize: .init(width: 600, height: 600))
                 }
             }else{
                 cell.image = nil

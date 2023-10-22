@@ -11,9 +11,11 @@ import Combine
 import RealmSwift
 class SetVM{
     @Published var studyType:StudyType = .basic
+    var searchText:String = ""
 }
 
 final class SetVC: BaseVC{
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>
     enum SectionType:Int {case main}
     struct Section: Identifiable {
         let id: SectionType
@@ -99,10 +101,14 @@ final class SetVC: BaseVC{
                         self?.setItem = item
                         self?.collectionView.reloadData()
                         self?.initModel()
-                        switch self?.vm.studyType {
-                        case .random,.basic: self?.initDataSource()
-                        case .check: self?.initCheckedDataSource()
-                        case .none: break
+                        guard let self else {return}
+                        Task{
+                            var snapshot:Snapshot
+                            switch self.vm.studyType {
+                            case .random,.basic: snapshot = try await self.initDataSource()
+                            case .check: snapshot = try await self.initCheckedDataSource()
+                            }
+                            await self.dataSource.apply(snapshot)
                         }
                     }.store(in: &subscription)
                     let nav = UINavigationController(rootViewController: vc)
@@ -163,10 +169,23 @@ final class SetVC: BaseVC{
         
         vm.$studyType.sink { [weak self] type in
             guard let self else {return}
-            switch type{
-            case .basic: initDataSource()
-            case .check: initCheckedDataSource()
-            default: break
+            Task{
+                let snapshot:Snapshot
+                switch type{
+                case .basic:
+                    snapshot = try await self.initDataSource()
+                    await self.dataSource.apply(snapshot,animatingDifferences: false)
+                case .check:
+                    snapshot = try await self.initCheckedDataSource()
+                    await self.dataSource.apply(snapshot,animatingDifferences: false)
+                default: break
+                }
+                do{
+                    let searchSnapshot = try await self.searchAction(text: self.vm.searchText)
+                    await self.dataSource.apply(searchSnapshot,animatingDifferences: true)
+                }catch{
+                    print(error)
+                }
             }
         }.store(in: &subscription)
     }
@@ -181,7 +200,6 @@ final class SetVC: BaseVC{
         self.navigationItem.searchController?.searchBar.isHidden = true
         navigationItem.preferredSearchBarPlacement = .inline
         navigationItem.hidesSearchBarWhenScrolling = false
-//        navigationItem.titleView = NavigationTitleView(frame: .zero, title: setItem?.title ?? "")
         navigationController?.navigationBar.addSubview(rightStView)
         rightStView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(4)
