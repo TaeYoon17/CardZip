@@ -94,8 +94,8 @@
 
 //MARK: -- 언어 코드
 "TTS Simplified Chinese" = "Simplified Chinese";
-"TTS English (United Kingdom)" = "English (United Kingdom)";
-"TTS English (United States)" = "English (United States)";
+"TTS English (United Kingdom)" = "English (UK)";
+"TTS English (United States)" = "English (US)";
 "TTS French (Standard)" = "French (Standard)";
 "TTS German (Standard)" = "German (Standard)";
 "TTS Japanese" = "Japanese";

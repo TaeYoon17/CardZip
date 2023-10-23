@@ -20,6 +20,7 @@ struct FolderListItem: Identifiable{
 }
 
 final class MainVC: BaseVC {
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>
     enum SectionType: Int, CaseIterable{ 
         case pinned,setList,folderList
         var title:String{
@@ -44,24 +45,26 @@ final class MainVC: BaseVC {
         var type: SectionType
     }
     lazy var collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: layout)
-    var dataSource : UICollectionViewDiffableDataSource<Section.ID,Item>!
+//    var dataSource : UICollectionViewDiffableDataSource<Section.ID,Item>!
+    var dataSource: MainDataSource!
+    let vm = MainVM()
     @DefaultsState(\.recentSet) var recentSetTableId
     @DefaultsState(\.likedSet) var likedSetTableId
     
-    var sectionStore: AnyModelStore<Section>!
-    var folderItemStore: AnyModelStore<FolderListItem>!
-    var pinnedItemStore: AnyModelStore<PinnedItem>!
+//    var sectionStore: AnyModelStore<Section>!
+//    var folderItemStore: AnyModelStore<FolderListItem>!
+//    var pinnedItemStore: AnyModelStore<PinnedItem>!
     
-    func initStores(){
-        let folderItems = (2...50).map{FolderListItem(title: "Try do this!", setNumber: $0)}
-        let pinnedItems:[PinnedItem] = [.init(type: .recent, setItem: SetItem.getByTableId(recentSetTableId)),.init(type: .heart, setItem: .getByTableId(likedSetTableId))]
-        self.folderItemStore = .init(folderItems)
-        self.pinnedItemStore = .init(pinnedItems)
-        self.sectionStore = .init([.init(id: .pinned, itemsID: pinnedItems.map{Item(id: $0.id, type: .pinned)} ),
-                                   .init(id: .setList, itemsID: []),
-//                                   .init(id: .folderList, itemsID: folderItems.map{Item(id: $0.id, type: .folderList)} )
-        ])
-    }
+//    func initStores(){
+//        let folderItems = (2...50).map{FolderListItem(title: "Try do this!", setNumber: $0)}
+//        let pinnedItems:[PinnedItem] = [.init(type: .recent, setItem: SetItem.getByTableId(recentSetTableId)),.init(type: .heart, setItem: .getByTableId(likedSetTableId))]
+//        self.folderItemStore = .init(folderItems)
+//        self.pinnedItemStore = .init(pinnedItems)
+//        self.sectionStore = .init([.init(id: .pinned, itemsID: pinnedItems.map{Item(id: $0.id, type: .pinned)} ),
+//                                   .init(id: .setList, itemsID: []),
+////                                   .init(id: .folderList, itemsID: folderItems.map{Item(id: $0.id, type: .folderList)} )
+//        ])
+//    }
     
     lazy var settingBtn = {
         let btn = NavBarButton(systemName: "gearshape")
@@ -106,8 +109,11 @@ final class MainVC: BaseVC {
         didSet{
             guard isExist != oldValue else {return}
             Task{
-                if isExist{  updateDataSource()
-                }else{ initDataSource() }
+                if isExist{
+                    self.dataSource.updateDataSource()
+                }else{
+                    self.dataSource.initDataSource()
+                }
                 self.collectionView.collectionViewLayout = layout
             }
         }
@@ -118,7 +124,7 @@ final class MainVC: BaseVC {
     }
     override func configureLayout() {
         super.configureLayout()
-        initStores()
+//        initStores()
 //        .addFolderBtn
         [collectionView,navBarView,settingBtn,
 //         navStack,
@@ -135,7 +141,6 @@ final class MainVC: BaseVC {
             }else{
                 make.bottom.equalTo(view.safeAreaLayoutGuide)
             }
-//            make.leading.equalToSuperview().inset(16)
             make.trailing.equalToSuperview().inset(16)
         }
 // MARK: -- Add Folder Btn
@@ -158,26 +163,19 @@ final class MainVC: BaseVC {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.appendView(type: .left, view: settingBtn)
 //        navigationController?.appendView(type: .right, view: navStack)
-        let pinnedItems:[PinnedItem] = sectionStore.fetchByID(.pinned).itemsID.compactMap {
-            guard var pinnedItem = pinnedItemStore.fetchByID($0.id) else {return nil}
-            switch pinnedItem.type{
-                case .heart: pinnedItem.setItem = .getByTableId(likedSetTableId)
-                case .recent: pinnedItem.setItem = SetItem.getByTableId(recentSetTableId)
-            }
-            return pinnedItem
-        }
-//        let recentItems = pinnedItems.map { item in
-//            var item = item
-//            switch item.type{
-//            case .heart: item.setItem = .getByTableId(likedSetTableId)
-//            case .recent: item.setItem = SetItem.getByTableId( recentSetTableId)
+//        let pinnedItems:[PinnedItem] = sectionStore.fetchByID(.pinned).itemsID.compactMap {
+//            guard var pinnedItem = pinnedItemStore.fetchByID($0.id) else {return nil}
+//            switch pinnedItem.type{
+//                case .heart: pinnedItem.setItem = .getByTableId(likedSetTableId)
+//                case .recent: pinnedItem.setItem = SetItem.getByTableId(recentSetTableId)
 //            }
-//            return item
+//            return pinnedItem
 //        }
-        pinnedItems.forEach({pinnedItemStore.insertModel(item: $0)})
-        var snapshot = dataSource.snapshot()
-        snapshot.reconfigureItems(pinnedItems.map{Item(id: $0.id, type: .pinned)})
-        dataSource.apply(snapshot,animatingDifferences: true)
+//        pinnedItems.forEach({pinnedItemStore.insertModel(item: $0)})
+//        var snapshot = dataSource.snapshot()
+//        snapshot.reconfigureItems(pinnedItems.map{Item(id: $0.id, type: .pinned)})
+//        dataSource.apply(snapshot,animatingDifferences: true)
+        dataSource.updatePins()
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)

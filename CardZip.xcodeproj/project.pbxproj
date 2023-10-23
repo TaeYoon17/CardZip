@@ -135,6 +135,8 @@
 		63E50EF32AD96A75003E0800 /* AddSetVC+DSM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E50EF22AD96A75003E0800 /* AddSetVC+DSM.swift */; };
 		63E50EF62AD9820A003E0800 /* ErrorPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */; };
 		63EAED4E2ADD05EA00046C44 /* EditableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EAED4D2ADD05EA00046C44 /* EditableVC.swift */; };
+		63F27D3D2AE600ED007A11A0 /* MainVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F27D3C2AE600ED007A11A0 /* MainVM.swift */; };
+		63F27D3F2AE6019E007A11A0 /* MainDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F27D3E2AE6019E007A11A0 /* MainDataSource.swift */; };
 		63F4195E2AE2CF8000D450F7 /* AppColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F4195D2AE2CF8000D450F7 /* AppColor.swift */; };
 		63F419662AE2F58100D450F7 /* SettingLanguageDS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F419652AE2F58100D450F7 /* SettingLanguageDS.swift */; };
 /* End PBXBuildFile section */
@@ -266,6 +268,8 @@
 		63E50EF22AD96A75003E0800 /* AddSetVC+DSM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddSetVC+DSM.swift"; sourceTree = "<group>"; };
 		63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPolicy.swift; sourceTree = "<group>"; };
 		63EAED4D2ADD05EA00046C44 /* EditableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableVC.swift; sourceTree = "<group>"; };
+		63F27D3C2AE600ED007A11A0 /* MainVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVM.swift; sourceTree = "<group>"; };
+		63F27D3E2AE6019E007A11A0 /* MainDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDataSource.swift; sourceTree = "<group>"; };
 		63F4195D2AE2CF8000D450F7 /* AppColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColor.swift; sourceTree = "<group>"; };
 		63F419642AE2E53A00D450F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63F419652AE2F58100D450F7 /* SettingLanguageDS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingLanguageDS.swift; sourceTree = "<group>"; };
@@ -587,6 +591,7 @@
 				639352082ACE423500F8B31B /* MainVC+Collectionable.swift */,
 				639352172ACE591A00F8B31B /* MainVC+CollectionDelegate.swift */,
 				639352192ACE593D00F8B31B /* MainVC+Registrations.swift */,
+				63F27D3E2AE6019E007A11A0 /* MainDataSource.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -635,6 +640,7 @@
 			children = (
 				63A0E35B2AE4471400E6DAAB /* CardScene */,
 				631331772AD3F56F00459515 /* AddSetVM.swift */,
+				63F27D3C2AE600ED007A11A0 /* MainVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -883,6 +889,7 @@
 				630DD8DC2AD9A09500B51662 /* ImageTransition.swift in Sources */,
 				63730F622AD2742400BC8F35 /* UIImageExtensions.swift in Sources */,
 				63A3D44A2ACE3FC500E6B10E /* BaseView.swift in Sources */,
+				63F27D3D2AE600ED007A11A0 /* MainVM.swift in Sources */,
 				636571362AD6DC9A008126C4 /* SetHeaderReusableView.swift in Sources */,
 				639352122ACE442F00F8B31B /* NavBarView.swift in Sources */,
 				63730F8A2AD29EFD00BC8F35 /* CardCellVM.swift in Sources */,
@@ -935,6 +942,7 @@
 				6357EA5D2ADC23F5005ED852 /* BackgroundConfigurations.swift in Sources */,
 				63E50EF62AD9820A003E0800 /* ErrorPolicy.swift in Sources */,
 				631E53932ADAA42B0010E11E /* CardBackView.swift in Sources */,
+				63F27D3F2AE6019E007A11A0 /* MainDataSource.swift in Sources */,
 				6365712E2AD6DAA6008126C4 /* SetListVC+Delegate.swift in Sources */,
 				635C3BD12ADFFB0500994BD8 /* NavTitleView.swift in Sources */,
 				63A3D4482ACE3F9A00E6B10E /* BaseCell.swift in Sources */,

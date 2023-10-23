@@ -11,7 +11,7 @@ import SnapKit
 extension MainVC{
     var pinnedRegistration: UICollectionView.CellRegistration<PinnedSetCell,Item>{
         UICollectionView.CellRegistration {[weak self] cell, indexPath, itemIdentifier in
-            guard let item = self?.pinnedItemStore.fetchByID(itemIdentifier.id) else { return}
+            guard let item = self?.dataSource?.pinnedItemStore.fetchByID(itemIdentifier.id) else { return}
             cell.backgroundColor = .lightBg
             cell.pinType = item.type
             cell.setItem = item.setItem
@@ -25,8 +25,9 @@ extension MainVC{
         }
     }
     var folderListItemRegistration : UICollectionView.CellRegistration<DisclosureItemCell,Item>{
-        UICollectionView.CellRegistration{ cell, indexPath, itemIdentifier in
-            let item = self.folderItemStore.fetchByID(itemIdentifier.id)
+        UICollectionView.CellRegistration{[weak self] cell, indexPath, itemIdentifier in
+            guard let self else {return}
+            let item = self.dataSource.folderItemStore.fetchByID(itemIdentifier.id)
 //            cell.titleLabel.text = item?.title
             cell.title = item?.title
             cell.setNumber = item?.setNumber ?? 0

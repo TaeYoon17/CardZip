@@ -18,7 +18,7 @@ extension MainVC: Collectionable{
         let pinnedItemRegi = pinnedRegistration
         let layoutHeaderRegi = layoutHeaderRegistration
 
-        dataSource = UICollectionViewDiffableDataSource<Section.ID,Item>(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+        dataSource = MainDataSource(vm: vm,collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             guard let sectionType = SectionType(rawValue: indexPath.section) else {return .init()}
             switch sectionType{
             case .setList:
@@ -53,25 +53,6 @@ extension MainVC: Collectionable{
             default: return nil
             }
         }
-        initDataSource()
-    }
-    @MainActor func initDataSource(){
-        var snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>()
-        snapshot.appendSections([.pinned,.setList])
-        [Section.ID.pinned,.setList].forEach{
-            if $0 == .folderList {return}
-            snapshot.appendItems(sectionStore.fetchByID($0).itemsID, toSection: $0)
-        }
-        dataSource.apply(snapshot,animatingDifferences: true)
-    }
-    @MainActor func updateDataSource(){
-        var snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>()
-//        ,.folderList
-        snapshot.appendSections([.pinned,.setList])
-        [Section.ID.pinned,.setList].forEach{
-            snapshot.appendItems(sectionStore.fetchByID($0).itemsID, toSection: $0)
-        }
-        dataSource.apply(snapshot,animatingDifferences: true)
     }
     
 }
@@ -106,7 +87,6 @@ extension MainVC{
             case .setList:
                 let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.333)))
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: .init(widthDimension: .fractionalWidth(0.9), heightDimension: .estimated(0)), subitems: [item,item,item])
-//                group.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 16)
                 section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 8
                 let sectionBackgroundDecoration = NSCollectionLayoutDecorationItem.background(elementKind: "folderListBg")

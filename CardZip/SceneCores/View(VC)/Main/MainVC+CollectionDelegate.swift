@@ -19,7 +19,8 @@ extension MainVC: UICollectionViewDelegate{
             self.navigationController?.pushViewController(vc, animated: true)
             collectionView.deselectItem(at: indexPath, animated: true)
         case .pinned:
-            let setItem = self.pinnedItemStore.fetchByID(item.id).setItem
+//            let setItem = self.pinnedItemStore.fetchByID(item.id).setItem
+            let setItem = dataSource.pinnedItemStore.fetchByID(item.id).setItem
             let vc = SetVC()
             vc.setItem = setItem
             self.navigationController?.pushViewController(vc, animated: true)
