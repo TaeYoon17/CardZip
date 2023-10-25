@@ -9,43 +9,18 @@ import UIKit
 import SnapKit
 import Combine
 enum StudyType{ case random,basic, check}
-
 final class CardVC: BaseVC{
     enum SectionType{case main}
     struct Section:Identifiable{
         let id:SectionType
         var subItems:[CardItem.ID]
     }
-    var studyType: StudyType = .basic
-    var startCardNumber:Int? = 0
-    var startItem:CardItem?
+    var vm: CardVM!
     var passthorughCompletion = PassthroughSubject<Void,Never>()
-    var setItem: SetItem!{
-        didSet{
-            guard let setItem else {return}
-            closeBtn.configuration?.attributedTitle = AttributedString(setItem.title , attributes: .init([
-                NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium),
-                NSAttributedString.Key.foregroundColor : UIColor.cardPrimary            ]))
-        }
-    }
-    var cardNumber = -1{
-        didSet{
-            guard cardNumber != oldValue else {return}
-            let str = "\(cardNumber + 1)  /  \(dataSource.snapshot().itemIdentifiers.count)"
-            countLabel.configuration?.attributedTitle = AttributedString(str, attributes: .numberStyle)
-        }
-    }
-    var vm = CardVM()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    var dataSource: UICollectionViewDiffableDataSource<Section.ID,CardItem.ID>!
-    private let setRepository = CardSetRepository()
-    private let cardRepository = CardRepository()
-    var sectionModel: AnyModelStore<Section>!
-    var cardsModel: AnyModelStore<CardItem>!
-    var changedCardIDs = Set<CardItem.ID>()
-    func initModeldataSource(){
-        guard let dbKey = setItem.dbKey,
-              let setTable = setRepository?.objectByPrimaryKey(primaryKey: dbKey) else{
+    var dataSource: DataSource!
+    func checkEmpty(){
+        guard let setTable = vm.setTables else{
             let alert = UIAlertController(title: "Not found card set".localized, message: nil, preferredStyle: .alert)
             alert.addAction(.init(title: "Back".localized, style: .cancel, handler: { [weak self] _ in
                 if let navi = self?.navigationController{ navi.popViewController(animated: true)
@@ -53,47 +28,28 @@ final class CardVC: BaseVC{
             }))
             return
         }
-        let cardTables:[CardTable]
-        switch studyType {
-        case .basic,.random: cardTables = Array(setTable.cardList)
-        case .check: cardTables = Array(setTable.cardList.where { table in table.isCheck })
-        }
-        let cardItems:[CardItem] = cardTables.map({ CardItem(table: $0) })
-        // 검색해도 첫 아이템을 찾도록 대응
-        self.startCardNumber = cardItems.firstIndex {
-            if let startItem = startItem?.dbKey, let dbKey = $0.dbKey{
-                return startItem == dbKey
-            }else {return false}
-        }
-        cardsModel = .init(cardItems)
-        sectionModel = .init([Section(id: .main, subItems: cardItems.map{$0.id})])
-        initDataSource()
     }
+    private lazy var countLabel = CountLabel
     private lazy var closeBtn = {
         let btn = NavBarButton(title: "Set Name".localized, systemName: "xmark")
         btn.configuration?.titleLineBreakMode = .byTruncatingTail
         btn.addAction(.init(handler: { [weak self] _ in
-            self?.saveRepository()
+            self?.dataSource.saveModel()
             self?.dismiss(animated: true) {
                 self?.passthorughCompletion.send()
             }
         }), for: .touchUpInside)
         return btn
     }()
-    private lazy var countLabel = CountLabel
     private lazy var nextBtn = {
-        let btn = UIButton(configuration: UIButton.Configuration.plain())
-        btn.setImage(UIImage(systemName: "chevron.compact.down", ofSize: 28, weight: .medium), for: .normal)
-        btn.tintColor = .secondary
+        let btn = MoveBtn(move: .down)
         btn.addAction(.init(handler: { [weak self] _ in
             self?.collectionView.scrollToNextItem(axis: .y)
         }), for: .touchUpInside)
         return btn
     }()
     private lazy var prevBtn = {
-        let btn = UIButton(configuration: UIButton.Configuration.plain())
-        btn.setImage(UIImage(systemName: "chevron.compact.up", ofSize: 28, weight: .medium), for: .normal)
-        btn.tintColor = .secondary
+        let btn = MoveBtn(move: .up)
         btn.addAction(.init(handler: { [weak self] _ in
             self?.collectionView.scrollToPreviousItem(axis: .y)
         }), for: .touchUpInside)
@@ -134,57 +90,34 @@ final class CardVC: BaseVC{
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: true)
+        vm.$cardNumber.sink {[weak self] cardNumber in
+            guard let self else {return}
+            let str = "\(cardNumber + 1)  /  \(dataSource.snapshot().itemIdentifiers.count)"
+            countLabel.configuration?.attributedTitle = AttributedString(str, attributes: .numberStyle)
+        }.store(in: &subscription)
+        vm.$setItem.sink {[weak self] setItem in
+            guard let self else {return}
+            closeBtn.configuration?.attributedTitle = AttributedString(setItem?.title ?? "" ,
+                                                                       attributes: .init([NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium),NSAttributedString.Key.foregroundColor : UIColor.cardPrimary]))
+        }.store(in: &subscription)
         vm.passthroughExpandImage.sink {[weak self] cardItem, number in
             let vc = ShowImageVC()
             vc.cardItem = cardItem
-            vc.setName = self?.setItem.title
+            vc.setName = self?.vm.setItem.title
             vc.startNumber = number
             self?.navigationController?.pushViewController(vc, animated: true)
         }.store(in: &subscription)
-        vm.passthroughCardItem.sink {[weak self] card in
-            guard let self else {return}
-            self.cardsModel.insertModel(item: card)
-            self.changedCardIDs.insert(card.id)
-        }.store(in: &subscription)
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.checkEmpty()
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let startCardNumber {
+        if let startCardNumber = vm.startCardNumber {
             self.collectionView.scrollToItem(index: startCardNumber, axis: .y)
-            self.startCardNumber = nil
+            vm.startCardNumber = nil
         }
-    }
-    func updateDataSource(){
-        var snapshot = NSDiffableDataSourceSnapshot<Section.ID,CardItem.ID>()
-        snapshot.appendSections([.main])
-        dataSource.apply(snapshot,animatingDifferences: true)
     }
     deinit{ print("CardVC 삭제됨!!") }
-}
-extension CardVC{
-    class CardDataSource : UICollectionViewDiffableDataSource<Section.ID,CardItem.ID>{
-        var sectionModel: AnyModelStore<Section>!
-        var cardsModel: AnyModelStore<CardItem>!
-        override init(collectionView: UICollectionView, cellProvider: @escaping UICollectionViewDiffableDataSource<CardVC.Section.ID, CardItem.ID>.CellProvider) {
-            super.init(collectionView: collectionView, cellProvider: cellProvider)
-        }
-        @MainActor func update(card: CardItem){
-            var snapshot = snapshot()
-            cardsModel.insertModel(item: card)
-            snapshot.reconfigureItems([card.id])
-            apply(snapshot,animatingDifferences: true)
-        }
-    }
-}
-extension CardVC{
-    @MainActor func saveRepository(){
-        let cardItems = changedCardIDs.compactMap { cardsModel.fetchByID($0) }
-        cardItems.forEach { item in
-            if let dbKey = item.dbKey,
-               let table:CardTable =  cardRepository?.getTableBy(tableID: dbKey){
-                cardRepository?.update(card: table, item: item)
-            }
-        }
-        App.Manager.shared.updateLikes()
-    }
 }

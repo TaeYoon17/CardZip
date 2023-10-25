@@ -40,7 +40,7 @@ extension CardVC{
         let btn = UIButton()
         btn.isUserInteractionEnabled = false
         var config = UIButton.Configuration.plain()
-        config.attributedTitle = AttributedString("\(cardNumber) / \(setItem?.cardCount ?? 0)", attributes: .numberStyle)
+//        config.attributedTitle = AttributedString("\(cardNumber) / \(setItem?.cardCount ?? 0)", attributes: .numberStyle)
         config.baseForegroundColor = .cardPrimary
         config.contentInsets = .init(top: 6, leading: 16, bottom: 6, trailing: 16)
         config.cornerStyle = .capsule

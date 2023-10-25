@@ -11,12 +11,21 @@ import Combine
 final class CardFrontView: BaseView{
     weak var cardVM: CardCellVM!{
         didSet{
-            guard let cardVM else {return}
-            applyImages(images: cardVM.cardItem.imageID)
-//            self.imagesDict = cardVM.imagesDict
-            self.imagesDict = cardVM.imagesDict
-            cardVM.$imagesDict.sink { val in
-                self.imagesDict = val
+            guard let cardVM else { return }
+            // 한번만 Stream 받기
+            cardVM.$cardItem.prefix(1).sink {[weak self] item in
+                guard let self else {return}
+                initDataSource(images: item.imageID)
+                titleLabel.text = item.title
+                titleLabel.alpha = 1
+                imageLabel.isHidden = item.imageID.count < 2
+                imageLabel.text = "\(nowImageIndex + 1) / \(item.imageID.count)"
+                // 여기서 미리 다 캐싱한다.
+                item.imageID.forEach { imagePath in
+                    Task{
+                        try await ImageService.shared.appendEmptyCache(albumID: imagePath,size: .init(width: 720, height: 720))
+                    }
+                }
             }.store(in: &subscription)
         }
     }
@@ -26,47 +35,8 @@ final class CardFrontView: BaseView{
         var id = UUID()
         var imagePath:String
     }
-    private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    private var dataSource : UICollectionViewDiffableDataSource<Section,Item>!
-    var text: String?{
-        didSet{
-            self.titleLabel.text = text
-            self.titleLabel.alpha = 1
-        }
-    }
-    func applyImages(images: [String]){
-        
-        if images.isEmpty {
-            isShow = false
-            self.showBtn.isHidden = true
-            self.imageLabel.isHidden = true
-            return
-        }else{
-            isShow = true
-            self.showBtn.isHidden = false
-            self.imageLabel.isHidden = false
-        }
-        imageLabel.text = "\(nowImageIndex + 1) / \(images.count)"
-//        Task{
-//            var newDict:[String: UIImage?] = [:]
-//            await images.asyncForEach({
-//                newDict[$0] = await UIImage.fetchBy(identifier: $0)?.preparingThumbnail(of: .init(width: 480, height: 480))
-//            })
-//            self.imagesDict = newDict
-//        }
-        var snapshot = NSDiffableDataSourceSnapshot<Section,Item>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(images.map{Item(imagePath: $0)}, toSection: .main)
-        dataSource.apply(snapshot,animatingDifferences: true)
-    }
-    @MainActor private var imagesDict:[String: UIImage?]?{
-        didSet{
-            guard let imagesDict, imagesDict != oldValue else {return}
-            var snapshot = dataSource.snapshot()
-            snapshot.reconfigureItems(snapshot.itemIdentifiers)
-            dataSource.apply(snapshot,animatingDifferences: false)
-        }
-    }
+    lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    var dataSource : UICollectionViewDiffableDataSource<Section,Item>!
     private var isShow = true{
         didSet{
             UIView.animate(withDuration: 0.2) {
@@ -95,7 +65,6 @@ final class CardFrontView: BaseView{
         }
     }
     var nowImageIndex = 0{ didSet{ imageLabel.text = "\(nowImageIndex + 1) / \(cardVM?.cardItem.imageID.count ?? 0)" } }
-    
     private var titleLabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -139,7 +108,7 @@ final class CardFrontView: BaseView{
         btn.configuration = config
         btn.addAction(.init(handler: { [weak self] _ in
             guard let self else {return}
-            TTS.shared.textToSpeech(text: self.text ?? "", language: App.Manager.shared.termLanguageCode ?? .ko)
+            TTS.shared.textToSpeech(text: cardVM?.cardItem.title ?? "", language: App.Manager.shared.termLanguageCode ?? .ko)
             UIView.animate(withDuration: 0.6) { [weak self] in
                 btn.configuration?.image = UIImage(systemName: "speaker.fill")
                 btn.configuration?.baseForegroundColor = .secondary
@@ -193,7 +162,6 @@ final class CardFrontView: BaseView{
         self.titleLabel.snp.makeConstraints { make in
             self.imageTopConstraint = make.top.equalTo(collectionView.snp.bottom).offset(16).constraint
             self.titleCenterConstraint = make.centerY.equalToSuperview().constraint
-//            make.centerX.equalToSuperview()
             make.horizontalEdges.equalToSuperview().inset(8)
         }
         speakerBtn.snp.makeConstraints { make in
@@ -207,55 +175,12 @@ final class CardFrontView: BaseView{
         self.backgroundColor = .bg
         showBtn.addAction(UIAction(handler: { [weak self] _ in
             self?.isShow.toggle()
-        }), for: .touchUpInside)   
+        }), for: .touchUpInside)
     }
-    func configureCollectionView(){
-        collectionView.layer.cornerRadius = 16.5
-        collectionView.layer.cornerCurve = .circular
-        collectionView.delegate = self
-        collectionView.isScrollEnabled = false
-        collectionView.backgroundColor = .lightBg
-        let cellRegistration = UICollectionView.CellRegistration<ImageCell,Item> {[weak self] cell, indexPath, itemIdentifier in
-            guard let imagesDict =  self?.imagesDict else {return}
-            if let image = imagesDict[itemIdentifier.imagePath]{
-                cell.image = image
-            }
-        }
-        dataSource = UICollectionViewDiffableDataSource<Section,Item>(collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
-            let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
-            cell.expandAction = {[weak self] in
-                guard let self else {return}
-                print(nowImageIndex)
-                if let cardVM{
-                    cardVM.showDetailImage.send(nowImageIndex)
-                }else{
-                    print("cardVM이 없다!!")
-                }
-            }
-            return cell
-        })
-    }
+    
 }
 
 
 
-extension CardFrontView: UICollectionViewDelegate{
-    var layout: UICollectionViewLayout{
-        let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: size)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitems: [item])
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .groupPaging
-        section.visibleItemsInvalidationHandler = { [weak self] ( visibleItems, offset, env) in
-            guard let indexPath = visibleItems.last?.indexPath else {return}
-            guard self?.nowImageIndex != indexPath.row else {return}
-            self?.nowImageIndex = indexPath.row
-        }
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        return layout
-    }
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        print(#function)
-    }
-}
+
 

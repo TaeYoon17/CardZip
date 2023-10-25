@@ -27,10 +27,13 @@ extension SetVC: UICollectionViewDelegate{
         collectionView.deselectItem(at: indexPath, animated: true)
     }
     func selectAction(startNumber: Int = 0){
+        print(#function)
         let vc = CardVC()
-        vc.setItem = setItem
-        vc.studyType = vm.studyType
-//        vc.startCardNumber = startNumber
+        let cardVM = CardVM()
+        cardVM.setItem = setItem
+        cardVM.studyType = vm.studyType
+        cardVM.startCardNumber = startNumber
+        vc.vm = cardVM
         vc.passthorughCompletion.sink { [weak self]  in
             guard let self else {return}
                 self.initModel()
@@ -49,11 +52,13 @@ extension SetVC: UICollectionViewDelegate{
         self.present(nav, animated: true)
     }
     func selectAction(cardItem: Item){
+        print(#function)
         let vc = CardVC()
-        vc.setItem = setItem
-        vc.studyType = vm.studyType
-        vc.startItem = cardModel?.fetchByID(cardItem.id)
-//        vc.startCardNumber = startNumber
+        let cardVM = CardVM()
+        vc.vm = cardVM
+        cardVM.setItem = setItem
+        cardVM.studyType = vm.studyType
+        cardVM.startItem = cardModel?.fetchByID(cardItem.id)
         vc.passthorughCompletion.sink { [weak self]  in
             guard let self else {return}
                 self.initModel()

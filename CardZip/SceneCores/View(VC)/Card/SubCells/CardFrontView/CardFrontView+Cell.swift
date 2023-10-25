@@ -10,7 +10,7 @@ import SnapKit
 extension CardFrontView{
     final class ImageCell: BaseCell{
         var expandAction: (()->Void)?
-        var image: UIImage?{
+        @MainActor var image: UIImage?{
             didSet{
                 UIView.imageAppear(view: imageView) {[weak self] in
                     guard let self else {return}

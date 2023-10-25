@@ -15,14 +15,11 @@ extension CardVC{
         collectionView.isPagingEnabled = true
         collectionView.showsVerticalScrollIndicator = false
         collectionView.bounces = false
-        
         let cellRegi = cellRegistration
-        dataSource = UICollectionViewDiffableDataSource<Section.ID,CardItem.ID>(collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
-            guard let self else {return .init()}
+        dataSource = DataSource(vm:vm,collectionView: collectionView, cellProvider: {collectionView, indexPath, itemIdentifier in
             let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegi, for: indexPath, item: itemIdentifier)
             return cell
         })
-        initModeldataSource()
     }
 }
 
@@ -34,18 +31,10 @@ extension CardVC:Collectionable{
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
-
         // 하나의 뷰만 보여주기 때문에 가능
-        
-//        section.visibleItemsInvalidationHandler = { [weak self] (items, offset, env) -> Void in
-//            guard let self = self else { return }
-//            let page = round((offset.y + 1) / self.view.bounds.height)
-//            self.cardNumber = Int(page)
-//        }
         section.visibleItemsInvalidationHandler = { [weak self] ( visibleItems, offset, env) in
             guard let indexPath = visibleItems.last?.indexPath else {return}
-//            guard self?.nowImageIndex != indexPath.row else {return}
-            self?.cardNumber = indexPath.row
+            self?.vm.cardNumber = indexPath.row
         }
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout

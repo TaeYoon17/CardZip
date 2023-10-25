@@ -8,46 +8,18 @@
 import SnapKit
 import UIKit
 import Combine
-protocol CardActionsDelegate:NSObject{
-    func checkAction(isCheck: Bool)
-    func heartAction(isHeart: Bool)
-    func speakerAction()
-    func tagAction()
-}
-class CardCell: BaseCell{
-    weak var cardVM: CardVM!{
-        didSet{
-            guard let cardVM else {return}
-//            vm.cardVM = cardVM
-        }
-    }
+final class CardCell: BaseCell{
     var vm: CardCellVM?{
         didSet{
             guard let vm else {return }
             wrapperView.vm = vm
             segmentControl.vm = vm
-//            wrapperView.frontView.images = vm.cardItem.imageID
-            wrapperView.frontView.text = vm.cardItem.title
             wrapperView.backView.mean = vm.cardItem.definition
             heartBtn.isTapped = vm.cardItem.isLike
             checkBtn.isTapped = vm.cardItem.isChecked
         }
     }
     var subscription = Set<AnyCancellable>()
-    var cardItem: CardItem?{
-        didSet{
-            guard let cardItem else {return}
-//            Task{
-//                wrapperView.frontView.images = cardItem.imageID
-//                wrapperView.frontView.text = cardItem.title
-//                wrapperView.backView.mean = cardItem.definition
-//            }
-//            vm.isHeart = cardItem.isLike
-//            vm.isChecked = cardItem.isChecked
-//            heartBtn.isTapped = cardItem.isLike
-//            checkBtn.isTapped = cardItem.isChecked
-        }
-    }
     private lazy var segmentControl = CardSegmentControl(items: ["Term".localized,"Description".localized ])
     private lazy var wrapperView = CardView(frontView: CardFrontView(), backView: CardBackView())
     lazy var checkBtn = {
@@ -57,28 +29,22 @@ class CardCell: BaseCell{
         ]))
         btn.addAction(.init(handler: { [weak self] _ in
             btn.isTapped.toggle()
-//            self?.vm.isChecked = btn.isTapped
             self?.vm?.cardItem.isChecked = btn.isTapped
         }), for: .touchUpInside)
         return btn
     }()
     lazy var heartBtn = {
-//        let btn = IconBtn(systemName: "heart")
         let btn = IconBtn(systemName: "star")
         btn.configuration?.attributedTitle = .init("Pin Memorize Intensively".localized, attributes: .init([
             .font : UIFont.systemFont(ofSize: 12, weight: .regular),
         ]))
         btn.addAction(.init(handler: { [weak self] _ in
             btn.isTapped.toggle()
-//            self?.vm.isHeart = btn.isTapped
             self?.vm?.cardItem.isLike = btn.isTapped
         }), for: .touchUpInside)
         return btn
     }()
-    let speakerBtn = {
-        let btn = IconBtn(systemName: "speaker")
-        return btn
-    }()
+    let speakerBtn = IconBtn(systemName: "speaker")
     let tagBtn = IconBtn(systemName: "tag")
     lazy var stView = {
         //MARK: -- 나중에 추가할 기능
@@ -116,12 +82,6 @@ class CardCell: BaseCell{
         }
     }
     override func configureView() {
-//        wrapperView.vm = vm
-//        segmentControl.vm = vm
         self.segmentControl.selectedSegmentIndex = (vm?.isFront ?? true) ? 0 : 1
-        vm?.showDetailImage.sink {[weak self] number in
-            guard let self,let cardItem else {return}
-            cardVM.passthroughExpandImage.send((cardItem,number))
-        }.store(in: &subscription)
     }
 }

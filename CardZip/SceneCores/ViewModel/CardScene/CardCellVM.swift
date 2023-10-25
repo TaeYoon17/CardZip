@@ -9,32 +9,23 @@ import Foundation
 import UIKit
 import Combine
 final class CardCellVM{
-    weak var cardVM: CardVM?
+    private weak var cardVM: CardVM?
     @Published var isFront: Bool = true
     @Published var cardItem:CardItem
     var showDetailImage = PassthroughSubject<Int,Never>()
     var subscription = Set<AnyCancellable>()
-    @Published var imagesDict:[String: UIImage?] = [:]
-    init(cardVM: CardVM, item: CardItem) {
+    init(cardVM: CardVM, cardItem: CardItem) {
         self.cardVM = cardVM
-        self.cardItem = item
+        self.cardItem = cardItem
         showDetailImage.sink {value in
-            cardVM.passthroughExpandImage.send((item,value))
+            cardVM.passthroughExpandImage.send((cardItem,value))
         }.store(in: &subscription)
-        $cardItem.sink { item in
-            cardVM.passthroughCardItem.send(item)
+        $cardItem.sink {item in
+            cardVM.passthroughUpdateCard.send(item)
         }.store(in: &subscription)
-        storeImages(images: item.imageID)
-        
-    }
-    func storeImages(images: [String]){
-        Task{
-            var newDict:[String: UIImage?] = [:]
-            await images.asyncForEach({
-                newDict[$0] = await UIImage.fetchBy(identifier: $0,ofSize: .init(width: 720, height: 720))
-            })
-            self.imagesDict = newDict
-        }
+        showDetailImage.sink { number in
+            cardVM.passthroughExpandImage.send((cardItem,number))
+        }.store(in: &subscription)
     }
     deinit{ print("CardCellVM이 삭제됨!!") }
 }

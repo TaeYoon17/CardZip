@@ -50,7 +50,6 @@ final class CardView: BaseView{
         self.frontView = frontView
         self.backView = backView
         super.init(frame: .zero)
-        
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

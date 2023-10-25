@@ -11,7 +11,10 @@ final class ImageService{
     // 키 이름: 앨범ID_width_height
     private let albumCache = NSCache<NSString, UIImage>()
     private init(){}
-    
+    func getKeyname(albumID: String,size:CGSize? = nil)-> String{
+        guard let size else {return albumID}
+        return "\(albumID)_\(size.width)_\(size.height)"
+    }
     // 앨범에서 이미지 ID 리스트 fetch 병렬처리,
     func load(albumImageIds ids: [String],size:CGSize? = nil) async throws -> [String: UIImage] {
         // 병렬로 처리되는 이미지들 중 가장 늦게 완료된 것을 기다린다
@@ -52,28 +55,37 @@ final class ImageService{
             throw FetchError.fetch
         }
     }
+    func appendEmptyCache(albumID:String,size: CGSize? = nil) async throws{
+        if nil == albumCache.object(forKey: albumID as NSString){
+            try await appendCache(albumID: albumID)
+        }
+    }
     func fetchByCache(albumID: String,size: CGSize? = nil) async throws -> UIImage?{
         let keyStr:String
+        let image: UIImage?
         if let size{
             keyStr = "\(albumID)_\(size.width)_\(size.height)"
+            if let sizeImage = albumCache.object(forKey: keyStr as NSString){
+                image = sizeImage
+            }else{
+                if let generalImage = albumCache.object(forKey: albumID as NSString){
+                   image = await generalImage.byPreparingThumbnail(ofSize: size)
+               }else{
+                   image = await UIImage.fetchBy(identifier: albumID, ofSize: size)
+               }
+            }
         }else{
             keyStr = albumID
-        }
-        if let image = albumCache.object(forKey: keyStr as NSString){ return image
-        }else{
-            Task.detached {
-                do{
-                    try await self.appendCache(albumID: albumID,size: size)
-                }catch{
-                    print(error)
-                }
-            }
-            if let size{
-                return await UIImage.fetchBy(identifier: albumID,ofSize: size)
+            if let generalImage = albumCache.object(forKey: albumID as NSString){
+                image = generalImage
             }else{
-                return await UIImage.fetchBy(identifier: albumID)
+                image = await UIImage.fetchBy(identifier: albumID)
             }
         }
+        Task.detached {
+            try await self.appendEmptyCache(albumID:keyStr,size:size)
+        }
+        return image
     }
     
 }
