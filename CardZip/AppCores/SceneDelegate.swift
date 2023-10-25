@@ -23,12 +23,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        if #available(iOS 13.0, *) {
-            // ✅ iOS 13 부터는 다크모드로만 제한.
-            window?.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
-        } else {
-        // Fallback on earlier versions
-        }
+//        if #available(iOS 13.0, *) {
+//            // ✅ iOS 13 부터는 다크모드로만 제한.
+//            window?.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
+//        } else {
+//        // Fallback on earlier versions
+//        }
 //MARK: -- 앱을 깔고 처음 시작 할 때 코드
         if liked == nil{
             let card = CardSetTable(title: "Pin Memorize Intensively".localized, description: "")

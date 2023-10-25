@@ -9,5 +9,5 @@ import Foundation
 import Combine
 
 final class MainVM{
-    
+    @Published var isExist : Bool = false
 }

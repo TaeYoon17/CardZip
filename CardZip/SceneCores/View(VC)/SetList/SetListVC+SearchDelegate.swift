@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension SetListVC: UISearchBarDelegate{
+extension SetListVC: UISearchBarDelegate,UISearchControllerDelegate{
     func willPresentSearchController(_ searchController: UISearchController) {
         UIView.animate(withDuration: 0.2) { self.navBackBtn.alpha = 0 }
     }
@@ -15,31 +15,13 @@ extension SetListVC: UISearchBarDelegate{
         UIView.animate(withDuration: 0.2) { self.navBackBtn.alpha = 1 }
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        guard let sectionItem = sectionModel.fetchByID(.main) else {return}
+        self.vm.searchText = searchText
         guard !searchText.isEmpty else{
             searchBarCancelButtonClicked(searchBar)
             return
         }
-        let setItemsID = sectionItem.subItems.filter { id in
-            guard let setItem = setModel.fetchByID(id) else {return false}
-            return setItem.title.contains(searchText)
-        }
-        var snapshot = NSDiffableDataSourceSnapshot<Section.ID,SetItem.ID>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(setItemsID)
-        dataSource.apply(snapshot,animatingDifferences:  true)
     }
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-
-    }
-    
-}
-extension SetListVC: UISearchControllerDelegate{
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        guard let sectionItem = sectionModel.fetchByID(.main) else {return}
-        var snapshot = NSDiffableDataSourceSnapshot<Section.ID,SetItem.ID>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(sectionItem.subItems)
-        dataSource.apply(snapshot,animatingDifferences:  true)
+        dataSource.initItem()
     }
 }

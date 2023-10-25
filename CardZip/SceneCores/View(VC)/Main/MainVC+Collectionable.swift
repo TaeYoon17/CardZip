@@ -72,7 +72,7 @@ extension MainVC{
                 let sectionBackgroundDecoration = NSCollectionLayoutDecorationItem.background(elementKind: "folderListBg")
                 section.decorationItems = [sectionBackgroundDecoration]
                 section.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(60)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)]
-                section.contentInsets = .init(top: 0, leading: 32, bottom: self.isExist ? 20 : 0, trailing: 32)
+                section.contentInsets = .init(top: 0, leading: 32, bottom: self.vm.isExist ? 20 : 0, trailing: 32)
             case .pinned:
                 let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(132)), subitems: [item] )

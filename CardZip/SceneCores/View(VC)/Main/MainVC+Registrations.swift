@@ -43,7 +43,7 @@ extension MainVC{
             switch sectionType{
             case .folderList:
                 supplementaryView.tapped = {[weak self] val in
-                    self?.isExist = val
+                    self?.vm.isExist = val
                 }
             default: break
             }

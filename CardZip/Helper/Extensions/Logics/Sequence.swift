@@ -22,4 +22,15 @@ extension Sequence {
         return values
     }
 }
-    
+public extension Array where Element : Hashable{
+    mutating func appendWithSubtract(contentsOf : [Element]){
+        let newSet = Set(contentsOf)
+        let subSet = newSet.subtracting(self)
+        self.append(contentsOf: subSet)
+    }
+    func appendingWithSubtract(contentsOf : [Element]) -> [Element]{
+        let newSet = Set(contentsOf)
+        let subSet = newSet.subtracting(self)
+        return (self + subSet)
+    }
+}

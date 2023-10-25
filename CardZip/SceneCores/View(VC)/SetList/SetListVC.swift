@@ -12,64 +12,14 @@ import RealmSwift
 import Combine
 final class SetListVC: BaseVC{
     enum SectionType:Int{ case main }
-    lazy var repository = CardSetRepository()
+//    lazy var repository = CardSetRepository()
     struct Section:Identifiable{
         let id: SectionType
         var subItems:[SetItem.ID]
     }
     lazy var collectionView = UITableView(frame: .zero, style: .insetGrouped)
-    var dataSource: DataSource!
-    var sectionModel : AnyModelStore<Section>!
-    var setModel: AnyModelStore<SetItem>!
-    @DefaultsState(\.likedSet) var likeKey
-    @DefaultsState(\.recentSet) var recentDbKey
-    @MainActor var imageDict:[String: UIImage] = [:]{
-        didSet{
-            var snapshot = dataSource.snapshot()
-            snapshot.reloadItems(snapshot.itemIdentifiers)
-            dataSource.apply(snapshot,animatingDifferences: true)
-            
-            self.activitiIndicator.stopAnimating()
-            self.view.isUserInteractionEnabled = true
-        }
-    }
-//    var subscription = Set<AnyCancellable>()
-    func initModelSnapshot(){
-        // 이걸 고치고 싶다!!
-        self.view.isUserInteractionEnabled = false
-        self.activitiIndicator.startAnimating()
-        guard let tasks = repository?.getTasks else{
-            let alert = UIAlertController(title: "Empty Set List".localized, message: nil, preferredStyle: .alert)
-            alert.addAction(.init(title: "Back".localized, style: .cancel,handler: { [weak self] _ in
-                self?.navigationController?.popViewController(animated: true)
-            }))
-            return
-        }
-        var imgPathes: [String] = []
-        let items:[SetItem] = Array(tasks).compactMap {
-            if $0._id == self.likeKey { return nil}
-            if let imagePath = $0.imagePath{ imgPathes.append(imagePath) }
-            return SetItem(title: $0.title, setDescription: $0.setDescription,
-                    imagePath: $0.imagePath, dbKey: $0._id, cardList: [],cardCount: $0.cardList.count)
-        }
-        setModel = .init(items)
-        let itemIDs = items.map{$0.id}
-        sectionModel = .init([Section(id: .main, subItems: itemIDs)])
-        var newDict:[String:UIImage] = [:]
-        Task{
-            for imgPath in imgPathes{
-                newDict[imgPath] = await .fetchBy(identifier: imgPath,ofSize: .init(width: 360, height: 360))?
-            }
-            self.imageDict = newDict
-        }
-            dataSource.apply({
-                var snapshot = NSDiffableDataSourceSnapshot<Section.ID,SetItem.ID>()
-                snapshot.appendSections([.main])
-                snapshot.appendItems(itemIDs, toSection: .main)
-                return snapshot
-            }(),animatingDifferences: true)
-        
-    }
+    var dataSource: SetListDataSource!
+    let vm = SetListVM()
     lazy var navBackBtn = {
         let btn = NavBarButton(systemName:  "chevron.left")
         btn.addAction(.init(handler: { [weak self] _ in
@@ -77,7 +27,6 @@ final class SetListVC: BaseVC{
         }), for: .touchUpInside)
         return btn
     }()
-    
     override func configureView() {
         super.configureView()
         configureCollectionView()
@@ -104,6 +53,17 @@ final class SetListVC: BaseVC{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        vm.$isLoading
+            .receive(on: RunLoop.main)
+            .sink {[weak self] isLoading in
+            guard let self else {return}
+            view.isUserInteractionEnabled = !isLoading
+            if isLoading{
+                activitiIndicator.startAnimating()
+            }else{
+                activitiIndicator.stopAnimating()
+            }
+        }.store(in: &subscription)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -115,26 +75,5 @@ final class SetListVC: BaseVC{
         navigationController?.navigationBar.prefersLargeTitles = false
         navBackBtn.removeFromSuperview()
     }
-    deinit{
-        print("SetListVC 삭제됨!")
-    }
-}
-extension SetListVC{
-    final class DataSource: UITableViewDiffableDataSource<Section.ID,SetItem.ID> {
-        var passthroughDeletItem = PassthroughSubject<SetItem.ID,Never>()
-        override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool { true }
-
-        override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool { true }
-
-        override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-            if editingStyle == .delete {
-                if let identifierToDelete = itemIdentifier(for: indexPath) {
-                    var snapshot = self.snapshot()
-                    snapshot.deleteItems([identifierToDelete])
-                    passthroughDeletItem.send(identifierToDelete)
-                    apply(snapshot)
-                }
-            }
-        }
-    }
+    deinit{ print("SetListVC 삭제됨!") }
 }

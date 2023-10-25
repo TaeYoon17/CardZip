@@ -7,51 +7,48 @@
 
 import UIKit
 import SnapKit
-extension SetListVC{
+extension SetListVC:UITableViewDataSourcePrefetching{
+
     func configureCollectionView() {
 //        let setItemRegi = setItemRegistration
         collectionView.backgroundColor = .bg
         collectionView.delegate = self
+        collectionView.prefetchDataSource = self
         collectionView.estimatedRowHeight = 80
-        collectionView.register(UITableViewCell.self, forCellReuseIdentifier: "SetListCell")
-        dataSource = DataSource(tableView: collectionView, cellProvider: {[weak self] tableView, indexPath, itemIdentifier in
-//            collectionView.dequeueReusableCell(withIdentifier: "SetListCell", for: indexPath)
-            guard let self,let item = self.setModel.fetchByID(itemIdentifier) else { return .init()}
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SetListCell", for: indexPath)
-            var content = cell.defaultContentConfiguration()
-            content.text = item.title
-            content.textProperties.numberOfLines = 1
-            content.textProperties.font = .boldSystemFont(ofSize: 17)
-            content.secondaryText = item.setDescription
-            content.imageProperties.cornerRadius = 8
-            cell.accessoryType = .disclosureIndicator
-            cell.contentMode = .scaleAspectFit
-            content.imageProperties.tintColor = .cardPrimary
-            content.imageProperties.preferredSymbolConfiguration = .init(textStyle: .title2)
-            var backConfig = cell.defaultBackgroundConfiguration()
+        collectionView.register(SetListCell.self, forCellReuseIdentifier: "SetListCell")
+        dataSource = SetListDataSource(vm: vm,tableView: collectionView, cellProvider: {[weak self] tableView, indexPath, itemIdentifier in
+            guard let self,let item = dataSource.setModel.fetchByID(itemIdentifier) else { return .init()}
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "SetListCell", for: indexPath) as? SetListCell else {return .init()}
+//            let image: UIImage
+//            if let imagePath = item.imagePath,let thumbImage = self.dataSource.imageDict[imagePath]{
+//                image = thumbImage
+//            }else{
+//                image = UIImage(systemName: "questionmark.circle", ofSize: 32, weight: .medium)!
+//            }
+            cell.item = item
             Task{
-                let image: UIImage
-                if let imagePath = item.imagePath,let thumbImage = self.imageDict[imagePath]{
-                    image = thumbImage
-                }else{
-//                    UIImage(systemName: "questionmark.circle")!
+                let image: UIImage?
+                if let path = item.imagePath{
+                    image = try await ImageService.shared.fetchByCache(albumID: path,size: .init(width: 360, height: 360))
+                }else {
                     image = UIImage(systemName: "questionmark.circle", ofSize: 32, weight: .medium)!
                 }
-                content.image = image
-                content.imageProperties.tintColor = .cardPrimary
-                backConfig.customView = BackView(image: image)
-                cell.contentConfiguration = content
-                cell.backgroundConfiguration = backConfig
+                cell.image = image
             }
             return cell
         })
-        dataSource.passthroughDeletItem.sink {[weak self] id in // set 아이템 삭제하는 publisher
-            self?.deleteSetItem(id)
-        }.store(in: &subscription)
-        initModelSnapshot()
+    }
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach { indexPath in
+            if let itemID = dataSource.itemIdentifier(for: indexPath),
+               let item = dataSource.setModel.fetchByID(itemID),
+               let imagePath = item.imagePath{
+                print(#function)
+                Task{
+                    
+                    try await ImageService.shared.appendCache(albumID:imagePath, size:.init(width: 360, height: 360))
+                }
+            }
+        }
     }
 }
-//MARK: -- Legacy with CollectionView
-//            cell.accessories = [.label(text: "\(item.cardCount)",options: .init(isHidden: false, reservedLayoutWidth: .actual, tintColor:
-//                                                                                    item.cardCount >= 500 ? .systemRed : item.cardCount >= 350 ? .systemYellow : .secondaryLabel ,
-//                                                                                font: .preferredFont(forTextStyle: .footnote), adjustsFontForContentSizeCategory: false)),.disclosureIndicator()]

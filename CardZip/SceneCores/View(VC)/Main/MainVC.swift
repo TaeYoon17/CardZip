@@ -45,26 +45,8 @@ final class MainVC: BaseVC {
         var type: SectionType
     }
     lazy var collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: layout)
-//    var dataSource : UICollectionViewDiffableDataSource<Section.ID,Item>!
     var dataSource: MainDataSource!
     let vm = MainVM()
-    @DefaultsState(\.recentSet) var recentSetTableId
-    @DefaultsState(\.likedSet) var likedSetTableId
-    
-//    var sectionStore: AnyModelStore<Section>!
-//    var folderItemStore: AnyModelStore<FolderListItem>!
-//    var pinnedItemStore: AnyModelStore<PinnedItem>!
-    
-//    func initStores(){
-//        let folderItems = (2...50).map{FolderListItem(title: "Try do this!", setNumber: $0)}
-//        let pinnedItems:[PinnedItem] = [.init(type: .recent, setItem: SetItem.getByTableId(recentSetTableId)),.init(type: .heart, setItem: .getByTableId(likedSetTableId))]
-//        self.folderItemStore = .init(folderItems)
-//        self.pinnedItemStore = .init(pinnedItems)
-//        self.sectionStore = .init([.init(id: .pinned, itemsID: pinnedItems.map{Item(id: $0.id, type: .pinned)} ),
-//                                   .init(id: .setList, itemsID: []),
-////                                   .init(id: .folderList, itemsID: folderItems.map{Item(id: $0.id, type: .folderList)} )
-//        ])
-//    }
     
     lazy var settingBtn = {
         let btn = NavBarButton(systemName: "gearshape")
@@ -94,46 +76,27 @@ final class MainVC: BaseVC {
     }()
     let searchBtn = NavBarButton(systemName: "magnifyingglass")
     let moreBtn = NavBarButton(systemName: "ellipsis")
-    let navBarView = NavBarView()
     
-    var isNavigationShow: Bool = false{
-        didSet{
-            guard isNavigationShow != oldValue else {return}
-            UIView.animate(withDuration: 0.2) {[weak self] in
-                guard let self else {return}
-                self.navBarView.alpha = self.isNavigationShow ? 1 : 0
-            }
-        }
-    }
-    var isExist = false{
-        didSet{
-            guard isExist != oldValue else {return}
-            Task{
-                if isExist{
-                    self.dataSource.updateDataSource()
-                }else{
-                    self.dataSource.initDataSource()
-                }
-                self.collectionView.collectionViewLayout = layout
-            }
-        }
-    }
- 
     override func viewDidLoad() {
         super.viewDidLoad()
+        vm.$isExist.sink {[weak self] val in
+            guard let self else {return}
+            Task{
+                self.collectionView.collectionViewLayout = self.layout
+            }
+        }.store(in: &subscription)
     }
     override func configureLayout() {
         super.configureLayout()
 //        initStores()
 //        .addFolderBtn
-        [collectionView,navBarView,settingBtn,
+        [collectionView,settingBtn,
 //         navStack,
          addCardSetBtn].forEach({view.addSubview($0)})
     }
     override func configureConstraints() {
         super.configureConstraints()
-        collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        collectionView.snp.makeConstraints { $0.edges.equalToSuperview()
         }
         addCardSetBtn.snp.makeConstraints { make in
             if App.Manager.shared.hasNotch(){
@@ -163,18 +126,10 @@ final class MainVC: BaseVC {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.appendView(type: .left, view: settingBtn)
 //        navigationController?.appendView(type: .right, view: navStack)
-//        let pinnedItems:[PinnedItem] = sectionStore.fetchByID(.pinned).itemsID.compactMap {
-//            guard var pinnedItem = pinnedItemStore.fetchByID($0.id) else {return nil}
-//            switch pinnedItem.type{
-//                case .heart: pinnedItem.setItem = .getByTableId(likedSetTableId)
-//                case .recent: pinnedItem.setItem = SetItem.getByTableId(recentSetTableId)
-//            }
-//            return pinnedItem
-//        }
-//        pinnedItems.forEach({pinnedItemStore.insertModel(item: $0)})
-//        var snapshot = dataSource.snapshot()
-//        snapshot.reconfigureItems(pinnedItems.map{Item(id: $0.id, type: .pinned)})
-//        dataSource.apply(snapshot,animatingDifferences: true)
+        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         dataSource.updatePins()
     }
     override func viewWillDisappear(_ animated: Bool) {

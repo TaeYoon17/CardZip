@@ -71,7 +71,6 @@
 		635C3BD92AE035C800994BD8 /* CardVC+DSM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635C3BD82AE035C800994BD8 /* CardVC+DSM.swift */; };
 		636571282AD6D68A008126C4 /* SetListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636571272AD6D68A008126C4 /* SetListVC.swift */; };
 		6365712A2AD6D6BB008126C4 /* SetListVC+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636571292AD6D6BB008126C4 /* SetListVC+Collectionable.swift */; };
-		6365712C2AD6D6E6008126C4 /* SetListVC+CellRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6365712B2AD6D6E6008126C4 /* SetListVC+CellRegistration.swift */; };
 		6365712E2AD6DAA6008126C4 /* SetListVC+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6365712D2AD6DAA6008126C4 /* SetListVC+Delegate.swift */; };
 		636571312AD6DB37008126C4 /* SetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636571302AD6DB37008126C4 /* SetVC.swift */; };
 		636571342AD6DC69008126C4 /* SetCardListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636571332AD6DC69008126C4 /* SetCardListCell.swift */; };
@@ -117,8 +116,8 @@
 		639352142ACE448D00F8B31B /* Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639352132ACE448D00F8B31B /* Collectionable.swift */; };
 		639352182ACE591A00F8B31B /* MainVC+CollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639352172ACE591A00F8B31B /* MainVC+CollectionDelegate.swift */; };
 		6393521A2ACE593D00F8B31B /* MainVC+Registrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639352192ACE593D00F8B31B /* MainVC+Registrations.swift */; };
-		6395AAD12ADAB88300BDCF3B /* SetListVC+DSM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6395AAD02ADAB88300BDCF3B /* SetListVC+DSM.swift */; };
 		639FBF5F2AD5A186004EEE65 /* AddImageVC+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639FBF5E2AD5A186004EEE65 /* AddImageVC+Registration.swift */; };
+		63A0CFBB2AE761140060B5F9 /* SetListVC+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFBA2AE761140060B5F9 /* SetListVC+Cell.swift */; };
 		63A0E35D2AE4471D00E6DAAB /* CardVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0E35C2AE4471D00E6DAAB /* CardVM.swift */; };
 		63A3D4312ACE3C6B00E6B10E /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 63A3D4302ACE3C6B00E6B10E /* Realm */; };
 		63A3D4332ACE3C6B00E6B10E /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63A3D4322ACE3C6B00E6B10E /* RealmSwift */; };
@@ -132,6 +131,11 @@
 		63A3D44A2ACE3FC500E6B10E /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A3D4492ACE3FC500E6B10E /* BaseView.swift */; };
 		63A3D44C2ACE3FE300E6B10E /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A3D44B2ACE3FE300E6B10E /* BaseVC.swift */; };
 		63ABC0C02ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ABC0BF2ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift */; };
+		63ADFE982AE6478B00C03B5E /* SetListVM+BackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFE972AE6478B00C03B5E /* SetListVM+BackView.swift */; };
+		63ADFE9A2AE6483400C03B5E /* SetListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFE992AE6483400C03B5E /* SetListVM.swift */; };
+		63ADFE9C2AE6485900C03B5E /* SetListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFE9B2AE6485900C03B5E /* SetListDataSource.swift */; };
+		63ADFE9E2AE685BC00C03B5E /* PublisherExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFE9D2AE685BC00C03B5E /* PublisherExtension.swift */; };
+		63ADFEA12AE6A55C00C03B5E /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFEA02AE6A55C00C03B5E /* ImageService.swift */; };
 		63E50EF32AD96A75003E0800 /* AddSetVC+DSM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E50EF22AD96A75003E0800 /* AddSetVC+DSM.swift */; };
 		63E50EF62AD9820A003E0800 /* ErrorPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */; };
 		63EAED4E2ADD05EA00046C44 /* EditableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EAED4D2ADD05EA00046C44 /* EditableVC.swift */; };
@@ -203,7 +207,6 @@
 		635C3BD82AE035C800994BD8 /* CardVC+DSM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardVC+DSM.swift"; sourceTree = "<group>"; };
 		636571272AD6D68A008126C4 /* SetListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetListVC.swift; sourceTree = "<group>"; };
 		636571292AD6D6BB008126C4 /* SetListVC+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVC+Collectionable.swift"; sourceTree = "<group>"; };
-		6365712B2AD6D6E6008126C4 /* SetListVC+CellRegistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVC+CellRegistration.swift"; sourceTree = "<group>"; };
 		6365712D2AD6DAA6008126C4 /* SetListVC+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVC+Delegate.swift"; sourceTree = "<group>"; };
 		636571302AD6DB37008126C4 /* SetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetVC.swift; sourceTree = "<group>"; };
 		636571332AD6DC69008126C4 /* SetCardListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCardListCell.swift; sourceTree = "<group>"; };
@@ -252,8 +255,8 @@
 		639352132ACE448D00F8B31B /* Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectionable.swift; sourceTree = "<group>"; };
 		639352172ACE591A00F8B31B /* MainVC+CollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainVC+CollectionDelegate.swift"; sourceTree = "<group>"; };
 		639352192ACE593D00F8B31B /* MainVC+Registrations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainVC+Registrations.swift"; sourceTree = "<group>"; };
-		6395AAD02ADAB88300BDCF3B /* SetListVC+DSM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVC+DSM.swift"; sourceTree = "<group>"; };
 		639FBF5E2AD5A186004EEE65 /* AddImageVC+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddImageVC+Registration.swift"; sourceTree = "<group>"; };
+		63A0CFBA2AE761140060B5F9 /* SetListVC+Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVC+Cell.swift"; sourceTree = "<group>"; };
 		63A0E35C2AE4471D00E6DAAB /* CardVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardVM.swift; sourceTree = "<group>"; };
 		63A3D4342ACE3C9E00E6B10E /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		63A3D4382ACE3CCD00E6B10E /* CircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
@@ -265,6 +268,11 @@
 		63A3D4492ACE3FC500E6B10E /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		63A3D44B2ACE3FE300E6B10E /* BaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
 		63ABC0BF2ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardVC+AttributeStringExtension.swift"; sourceTree = "<group>"; };
+		63ADFE972AE6478B00C03B5E /* SetListVM+BackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVM+BackView.swift"; sourceTree = "<group>"; };
+		63ADFE992AE6483400C03B5E /* SetListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetListVM.swift; sourceTree = "<group>"; };
+		63ADFE9B2AE6485900C03B5E /* SetListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetListDataSource.swift; sourceTree = "<group>"; };
+		63ADFE9D2AE685BC00C03B5E /* PublisherExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublisherExtension.swift; sourceTree = "<group>"; };
+		63ADFEA02AE6A55C00C03B5E /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		63E50EF22AD96A75003E0800 /* AddSetVC+DSM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddSetVC+DSM.swift"; sourceTree = "<group>"; };
 		63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPolicy.swift; sourceTree = "<group>"; };
 		63EAED4D2ADD05EA00046C44 /* EditableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableVC.swift; sourceTree = "<group>"; };
@@ -447,12 +455,12 @@
 		636571262AD6D67B008126C4 /* SetList */ = {
 			isa = PBXGroup;
 			children = (
+				638340B52AE7550C0034603B /* ViewCPT */,
 				636571272AD6D68A008126C4 /* SetListVC.swift */,
 				636571292AD6D6BB008126C4 /* SetListVC+Collectionable.swift */,
-				6365712B2AD6D6E6008126C4 /* SetListVC+CellRegistration.swift */,
 				6365712D2AD6DAA6008126C4 /* SetListVC+Delegate.swift */,
-				6395AAD02ADAB88300BDCF3B /* SetListVC+DSM.swift */,
 				635C3BCE2ADFEC6900994BD8 /* SetListVC+SearchDelegate.swift */,
+				63ADFE9B2AE6485900C03B5E /* SetListDataSource.swift */,
 			);
 			path = SetList;
 			sourceTree = "<group>";
@@ -491,6 +499,7 @@
 				635C3BCC2ADFDC0100994BD8 /* StringExtension.swift */,
 				633BD4B42AD7EB8A006D6955 /* Sequence.swift */,
 				630DD8DD2AD9A83B00B51662 /* PHImageManagerExtensions.swift */,
+				63ADFE9D2AE685BC00C03B5E /* PublisherExtension.swift */,
 			);
 			path = Logics;
 			sourceTree = "<group>";
@@ -558,6 +567,15 @@
 			path = AddImage;
 			sourceTree = "<group>";
 		};
+		638340B52AE7550C0034603B /* ViewCPT */ = {
+			isa = PBXGroup;
+			children = (
+				63ADFE972AE6478B00C03B5E /* SetListVM+BackView.swift */,
+				63A0CFBA2AE761140060B5F9 /* SetListVC+Cell.swift */,
+			);
+			path = ViewCPT;
+			sourceTree = "<group>";
+		};
 		6386E0C32AE5781A0044F7DF /* Splash */ = {
 			isa = PBXGroup;
 			children = (
@@ -620,6 +638,7 @@
 				63A3D42E2ACE3C4500E6B10E /* DataBase */,
 				632A48B82ACD0E1600413AF4 /* Localized */,
 				632A485D2ACCEBC600413AF4 /* Network */,
+				63ADFEA02AE6A55C00C03B5E /* ImageService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -641,6 +660,7 @@
 				63A0E35B2AE4471400E6DAAB /* CardScene */,
 				631331772AD3F56F00459515 /* AddSetVM.swift */,
 				63F27D3C2AE600ED007A11A0 /* MainVM.swift */,
+				63ADFE992AE6483400C03B5E /* SetListVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -872,6 +892,7 @@
 				633BD4B72AD7F1E1006D6955 /* CardFrontView+Cell.swift in Sources */,
 				63730F802AD29D0300BC8F35 /* InsetTextField.swift in Sources */,
 				633BB4652AD6E0ED005E8E09 /* SetVC+Collectionable.swift in Sources */,
+				63ADFEA12AE6A55C00C03B5E /* ImageService.swift in Sources */,
 				633BD4AE2AD7DE22006D6955 /* CardVC+CustomView.swift in Sources */,
 				63A3D4352ACE3C9E00E6B10E /* NetworkService.swift in Sources */,
 				6365713A2AD6DD46008126C4 /* TempCard.swift in Sources */,
@@ -879,12 +900,14 @@
 				636C51E62ADCC5770087A1A4 /* ViewControllerExtensions.swift in Sources */,
 				63A0E35D2AE4471D00E6DAAB /* CardVM.swift in Sources */,
 				631331712AD3F3B000459515 /* AddItemCell.swift in Sources */,
+				63ADFE9C2AE6485900C03B5E /* SetListDataSource.swift in Sources */,
 				6365712A2AD6D6BB008126C4 /* SetListVC+Collectionable.swift in Sources */,
 				633BD4B32AD7DF2A006D6955 /* CardVC+Registration.swift in Sources */,
 				631331802AD4427700459515 /* AddSetCell.swift in Sources */,
 				63730F862AD29E1600BC8F35 /* CustomAlertController.swift in Sources */,
 				636571382AD6DD1A008126C4 /* CardVC.swift in Sources */,
 				639352102ACE43F500F8B31B /* AddFolderBtn.swift in Sources */,
+				63ADFE9E2AE685BC00C03B5E /* PublisherExtension.swift in Sources */,
 				63A3D4412ACE3EF500E6B10E /* NavRightStack.swift in Sources */,
 				630DD8DC2AD9A09500B51662 /* ImageTransition.swift in Sources */,
 				63730F622AD2742400BC8F35 /* UIImageExtensions.swift in Sources */,
@@ -893,10 +916,10 @@
 				636571362AD6DC9A008126C4 /* SetHeaderReusableView.swift in Sources */,
 				639352122ACE442F00F8B31B /* NavBarView.swift in Sources */,
 				63730F8A2AD29EFD00BC8F35 /* CardCellVM.swift in Sources */,
-				6365712C2AD6D6E6008126C4 /* SetListVC+CellRegistration.swift in Sources */,
 				636855422AE146E700FCD7A5 /* TTS_Service.swift in Sources */,
 				6313316F2AD3F37000459515 /* ImageCell.swift in Sources */,
 				639352092ACE423500F8B31B /* MainVC+Collectionable.swift in Sources */,
+				63ADFE982AE6478B00C03B5E /* SetListVM+BackView.swift in Sources */,
 				635C3BCB2ADFD9A300994BD8 /* App.swift in Sources */,
 				63552A3B2AD4DCAB00A7063A /* CardItem.swift in Sources */,
 				630DD8E12ADA647100B51662 /* AddImageVC+DSM.swift in Sources */,
@@ -906,7 +929,6 @@
 				63730F742AD290B000BC8F35 /* CardSetTable.swift in Sources */,
 				63F4195E2AE2CF8000D450F7 /* AppColor.swift in Sources */,
 				63730F6F2AD28F3900BC8F35 /* TableRepository.swift in Sources */,
-				6395AAD12ADAB88300BDCF3B /* SetListVC+DSM.swift in Sources */,
 				632A484E2ACCE81B00413AF4 /* ViewController.swift in Sources */,
 				6313317A2AD3FA7A00459515 /* AddSet+Collectionable.swift in Sources */,
 				63A3D43F2ACE3EDD00E6B10E /* NavBarButton.swift in Sources */,
@@ -958,6 +980,7 @@
 				6357EA512ADBC3A4005ED852 /* DeletableImageCell.swift in Sources */,
 				63730F712AD2901800BC8F35 /* CardSetRepository.swift in Sources */,
 				63730F832AD29D6500BC8F35 /* AddImageVC.swift in Sources */,
+				63ADFE9A2AE6483400C03B5E /* SetListVM.swift in Sources */,
 				6365713E2AD6DDE5008126C4 /* CardFrontView.swift in Sources */,
 				63730F7E2AD29CE500BC8F35 /* AddSetItemCell.swift in Sources */,
 				635C3BD92AE035C800994BD8 /* CardVC+DSM.swift in Sources */,
@@ -973,6 +996,7 @@
 				635C3BD52AE0066100994BD8 /* SetVC+DSM.swift in Sources */,
 				632A484C2ACCE81B00413AF4 /* SceneDelegate.swift in Sources */,
 				6393520E2ACE43DB00F8B31B /* NewCardSetBtn.swift in Sources */,
+				63A0CFBB2AE761140060B5F9 /* SetListVC+Cell.swift in Sources */,
 				63730F762AD2974E00BC8F35 /* CardTable.swift in Sources */,
 				639352072ACE41CF00F8B31B /* MainVC.swift in Sources */,
 				6357EA5B2ADC05C5005ED852 /* Setting.swift in Sources */,
@@ -1157,7 +1181,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tistory.arpple.CardZip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1191,7 +1215,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tistory.arpple.CardZip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
