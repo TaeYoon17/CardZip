@@ -17,13 +17,6 @@ extension AddSetVC{
             print(cardItem)
             cell.vm = cellVM
             cell.fieldAccessoryView = self?.appendItemView
-            //MARK: -- 이미지를 추가해야함!!
-//            cell.image = cardItem.imageID.first
-            
-            //MARK -- Detail 뷰 컨트롤러 넣기!!
-//            cell.detailTapped = { [weak self] in
-//                print("detailTapped!")
-//            }
         }
     }
     var setHeaderRegistration: UICollectionView.CellRegistration< AddSetCell,Item>{

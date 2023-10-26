@@ -26,7 +26,7 @@ final class AddSetVC: EditableVC{
     var setItem: SetItem?
     
     var vm :AddSetVM! // 여기 수정해야함!
-    weak var photoService:PhotoService! = PhotoService.shared
+//    weak var photoService:PhotoService! = PhotoService.shared
     func emptyCheck(){
         guard let setItem = vm?.setItem else {return}
         self.alertLackDatas(title: "Not found card set".localized) {[weak self] in
@@ -114,6 +114,7 @@ final class AddSetVC: EditableVC{
                 return
             }
             self?.dataSource.createItem()
+//            self?.vm.addCardItem()
             self?.collectionView.scrollToLastItem()
         }), for: .touchUpInside)
         return btn
@@ -121,16 +122,11 @@ final class AddSetVC: EditableVC{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(true, animated: true)
-        photoService.passthroughIdentifiers.sink {[weak self] (val,vc) in
-            guard let self else {return}
-            guard let str = val.first, vc == self else {return}
-            //            configureSetImage(str: str) //여기 수정해야함
-        }.store(in: &subscription)
         vm?.passthroughCloseAction.sink(receiveValue: { [weak self] in
             self?.closeAction()
         }).store(in: &subscription)
-        vm.passthroughCardAction.sink {[weak self] actionType,cardItem in
-            guard let self else {return}
+        vm.cardAction.sink {[weak self] actionType,cardItem in
+            guard let self,let cardItem else {return}
             switch actionType{
             case .imageTapped:
                 let vc = AddImageVC()
@@ -145,7 +141,13 @@ final class AddSetVC: EditableVC{
             case .delete: dataSource.deleteItem(cardItem: cardItem)
             }
         }.store(in: &subscription)
-        
+        vm.setAction.sink { [weak self] actionType, setItem in
+            guard let self else {return}
+            switch actionType{
+            case .imageTapped:
+                vm.photoService.presentPicker(vc: self,multipleSelection: false)
+            }
+        }.store(in: &subscription)
         vm.passthroughErrorMessage.sink {[weak self] errorMessage in
             self?.alertLackDatas(title: errorMessage)
         }.store(in: &subscription)
@@ -156,9 +158,9 @@ final class AddSetVC: EditableVC{
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         Task{
-            if await !photoService.isValidAuthorization(){
+            if await !vm.photoService.isValidAuthorization(){
                 self.alertLackDatas(title: "Album images are not available".localized,
-                                    message: "You can change album access by going into the app settings".localized )
+                    message: "You can change album access by going into the app settings".localized )
             }
         }
     }

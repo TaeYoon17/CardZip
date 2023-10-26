@@ -35,74 +35,7 @@ extension AddSetVC:Collectionable,UICollectionViewDelegate{
             default: return nil
             }
         }
-//        self.initModels()
-
     }
-    
-//    func headerItemBindings(cell:AddSetVC.AddSetCell,item: Item){
-//        guard var setItem:SetItem = headerModel.fetchByID(item.id) else {return}
-//        cell.fieldAccessoryView = appendItemView
-//        cell.titleAction = { [weak self] in
-//            guard let self else {return}
-//            var snapshot = dataSource.snapshot()
-//            setItem.title = cell.titleField.text ?? ""
-//            headerModel.insertModel(item: setItem)
-//            snapshot.reconfigureItems([item])
-//            dataSource.apply(snapshot,animatingDifferences: false)
-//        }
-//        cell.descriptionAction = { [weak self] in
-//            guard let self else {return}
-//            var snapshot = dataSource.snapshot()
-//            setItem.setDescription = cell.descriptionField.text ?? ""
-//            headerModel.insertModel(item: setItem)
-//            snapshot.reconfigureItems([item])
-//            dataSource.apply(snapshot,animatingDifferences: false)
-//        }
-//        cell.imageTappedAction = { [weak self] in
-//            guard let self else {return}
-//            photoService.presentPicker(vc: self,multipleSelection: false)
-//        }
-//    }
-//    func cardItemBindings(cell:AddSetVC.AddSetItemCell,item: Item){
-//        guard var cardItem:CardItem = itemModel.fetchByID(item.id) else {return}
-//        cell.fieldAccessoryView = appendItemView
-//        cell.termAction = { [weak self] in
-//            guard let self else {return}
-//            var snapshot = dataSource.snapshot()
-//            cardItem.title = cell.termField.text ?? ""
-//            itemModel.insertModel(item: cardItem)
-//            snapshot.reconfigureItems([item])
-//            dataSource.apply(snapshot,animatingDifferences: false)
-//        }
-//        cell.definitionAction = { [weak self] in
-//            guard let self else {return}
-//            var snapshot = self.dataSource.snapshot()
-//            cardItem.definition = cell.definitionField.text ?? ""
-//            itemModel.insertModel(item: cardItem) // dictionary로 알아서 수정
-//            snapshot.reconfigureItems([item])
-//            dataSource.apply(snapshot,animatingDifferences: false)
-//        }
-//        cell.deleteTapped = { [weak self] in
-//            self?.deleteDataSource(deleteItem: item)
-//        }
-//        // 이미지 추가 이벤트 처리하기
-//        cell.addImageTapped = { [weak self] in
-//            guard let self else {return}
-//            let vc = AddImageVC()
-//            vc.cardItem = cardItem
-//            // AddImageVC에서 처리한 이미지를 받음
-//            vc.passthorughImgID.sink {[weak self] imagesID in
-//                guard let self else {return}
-//                cardItem.imageID = imagesID
-//                itemModel.removeModel(cardItem.id)
-//                itemModel.insertModel(item: cardItem) // dictionary로 알아서 수정
-//                reconfigureDataSource(item: item)
-//            }.store(in: &subscription)
-//            navigationController?.pushViewController(vc, animated: true)
-//        }
-//    }
-    
-    
 }
 //MARK: -- UICollectionViewLayout
 extension AddSetVC{

@@ -26,9 +26,9 @@ final class AddSetItemCellVM{
         
     }
     func addImageTapped(){
-        addSetVM.passthroughCardAction.send((.imageTapped,cardItem))
+        addSetVM.cardAction.send((.imageTapped,cardItem))
     }
     func deleteTapped(){
-        addSetVM.passthroughCardAction.send((.delete, cardItem))
+        addSetVM.cardAction.send((.delete, cardItem))
     }
 }

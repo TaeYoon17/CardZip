@@ -22,4 +22,7 @@ final class AddSetHeaderVM{
             addSetVM.updatedSetItem.send(setItem)
         }.store(in: &subscription)
     }
+    func imageTappedAction(){
+        addSetVM.setAction.send((.imageTapped, setItem))
+    }
 }

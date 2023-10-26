@@ -7,21 +7,19 @@
 
 import Foundation
 import Combine
-
+extension AddSetVM{
+    enum CardActionType{ case imageTapped, delete }
+    enum SetActionType{ case imageTapped }
+}
 final class AddSetVM{
-    enum CardActionType{
-        case imageTapped
-        case delete
-    }
-    enum SetActionType{
-        case hello
-    }
     @MainActor let repository = CardSetRepository()
+    @MainActor let cardRepository = CardRepository()
+    weak var photoService:PhotoService! = PhotoService.shared
     var dataProcess: DataProcessType = .add
     var setItem: SetItem?
     var nowItemsCount: Int = 0
     
-    // Edit했을 때 변경 사항을 던져주는 passthrough
+    // DataProcessTyppe Edit했을 때 변경 사항을 던져주는 passthrough
     var passthroughEditSet = PassthroughSubject<SetItem,Never>()
     
     
@@ -34,13 +32,21 @@ final class AddSetVM{
     // 카드에서 뷰컨 프로퍼티를 사용하는 액션을 요청할 때
     var cardAction = PassthroughSubject<(CardActionType,CardItem?),Never>()
     var setAction = PassthroughSubject<(SetActionType,SetItem?),Never>()
-    
-    @Published var cards:[CardItem] = []
     init(dataProcess: DataProcessType,setItem: SetItem?){
         self.dataProcess = dataProcess
-        self.setItem = setItem
+        switch dataProcess{
+        case.add:
+            self.setItem = .init(title: "", setDescription: "", cardList: [CardItem()], cardCount: 0)
+        case .edit:
+            if let setItem{
+                self.setItem = setItem
+            }else{
+                passthroughErrorMessage.send("Not found card set".localized)
+                passthroughCloseAction.send()
+            }
+        }
     }
-    func createItem(){ cards.append(.init()) }
+    
     @MainActor var setTable:CardSetTable?{
         if let dbKey = setItem?.dbKey,let table = repository?.getTableBy(tableID: dbKey){
             return table
@@ -61,26 +67,24 @@ final class AddSetVM{
     @MainActor func saveRepository(setItem: SetItem,cardItems:[CardItem]){
         var setItem = setItem
         let cardSetTable:CardSetTable
-        //            if let dbKey = setData.dbKey,let setTable = repository?.getTableBy(tableID: dbKey)
         if let setTable{
             cardSetTable = setTable// 데베에 존재함
         }else{
             cardSetTable = CardSetTable()// 데베에 존재하지 않음 (새로 추가함)
         }
         let prevCardTables = Set(cardSetTable.cardList)
-        let cardRepository:CardRepository = repository!.cardRespository!
         let results:[CardTable] = cardItems.map {
             let cardTable:CardTable
-            if let dbKey = $0.dbKey,let table = cardRepository.getTableBy(tableID:dbKey){
+            if let dbKey = $0.dbKey,let table = cardRepository?.getTableBy(tableID:dbKey){
                 cardTable =  table
             }else{
                 cardTable = CardTable()
             }
-            cardRepository.update(card: cardTable, item: $0)
+            cardRepository?.update(card: cardTable, item: $0)
             return cardTable
         }
         repository?.create(set: cardSetTable, setItem: setItem)
-        prevCardTables.subtracting(results).forEach { cardRepository.delete(item: $0) } // 이전에 존재한 카드 테이블들을 삭제한다.
+        prevCardTables.subtracting(results).forEach { cardRepository?.delete(item: $0) } // 이전에 존재한 카드 테이블들을 삭제한다.
         repository?.removeAllCards(set: cardSetTable)
         repository?.replaceAllCards(set: cardSetTable, cards: results)
         

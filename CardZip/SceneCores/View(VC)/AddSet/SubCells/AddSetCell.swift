@@ -38,6 +38,12 @@ extension AddSetVC{
                 descriptionField.textPublisher
                     .assign(to: \.setItem.setDescription, on: vm)
                     .store(in: &subscription)
+                emptyBtn.imageTappedAction = { [weak self] in
+                    self?.vm.imageTappedAction()
+                }
+                editBtn.imageTappedAction = { [weak self] in
+                    self?.vm.imageTappedAction()
+                }
             }
         }
         
@@ -51,13 +57,13 @@ extension AddSetVC{
         }
         //MARK: -- Action Delegate
         var editBeginAction:(()->Void)?
-        var imageTappedAction: (()->Void)?{
-            didSet{
-                guard let imageTappedAction else {return}
-                emptyBtn.imageTappedAction = imageTappedAction
-                editBtn.imageTappedAction = imageTappedAction
-            }
-        }
+//        var imageTappedAction: (()->Void)?{
+//            didSet{
+//                guard let imageTappedAction else {return}
+//                emptyBtn.imageTappedAction = imageTappedAction
+//                editBtn.imageTappedAction = imageTappedAction
+//            }
+//        }
         
         lazy var titleField = {
             let field = InsetTextField(rightPadding: true)
@@ -133,7 +139,6 @@ extension AddSetVC{
                 contentView.layer.cornerCurve = .circular
             }
         }
-        @objc func imageTapped(_ sender: UITapGestureRecognizer){ self.imageTappedAction?() }
     }
 }
 extension AddSetVC.AddSetCell: UITextFieldDelegate{
