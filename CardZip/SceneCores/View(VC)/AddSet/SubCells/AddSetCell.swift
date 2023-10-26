@@ -11,6 +11,37 @@ import Combine
 import TextFieldEffects
 extension AddSetVC{
     final class AddSetCell:BaseCell{
+        weak var vm: AddSetHeaderVM!{
+            didSet{
+                guard let vm else {return }
+                vm.$setItem.prefix(1).sink {[weak self] setItem in
+                    guard let self else {return}
+                    titleField.text = setItem.title
+                    descriptionField.text = setItem.setDescription
+                    Task{
+                        if let imagePath = setItem.imagePath,let image = try await ImageService.shared.fetchByCache(albumID: imagePath){
+                            self.emptyBtn.alpha = 0
+                            self.editBtn.alpha = 1
+                            UIView.imageAppear(view: self.editBtn) {
+                                self.editBtn.image = image
+                            }
+                        }else {
+                            self.emptyBtn.alpha = 1
+                            self.editBtn.image = nil
+                            self.editBtn.alpha = 0
+                        }
+                    }
+                }.store(in: &subscription)
+                titleField.textPublisher
+                    .assign(to: \.setItem.title, on: vm)
+                    .store(in: &subscription)
+                descriptionField.textPublisher
+                    .assign(to: \.setItem.setDescription, on: vm)
+                    .store(in: &subscription)
+            }
+        }
+        
+        var subscription = Set<AnyCancellable>()
         weak var fieldAccessoryView: UIView?{
             didSet{
                 guard let fieldAccessoryView else {return}
@@ -18,37 +49,7 @@ extension AddSetVC{
                 self.descriptionField.inputAccessoryView = fieldAccessoryView
             }
         }
-        var title:String?{
-            didSet{
-                guard let title else {return}
-                titleField.text = title
-            }
-        }
-        var setDescription:String?{
-            didSet{
-                guard let setDescription else {return}
-                descriptionField.text = setDescription
-            }
-        }
-        var image: UIImage?{
-            didSet{
-                if let image{
-                    emptyBtn.alpha = 0
-                    editBtn.alpha = 1
-                    UIView.imageAppear(view: editBtn) {
-                        self.editBtn.image = image
-                    }
-                }else{
-                    emptyBtn.alpha = 1
-                    editBtn.image = nil
-                    editBtn.alpha = 0
-                    
-                }
-            }
-        }
         //MARK: -- Action Delegate
-        var titleAction:(()->Void)?
-        var descriptionAction: (()->Void)?
         var editBeginAction:(()->Void)?
         var imageTappedAction: (()->Void)?{
             didSet{
@@ -72,9 +73,6 @@ extension AddSetVC{
             field.addAction(.init(handler: { [weak self] _ in
                 field.placeholder = "Enter a set title".localized
             }), for: .editingDidEnd)
-            field.addAction(.init(handler: { [weak self] _ in
-                self?.titleAction?()
-            }), for: .editingChanged)
             field.delegate = self
             return field
         }()
@@ -89,9 +87,6 @@ extension AddSetVC{
                 self?.editBeginAction?()
                 field.placeholder = ""
             }), for: .editingDidBegin)
-            field.addAction(.init(handler: { [weak self] _ in
-                self?.descriptionAction?()
-            }), for: .editingChanged)
             field.addAction(.init(handler: { [weak self] _ in
                 field.placeholder = "Enter a description".localized
             }), for: .editingDidEnd)
@@ -110,7 +105,8 @@ extension AddSetVC{
             super.configureConstraints()
             [emptyBtn,editBtn].forEach{ imageView in
                 imageView.snp.makeConstraints { make in
-                    make.top.centerX.equalToSuperview().offset(8)
+                    make.top.equalToSuperview().offset(8)
+                    make.centerX.equalToSuperview()
                     make.width.equalTo(imageView.snp.height)
                     make.height.equalTo(128)
                 }
@@ -138,12 +134,9 @@ extension AddSetVC{
             }
         }
         @objc func imageTapped(_ sender: UITapGestureRecognizer){ self.imageTappedAction?() }
-        
     }
 }
 extension AddSetVC.AddSetCell: UITextFieldDelegate{
-    
-    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
        // 백스페이스 처리
        if let char = string.cString(using: String.Encoding.utf8) {

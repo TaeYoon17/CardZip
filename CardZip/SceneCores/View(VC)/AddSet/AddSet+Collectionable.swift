@@ -16,20 +16,17 @@ extension AddSetVC:Collectionable,UICollectionViewDelegate{
         let layoutFooterRegi = layoutFooterRegistration
         let editCellRegi = setCardRegistration
         let headerCellRegi = setHeaderRegistration
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
-            guard let self else {return .init()}
+        dataSource = DataSource(vm:vm,collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             switch itemIdentifier.type{
             case .cards:
                 let cell:AddSetVC.AddSetItemCell =  collectionView.dequeueConfiguredReusableCell(using: editCellRegi, for: indexPath, item: itemIdentifier)
-                cardItemBindings(cell: cell, item:itemIdentifier)
                 return cell
             case .header:
                 let cell = collectionView.dequeueConfiguredReusableCell(using: headerCellRegi, for: indexPath, item: itemIdentifier)
-                headerItemBindings(cell: cell, item: itemIdentifier)
                 return cell
             }
-        })
-        dataSource.supplementaryViewProvider = {[weak self] collectionView, kind, indexPath in
+       })
+        dataSource.supplementaryViewProvider = {collectionView, kind, indexPath in
             switch kind{
             case "LayoutHeader":
                 return collectionView.dequeueConfiguredReusableSupplementary(using: layoutHeaderRegi, for: indexPath)
@@ -38,99 +35,73 @@ extension AddSetVC:Collectionable,UICollectionViewDelegate{
             default: return nil
             }
         }
-        self.initModels()
+//        self.initModels()
 
     }
     
-    func headerItemBindings(cell:AddSetVC.AddSetCell,item: Item){
-        guard var setItem:SetItem = headerModel.fetchByID(item.id) else {return}
-        cell.fieldAccessoryView = appendItemView
-        cell.titleAction = { [weak self] in
-            guard let self else {return}
-            var snapshot = dataSource.snapshot()
-            setItem.title = cell.titleField.text ?? ""
-            headerModel.insertModel(item: setItem)
-            snapshot.reconfigureItems([item])
-            dataSource.apply(snapshot,animatingDifferences: false)
-        }
-        cell.descriptionAction = { [weak self] in
-            guard let self else {return}
-            var snapshot = dataSource.snapshot()
-            setItem.setDescription = cell.descriptionField.text ?? ""
-            headerModel.insertModel(item: setItem)
-            snapshot.reconfigureItems([item])
-            dataSource.apply(snapshot,animatingDifferences: false)
-        }
-        cell.imageTappedAction = { [weak self] in
-            guard let self else {return}
-            photoService.presentPicker(vc: self,multipleSelection: false)
-        }
-    }
-    func cardItemBindings(cell:AddSetVC.AddSetItemCell,item: Item){
-        guard var cardItem:CardItem = itemModel.fetchByID(item.id) else {return}
-        cell.fieldAccessoryView = appendItemView
-        cell.termAction = { [weak self] in
-            guard let self else {return}
-            var snapshot = dataSource.snapshot()
-            cardItem.title = cell.termField.text ?? ""
-            itemModel.insertModel(item: cardItem)
-            snapshot.reconfigureItems([item])
-            dataSource.apply(snapshot,animatingDifferences: false)
-        }
-        cell.definitionAction = { [weak self] in
-            guard let self else {return}
-            var snapshot = self.dataSource.snapshot()
-            cardItem.definition = cell.definitionField.text ?? ""
-            itemModel.insertModel(item: cardItem) // dictionary로 알아서 수정
-            snapshot.reconfigureItems([item])
-            dataSource.apply(snapshot,animatingDifferences: false)
-        }
-        cell.deleteTapped = { [weak self] in
-            self?.deleteDataSource(deleteItem: item)
-        }
-        // 이미지 추가 이벤트 처리하기
-        cell.addImageTapped = { [weak self] in
-            guard let self else {return}
-            let vc = AddImageVC()
-            vc.cardItem = cardItem
-            // AddImageVC에서 처리한 이미지를 받음
-            vc.passthorughImgID.sink {[weak self] imagesID in
-                guard let self else {return}
-                cardItem.imageID = imagesID
-                itemModel.removeModel(cardItem.id)
-                itemModel.insertModel(item: cardItem) // dictionary로 알아서 수정
-                reconfigureDataSource(item: item)
-            }.store(in: &subscription)
-            navigationController?.pushViewController(vc, animated: true)
-        }
-    }
-    private var appendItemView: UIView {
-        let view = NavBarView(frame:.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48))
-        view.alpha = 1
-        let btn = BottomImageBtn(systemName: "plus")
-        let doneBtn = UIButton(configuration: .plain())
-        doneBtn.setAttributedTitle(.init(string: "Done".localized, attributes: [
-            .font : UIFont.systemFont(ofSize: 17, weight: .semibold)
-        ]), for: .normal)
-        doneBtn.tintColor = .cardPrimary
-        btn.configuration?.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
-        btn.addAction(.init(handler: { [weak self] _ in
-            self?.appendDataSource()
-            self?.collectionView.scrollToLastItem()
-        }), for: .touchUpInside)
-        doneBtn.addAction(.init(handler: { [weak self] _ in
-            self?.view.endEditing(true)
-//            self?.becomeFirstResponder()
-        }), for: .touchUpInside)
-        view.addSubview(btn)
-        view.addSubview(doneBtn)
-        btn.snp.makeConstraints { $0.center.equalToSuperview() }
-        doneBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(16.5)
-            make.centerY.equalToSuperview()
-        }
-        return view
-    }
+//    func headerItemBindings(cell:AddSetVC.AddSetCell,item: Item){
+//        guard var setItem:SetItem = headerModel.fetchByID(item.id) else {return}
+//        cell.fieldAccessoryView = appendItemView
+//        cell.titleAction = { [weak self] in
+//            guard let self else {return}
+//            var snapshot = dataSource.snapshot()
+//            setItem.title = cell.titleField.text ?? ""
+//            headerModel.insertModel(item: setItem)
+//            snapshot.reconfigureItems([item])
+//            dataSource.apply(snapshot,animatingDifferences: false)
+//        }
+//        cell.descriptionAction = { [weak self] in
+//            guard let self else {return}
+//            var snapshot = dataSource.snapshot()
+//            setItem.setDescription = cell.descriptionField.text ?? ""
+//            headerModel.insertModel(item: setItem)
+//            snapshot.reconfigureItems([item])
+//            dataSource.apply(snapshot,animatingDifferences: false)
+//        }
+//        cell.imageTappedAction = { [weak self] in
+//            guard let self else {return}
+//            photoService.presentPicker(vc: self,multipleSelection: false)
+//        }
+//    }
+//    func cardItemBindings(cell:AddSetVC.AddSetItemCell,item: Item){
+//        guard var cardItem:CardItem = itemModel.fetchByID(item.id) else {return}
+//        cell.fieldAccessoryView = appendItemView
+//        cell.termAction = { [weak self] in
+//            guard let self else {return}
+//            var snapshot = dataSource.snapshot()
+//            cardItem.title = cell.termField.text ?? ""
+//            itemModel.insertModel(item: cardItem)
+//            snapshot.reconfigureItems([item])
+//            dataSource.apply(snapshot,animatingDifferences: false)
+//        }
+//        cell.definitionAction = { [weak self] in
+//            guard let self else {return}
+//            var snapshot = self.dataSource.snapshot()
+//            cardItem.definition = cell.definitionField.text ?? ""
+//            itemModel.insertModel(item: cardItem) // dictionary로 알아서 수정
+//            snapshot.reconfigureItems([item])
+//            dataSource.apply(snapshot,animatingDifferences: false)
+//        }
+//        cell.deleteTapped = { [weak self] in
+//            self?.deleteDataSource(deleteItem: item)
+//        }
+//        // 이미지 추가 이벤트 처리하기
+//        cell.addImageTapped = { [weak self] in
+//            guard let self else {return}
+//            let vc = AddImageVC()
+//            vc.cardItem = cardItem
+//            // AddImageVC에서 처리한 이미지를 받음
+//            vc.passthorughImgID.sink {[weak self] imagesID in
+//                guard let self else {return}
+//                cardItem.imageID = imagesID
+//                itemModel.removeModel(cardItem.id)
+//                itemModel.insertModel(item: cardItem) // dictionary로 알아서 수정
+//                reconfigureDataSource(item: item)
+//            }.store(in: &subscription)
+//            navigationController?.pushViewController(vc, animated: true)
+//        }
+//    }
+    
     
 }
 //MARK: -- UICollectionViewLayout
@@ -143,7 +114,7 @@ extension AddSetVC{
                 var listConfig = UICollectionLayoutListConfiguration(appearance: .plain)
                 listConfig.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
                     let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {[weak self] action, sourceView, actionPerformed in
-                        self?.deleteDataSource(indexPath: indexPath)
+                        self?.dataSource.deleteItem(indexPath: indexPath)
                     }
                     deleteAction.image = UIImage(systemName: "trash")
                     return .init(actions: [deleteAction])

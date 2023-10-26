@@ -22,14 +22,10 @@ final class AddSetVC: EditableVC{
     }
     var passthroughSetItem = PassthroughSubject<SetItem,Never>()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    var dataSource : UICollectionViewDiffableDataSource<Section.ID,Item>!
-    var itemModel : AnyModelStore<CardItem>!
-    var headerModel : AnyModelStore<SetItem>!
-    var sectionModel: AnyModelStore<Section>!
-    var vcType: DataProcessType = .add
+    var dataSource : DataSource!
     var setItem: SetItem?
-    let repository = CardSetRepository()
-    var vm :AddSetVM? // 여기 수정해야함!
+    
+    var vm :AddSetVM! // 여기 수정해야함!
     weak var photoService:PhotoService! = PhotoService.shared
     func emptyCheck(){
         guard let setItem = vm?.setItem else {return}
@@ -37,39 +33,39 @@ final class AddSetVC: EditableVC{
             self?.dismiss(animated: true)
         }
     }
-    func initModels(){
-        print(vcType)
-        switch vcType {
-        case .add:
-            let cardItem = [CardItem()]
-            let headerItem = [SetItem()]
-            itemModel = .init(cardItem)
-            headerModel = .init(headerItem)
-            sectionModel = .init([
-                Section(id: .header, subItems: headerItem.map{Item(id: $0.id, type: .header)})
-                ,Section(id: .cards, subItems: cardItem.map{
-                Item(id: $0.id, type: .cards)
-            })])
-            self.initDataSource()
-        case .edit:
-            if let setItem,let dbKey = setItem.dbKey ,let table = repository?.getTableBy(tableID: dbKey){
-                let cardItems = Array(table.cardList).map{CardItem(table: $0)}
-                let headerItem = [SetItem(table: table)]
-                itemModel = .init(cardItems)
-                headerModel = .init(headerItem)
-                sectionModel = .init([
-                    Section(id: .header, subItems: headerItem.map{Item(id: $0.id, type: .header)})
-                    ,Section(id: .cards, subItems: cardItems.map{
-                    Item(id: $0.id, type: .cards)
-                })])
-                self.initDataSource()
-            }else{
-                self.alertLackDatas(title: "Not found card set".localized) {[weak self] in
-                    self?.dismiss(animated: true)
-                }
-            }
-        }
-    }
+    //    func initModels(){
+    //        print(vcType)
+    //        switch vcType {
+    //        case .add:
+    //            let cardItem = [CardItem()]
+    //            let headerItem = [SetItem()]
+    //            itemModel = .init(cardItem)
+    //            headerModel = .init(headerItem)
+    //            sectionModel = .init([
+    //                Section(id: .header, subItems: headerItem.map{Item(id: $0.id, type: .header)})
+    //                ,Section(id: .cards, subItems: cardItem.map{
+    //                Item(id: $0.id, type: .cards)
+    //            })])
+    //            self.initDataSource()
+    //        case .edit:
+    //            if let setItem,let dbKey = setItem.dbKey ,let table = repository?.getTableBy(tableID: dbKey){
+    //                let cardItems = Array(table.cardList).map{CardItem(table: $0)}
+    //                let headerItem = [SetItem(table: table)]
+    //                itemModel = .init(cardItems)
+    //                headerModel = .init(headerItem)
+    //                sectionModel = .init([
+    //                    Section(id: .header, subItems: headerItem.map{Item(id: $0.id, type: .header)})
+    //                    ,Section(id: .cards, subItems: cardItems.map{
+    //                    Item(id: $0.id, type: .cards)
+    //                })])
+    //                self.initDataSource()
+    //            }else{
+    //                self.alertLackDatas(title: "Not found card set".localized) {[weak self] in
+    //                    self?.dismiss(animated: true)
+    //                }
+    //            }
+    //        }
+    //    }
     
     //MARK: -- 뷰 구성
     lazy var navCloseBtn = {
@@ -77,7 +73,7 @@ final class AddSetVC: EditableVC{
         btn.addAction(.init(handler: { [weak self] _ in
             self?.closeBtnTapped()
         }), for: .touchUpInside)
-        switch vcType {
+        switch vm.dataProcess {
         case .add: break
         case .edit: btn.alpha = 0
         }
@@ -86,13 +82,13 @@ final class AddSetVC: EditableVC{
     
     lazy var navDoneBtn = {
         let text:String
-        switch vcType {
+        switch vm.dataProcess {
         case .add: text = "Create".localized
         case .edit: text = "Edit".localized
         }
         let btn = DoneBtn(title: text)
         btn.addAction(.init(handler: { [weak self] _ in
-            self?.saveRepository()
+            self?.dataSource.saveData()
         }), for: .touchUpInside)
         return btn
     }()
@@ -111,13 +107,13 @@ final class AddSetVC: EditableVC{
     
     lazy var appendItemBtn = {
         let btn = BottomImageBtn(systemName: "plus")
-        btn.addAction(.init(handler: {
-            [weak self] _ in
-            if self?.getItemsCount ?? 1000 >= 100{
+        btn.addAction(.init(handler: {[weak self] _ in
+            print("일단 버튼은 눌림")
+            if self?.vm.nowItemsCount ?? 1000 >= 100{
                 self?.alertLackDatas(title: "Too many datas".localized)
                 return
             }
-            self?.appendDataSource()
+            self?.dataSource.createItem()
             self?.collectionView.scrollToLastItem()
         }), for: .touchUpInside)
         return btn
@@ -128,15 +124,34 @@ final class AddSetVC: EditableVC{
         photoService.passthroughIdentifiers.sink {[weak self] (val,vc) in
             guard let self else {return}
             guard let str = val.first, vc == self else {return}
-            configureSetImage(str: str)
+            //            configureSetImage(str: str) //여기 수정해야함
         }.store(in: &subscription)
         vm?.passthroughCloseAction.sink(receiveValue: { [weak self] in
             self?.closeAction()
         }).store(in: &subscription)
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        vm.passthroughCardAction.sink {[weak self] actionType,cardItem in
+            guard let self else {return}
+            switch actionType{
+            case .imageTapped:
+                let vc = AddImageVC()
+                vc.cardItem = cardItem
+                vc.passthorughImgID.sink {[weak self] imagesID in
+                    guard let self else {return}
+                    var newCardItem = cardItem
+                    newCardItem.imageID = imagesID
+                    vm.updatedCardItem.send((newCardItem,true))
+                }.store(in: &subscription)
+                navigationController?.pushViewController(vc, animated: true)
+            case .delete: dataSource.deleteItem(cardItem: cardItem)
+            }
+        }.store(in: &subscription)
         
+        vm.passthroughErrorMessage.sink {[weak self] errorMessage in
+            self?.alertLackDatas(title: errorMessage)
+        }.store(in: &subscription)
+        vm.passthroughCloseAction.sink { [weak self] _ in
+            self?.closeAction()
+        }.store(in: &subscription)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -183,7 +198,6 @@ final class AddSetVC: EditableVC{
             make.height.equalTo(60)
         }
     }
-    
     override func configureConstraints() {
         super.configureConstraints()
         collectionView.snp.makeConstraints {
@@ -203,8 +217,8 @@ final class AddSetVC: EditableVC{
 //MARK: -- Set Button Policy
 extension AddSetVC{
     func closeBtnTapped(){
-        if let headerItem = sectionModel.fetchByID(.header).subItems.first,
-           let setData = headerModel.fetchByID(headerItem.id){
+        if let headerItem = dataSource.sectionModel.fetchByID(.header).subItems.first,
+           let setData = dataSource.headerModel.fetchByID(headerItem.id){
             if setData.title != ""{
                 let alert = UIAlertController(title: "Close Add Card Set??".localized, message: "Don't save it".localized, preferredStyle: .alert)
                 alert.addAction(.init(title: "Close".localized , style: .default,handler: { [weak self] _ in

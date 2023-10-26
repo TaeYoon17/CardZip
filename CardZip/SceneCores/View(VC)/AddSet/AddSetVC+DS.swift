@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 extension AddSetVC{
     final class DataSource:UICollectionViewDiffableDataSource<Section.ID,Item>{
         typealias Item = AddSetVC.Item
@@ -15,10 +16,47 @@ extension AddSetVC{
         var itemModel : AnyModelStore<CardItem>!
         var headerModel : AnyModelStore<SetItem>!
         var sectionModel: AnyModelStore<Section>!
+        var subscription = Set<AnyCancellable>()
         init(vm: AddSetVM,collectionView: UICollectionView, cellProvider: @escaping UICollectionViewDiffableDataSource<AddSetVC.Section.ID, AddSetVC.Item>.CellProvider) {
             super.init(collectionView: collectionView, cellProvider: cellProvider)
             self.vm = vm
+            initModels()
+            vm.updatedCardItem.sink {[weak self] (item,dsUpdate) in
+                self?.itemModel.insertModel(item: item)
+                if dsUpdate{
+                    print(dsUpdate)
+                    self?.reconfigureDataSource(cardItem: item)
+                }
+            }.store(in: &subscription)
+            vm.updatedSetItem.sink { [weak self] item in
+                self?.headerModel.insertModel(item: item)
+            }.store(in: &subscription)
             
+        }
+        func createItem(){
+            let cardItem = CardItem()
+            let item = Item(id: cardItem.id, type: .cards)
+            var section = sectionModel.fetchByID(.cards)
+            section?.subItems.append(item)
+            itemModel.insertModel(item: cardItem)
+            sectionModel.insertModel(item: section!)
+            self.appendDataSource(item: item)
+        }
+        func updateItem(_ item:Item,term:String){
+            guard var cardItem:CardItem = itemModel.fetchByID(item.id) else {return}
+            cardItem.title = term
+            itemModel.insertModel(item: cardItem)
+            reconfigureDataSource(item: item)
+        }
+        func updateItem(_ item:Item,definition:String){
+            guard var cardItem:CardItem = itemModel.fetchByID(item.id) else {return}
+            cardItem.definition = definition
+            itemModel.insertModel(item: cardItem)
+            reconfigureDataSource(item: item)
+        }
+        func deleteItem(cardItem: CardItem){
+            let item = Item(id: cardItem.id, type: .cards)
+            deleteItem(item: item)
         }
         func deleteItem(indexPath:IndexPath){
             guard let item = itemIdentifier(for: indexPath) else  { return}
@@ -39,7 +77,7 @@ extension AddSetVC{
         func saveData(){
             // 1. 헤더 타이틀을 추가하지 않은 경우 에러
             let snapshot = snapshot()
-            guard let headerItem = snapshot.itemIdentifiers(inSection: .header).first,var setData = headerModel.fetchByID(headerItem.id),setData.title != "" else {
+            guard let headerItem = snapshot.itemIdentifiers(inSection: .header).first,let setData = headerModel.fetchByID(headerItem.id),setData.title != "" else {
                 vm.passthroughErrorMessage.send("No set title".localized)
                 return
             }
@@ -86,9 +124,6 @@ extension AddSetVC.DataSource{
                 })])
                 self.initDataSource()
             }else{
-//                    self.alertLackDatas(title: "Not found card set".localized) {[weak self] in
-//                        self?.dismiss(animated: true)
-//                    }
                 vm.passthroughErrorMessage.send("Not found card set".localized)
                 vm.passthroughCloseAction.send()
             }
@@ -103,7 +138,15 @@ fileprivate extension AddSetVC.DataSource{
         let snapshot = snapshot()
         return snapshot.itemIdentifiers(inSection: .cards).count
     }
-    
+    @MainActor func reconfigureDataSource(cardItem: CardItem){
+        var snapshot = snapshot()
+        if let item = snapshot.itemIdentifiers(inSection: .cards).first(where: { $0.id == cardItem.id }){
+            snapshot.reconfigureItems([item])
+            Task{
+                await apply(snapshot,animatingDifferences: false)
+            }
+        }
+    }
     @MainActor func reconfigureDataSource(item: Item){
         var snapshot = snapshot()
         snapshot.reconfigureItems([item])
@@ -123,16 +166,13 @@ fileprivate extension AddSetVC.DataSource{
         var snapshot = snapshot()
         snapshot.deleteItems([deleteItem])
         vm.nowItemsCount = getItemsCount
+        apply(snapshot,animatingDifferences: true)
     }
     
-    @MainActor func appendDataSource(){ // 데이터 소스만 추가, DB 저장 아님
+    @MainActor func appendDataSource(item: Item){ // 데이터 소스만 추가, DB 저장 아님
+        
+        
         var snapshot = snapshot()
-        let cardItem = CardItem()
-        let item = Item(id: cardItem.id, type: .cards)
-        var section = sectionModel.fetchByID(.cards)
-        section?.subItems.append(item)
-        itemModel.insertModel(item: cardItem)
-        sectionModel.insertModel(item: section!)
         snapshot.appendItems([item], toSection: .cards)
         apply(snapshot,animatingDifferences: true)
         vm.nowItemsCount = getItemsCount

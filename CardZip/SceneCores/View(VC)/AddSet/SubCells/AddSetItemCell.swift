@@ -7,9 +7,23 @@
 
 import UIKit
 import SnapKit
+import Combine
 //AddSetItemCell
 extension AddSetVC{
     final class AddSetItemCell: BaseCell{
+        weak var vm: AddSetItemCellVM?{
+            didSet{
+                guard let vm else {return}
+                vm.$cardItem.prefix(1).sink {[weak self] cardItem in
+                    self?.termField.text = cardItem.title
+                    self?.definitionField.text = cardItem.definition
+                    Task{ try await self?.getImage(path:cardItem.imageID.first) }
+                }.store(in: &subscription)
+                termField.textPublisher.assign(to: \.cardItem.title, on: vm).store(in: &subscription)
+                definitionField.textPublisher.assign(to: \.cardItem.definition, on: vm).store(in: &subscription)
+            }
+        }
+        var subscription = Set<AnyCancellable>()
         weak var fieldAccessoryView: UIView?{
             didSet{
                 guard let fieldAccessoryView else {return}
@@ -17,59 +31,42 @@ extension AddSetVC{
                 self.definitionField.inputAccessoryView = fieldAccessoryView
             }
         }
-        var term: String?{ didSet{ termField.text = term } }
-        var definition: String?{
-            didSet{definitionField.text = definition}
-        }
-        var image: UIImage?{
-            didSet{
-                if let image{
-                    addImageBtn.configuration?.image = image
-                    
-                    addImageBtn.configuration?.attributedTitle = AttributedString("Edit".localized, attributes: .init([
-                        NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12, weight: .medium)]))
-                }else{
-                    addImageBtn.configuration?.image = UIImage(systemName: "photo.on.rectangle.angled")
-                    addImageBtn.configuration?.attributedTitle = AttributedString("Add Image", attributes: .init([
-                        NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12, weight: .medium)]))
-                }
-            }
-        }
-        var termAction:(()->Void)?
-        var definitionAction: (()->Void)?
-        var didBegin:(()->Void)?
+
+        //        var didBegin:(()->Void)?
         lazy var termField = {
             let field = InsetTextField()
+            field.textPublisher.sink(receiveValue: {[weak self] val in
+                            self?.vm?.cardItem.title = val
+                        }).store(in: &subscription)
+            field.font = .systemFont(ofSize: 17,weight: .regular)
+            field.placeholder = "Enter a term".localized
             field.addAction(.init(handler: { [weak self] _ in
                 field.placeholder = ""
-                self?.didBegin?()
+                //                self?.didBegin?()
             }), for: .editingDidBegin)
             field.addAction(.init(handler: { [weak self] _ in
                 field.placeholder = "Enter a term".localized
             }), for: .editingDidEnd)
-            field.addAction(.init(handler: { [weak self] _  in
-                self?.termAction?()
-            }), for: .editingChanged)
             return field
         }()
         lazy var definitionField = {
             let field = InsetTextField()
+            field.font = .systemFont(ofSize: 17,weight: .regular)
+            field.placeholder = "Enter a definition".localized
             field.addAction(.init(handler: { [weak self] _ in
                 field.placeholder = ""
-                self?.didBegin?()
+                //                self?.didBegin?()
+                //                self?.addSetVM.passthroughDidBegin.send()
             }), for: .editingDidBegin)
             field.addAction(.init(handler: { [weak self] _ in
                 field.placeholder = "Enter a definition".localized
             }), for: .editingDidEnd)
-            field.addAction(.init(handler: { [weak self] _ in
-                self?.definitionAction?()
-            }), for: .editingChanged)
             return field
         }()
         lazy var detailBtn = {
             let btn = UIButton()
             var config = UIButton.Configuration.plain()
-//            "detail"
+            //            "detail"
             config.attributedTitle = .init("", attributes: .init([
                 NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14,weight: .medium)
             ]))
@@ -77,11 +74,10 @@ extension AddSetVC{
             config.contentInsets = .init(top: 4, leading: 4, bottom: 4, trailing: 4)
             config.imagePlacement = .trailing
             config.baseForegroundColor = .secondaryLabel
-//            "chevron.right"
             config.image = UIImage(systemName: "", withConfiguration: .getConfig(ofSize: 8, weight: .heavy))
             btn.configuration = config
             btn.addAction(.init(handler: { [weak self] _ in
-                self?.detailTapped?()
+                //                self?.detailTapped?()
             }), for: .touchUpInside)
             return btn
         }()
@@ -95,11 +91,11 @@ extension AddSetVC{
             config.contentInsets = .init(top: 4, leading: 4, bottom: 4, trailing: 4)
             config.imagePlacement = .trailing
             config.baseForegroundColor = .secondaryLabel
-//            "chevron.right"
+            //            "chevron.right"
             config.image = UIImage(systemName: "", withConfiguration: .getConfig(ofSize: 8, weight: .heavy))
             btn.configuration = config
             btn.addAction(.init(handler: { [weak self] _ in
-                self?.deleteTapped?()
+                self?.vm?.deleteTapped()
             }), for: .touchUpInside)
             return btn
         }()
@@ -109,6 +105,10 @@ extension AddSetVC{
             st.spacing = 8
             st.alignment = .leading
             st.distribution = .fillEqually
+            st.layer.cornerRadius = 16
+            st.layer.cornerCurve = .circular
+            st.backgroundColor = .bgSecond
+            st.setShadowLayer()
             return st
         }()
         lazy var imageShowView = {
@@ -121,12 +121,10 @@ extension AddSetVC{
             v.clipsToBounds = true
             v.addSubview(visualView)
             v.addSubview(addImageBtn)
-            visualView.snp.makeConstraints { $0.edges.equalToSuperview()
-            }
+            visualView.snp.makeConstraints { $0.edges.equalToSuperview()}
             addImageBtn.snp.makeConstraints { $0.edges.equalToSuperview() }
             return v
         }()
-        
         private lazy var addImageBtn = {
             let btn = UIButton()
             var config = UIButton.Configuration.plain()
@@ -142,19 +140,14 @@ extension AddSetVC{
             btn.configuration = config
             btn.addAction(.init(handler: { [weak self] _ in
                 print("버튼이 입력됨!!")
-                self?.addImageTapped?()
+                self?.vm?.addImageTapped()
             }), for: .touchUpInside)
             return btn
         }()
-        var detailTapped: (()->Void)?
-        var addImageTapped:(()->Void)?
-        var deleteTapped: (()->Void)?
+        //        var detailTapped: (()->Void)?
         override func configureLayout() {
             super.configureLayout()
-            contentView.addSubview(stView)
-            contentView.addSubview(detailBtn)
-            contentView.addSubview(imageShowView)
-            contentView.addSubview(deleteBtn)
+            [stView,detailBtn,imageShowView,deleteBtn].forEach { contentView.addSubview($0)}
         }
         override func configureConstraints() {
             super.configureConstraints()
@@ -184,22 +177,25 @@ extension AddSetVC{
             definitionField.snp.makeConstraints { make in
                 make.width.equalTo(termField.snp.width)
             }
-//            imageShowView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-//            imageShowView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+            //            imageShowView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            //            imageShowView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         }
         override func configureView() {
             super.configureView()
             contentView.backgroundColor = .lightBg
-            stView.backgroundColor = .bgSecond
             contentView.layer.cornerRadius = 16
             contentView.layer.cornerCurve = .circular
-            termField.placeholder = "Enter a term".localized
-            definitionField.placeholder = "Enter a definition".localized
-            termField.font = .systemFont(ofSize: 17, weight: .regular)
-            definitionField.font = .systemFont(ofSize: 17,weight: .regular)
-            stView.layer.cornerRadius = 16
-            stView.layer.cornerCurve = .circular
-            stView.setShadowLayer()
+        }
+        func getImage(path:String?) async throws {
+            if let path, let image = try await ImageService.shared.fetchByCache(albumID: path,size: .init(width: 44, height: 44)){
+                self.addImageBtn.configuration?.image = image
+                self.addImageBtn.configuration?.attributedTitle = AttributedString("Edit".localized, attributes: .init([
+                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12, weight: .medium)]))
+            }else{
+                self.addImageBtn.configuration?.image = UIImage(systemName: "photo.on.rectangle.angled")
+                self.addImageBtn.configuration?.attributedTitle = AttributedString("Add Image", attributes: .init([
+                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12, weight: .medium)]))
+            }
         }
     }
 }

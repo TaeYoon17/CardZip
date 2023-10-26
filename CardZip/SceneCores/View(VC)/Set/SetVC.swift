@@ -94,7 +94,7 @@ final class SetVC: BaseVC{
                 .init(title: "Edit".localized, systemName: "pencil", completion: { [weak self] in
                     guard let self else {return}
                     let vc = AddSetVC()
-                    vc.vcType = .edit
+//                    vc.vcType = .edit
                     vc.modalPresentationStyle = .pageSheet
                     vc.setItem = setItem
                     vc.passthroughSetItem.sink {[weak self] item in

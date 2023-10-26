@@ -61,7 +61,9 @@ final class MainVC: BaseVC {
     lazy var addCardSetBtn = {
         let btn = NewCardSetBtn()
         btn.addAction(.init(handler: {[weak self] _ in
+            let vm = AddSetVM(dataProcess: .add, setItem: nil)
             let vc = AddSetVC()
+            vc.vm = vm
             let nav = UINavigationController(rootViewController: vc)
             self?.present(nav, animated: true)
         }), for: .touchUpInside)

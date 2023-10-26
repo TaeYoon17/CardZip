@@ -9,14 +9,37 @@ import Foundation
 import Combine
 
 final class AddSetVM{
+    enum CardActionType{
+        case imageTapped
+        case delete
+    }
+    enum SetActionType{
+        case hello
+    }
     @MainActor let repository = CardSetRepository()
     var dataProcess: DataProcessType = .add
     var setItem: SetItem?
     var nowItemsCount: Int = 0
+    
+    // Edit했을 때 변경 사항을 던져주는 passthrough
     var passthroughEditSet = PassthroughSubject<SetItem,Never>()
-    var passthroughCloseAction = PassthroughSubject<Void,Never>()
-    var passthroughErrorMessage = PassthroughSubject<String,Never>()
+    
+    
+    var passthroughCloseAction = PassthroughSubject<Void,Never>() // 닫을 때
+    var passthroughErrorMessage = PassthroughSubject<String,Never>() // 에러 메시지를 던질 때
+//    var passthroughDidBegin = PassthroughSubject<Void,Never>() // 시작할떼..?
+    
+    var updatedCardItem = PassthroughSubject<(CardItem,Bool),Never>() // 리스트에서 단일 카드 내용을 업데이트 할 때
+    var updatedSetItem = PassthroughSubject<SetItem,Never>() // 세트 정보를 업데이트 할 때
+    // 카드에서 뷰컨 프로퍼티를 사용하는 액션을 요청할 때
+    var cardAction = PassthroughSubject<(CardActionType,CardItem?),Never>()
+    var setAction = PassthroughSubject<(SetActionType,SetItem?),Never>()
+    
     @Published var cards:[CardItem] = []
+    init(dataProcess: DataProcessType,setItem: SetItem?){
+        self.dataProcess = dataProcess
+        self.setItem = setItem
+    }
     func createItem(){ cards.append(.init()) }
     @MainActor var setTable:CardSetTable?{
         if let dbKey = setItem?.dbKey,let table = repository?.getTableBy(tableID: dbKey){
@@ -61,11 +84,6 @@ final class AddSetVM{
         repository?.removeAllCards(set: cardSetTable)
         repository?.replaceAllCards(set: cardSetTable, cards: results)
         
-        //        if vcType == .edit{
-        //            setData.cardList = items
-        //            self.passthroughSetItem.send(setData)
-        //        }
-        //        self.closeAction()
         if dataProcess == .edit{
             setItem.cardList = cardItems
             passthroughEditSet.send(setItem)
