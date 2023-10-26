@@ -38,6 +38,16 @@ extension CardVC{
             self.cardsModel = .init(cardItems)
             sectionModel = .init([Section(id: .main, subItems: cardItems.map{$0.id})])
             initDataSource()
+            // 미리 첫 번째 아이템들만 캐싱한다.
+            Task{
+                cardItems.forEach { item in
+                    guard let imagePath = item.imageID.first else {return }
+                    Task.detached(operation: {
+                        try await ImageService.shared.appendCache(albumID: imagePath)
+                        try await ImageService.shared.appendCache(albumID:imagePath,size:.init(width: 720, height: 720))
+                    })
+                }
+            }
         }
         func saveModel(){
             let cardItems = changedCardIDs.compactMap { cardsModel.fetchByID($0) }

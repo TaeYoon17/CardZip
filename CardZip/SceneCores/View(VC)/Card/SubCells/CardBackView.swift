@@ -7,9 +7,7 @@
 
 import UIKit
 import SnapKit
-
 final class CardBackView: BaseView{
-    
     var mean:String?{
         didSet{
             guard let mean else {return}
@@ -21,7 +19,6 @@ final class CardBackView: BaseView{
         label.font = .monospacedSystemFont(ofSize: 28, weight: .medium)
         label.numberOfLines = 0
         label.textAlignment = .center
-        
         return label
     }()
     private lazy var speakerBtn = {

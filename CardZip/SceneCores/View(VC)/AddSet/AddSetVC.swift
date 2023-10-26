@@ -9,8 +9,8 @@ import UIKit
 import SnapKit
 import Combine
 import Photos
+enum DataProcessType{case add, edit}
 final class AddSetVC: EditableVC{
-    enum VC_TYPE {case add, edit}
     enum SectionType:Int{ case header,cards }
     struct Section:Identifiable,Hashable{
         let id: SectionType
@@ -26,11 +26,17 @@ final class AddSetVC: EditableVC{
     var itemModel : AnyModelStore<CardItem>!
     var headerModel : AnyModelStore<SetItem>!
     var sectionModel: AnyModelStore<Section>!
-    var vcType: VC_TYPE = .add
+    var vcType: DataProcessType = .add
     var setItem: SetItem?
     let repository = CardSetRepository()
+    var vm :AddSetVM? // 여기 수정해야함!
     weak var photoService:PhotoService! = PhotoService.shared
-    
+    func emptyCheck(){
+        guard let setItem = vm?.setItem else {return}
+        self.alertLackDatas(title: "Not found card set".localized) {[weak self] in
+            self?.dismiss(animated: true)
+        }
+    }
     func initModels(){
         print(vcType)
         switch vcType {
@@ -97,10 +103,6 @@ final class AddSetVC: EditableVC{
     }
     lazy var navLabel = {
         let label = UILabel()
-//        label.text = switch vcType {
-//        case .add: "New Card Set"
-//        case .edit: "Edit Card Set"
-//        }
         label.font = .preferredFont(forTextStyle: .headline)
         return label
     }()
@@ -128,7 +130,9 @@ final class AddSetVC: EditableVC{
             guard let str = val.first, vc == self else {return}
             configureSetImage(str: str)
         }.store(in: &subscription)
-        
+        vm?.passthroughCloseAction.sink(receiveValue: { [weak self] in
+            self?.closeAction()
+        }).store(in: &subscription)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

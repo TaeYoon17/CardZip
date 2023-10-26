@@ -120,6 +120,7 @@
 		63A0CFBF2AE9161D0060B5F9 /* CardVC+DS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFBE2AE9161D0060B5F9 /* CardVC+DS.swift */; };
 		63A0CFC22AE943AE0060B5F9 /* MoveBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFC12AE943AE0060B5F9 /* MoveBtn.swift */; };
 		63A0CFC42AE9562B0060B5F9 /* CardFrontView+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFC32AE9562B0060B5F9 /* CardFrontView+Collectionable.swift */; };
+		63A0CFC72AE9674D0060B5F9 /* AddSetVC+DS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFC62AE9674D0060B5F9 /* AddSetVC+DS.swift */; };
 		63A0E35D2AE4471D00E6DAAB /* CardVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0E35C2AE4471D00E6DAAB /* CardVM.swift */; };
 		63A3D4312ACE3C6B00E6B10E /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 63A3D4302ACE3C6B00E6B10E /* Realm */; };
 		63A3D4332ACE3C6B00E6B10E /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63A3D4322ACE3C6B00E6B10E /* RealmSwift */; };
@@ -261,6 +262,7 @@
 		63A0CFBE2AE9161D0060B5F9 /* CardVC+DS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardVC+DS.swift"; sourceTree = "<group>"; };
 		63A0CFC12AE943AE0060B5F9 /* MoveBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveBtn.swift; sourceTree = "<group>"; };
 		63A0CFC32AE9562B0060B5F9 /* CardFrontView+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardFrontView+Collectionable.swift"; sourceTree = "<group>"; };
+		63A0CFC62AE9674D0060B5F9 /* AddSetVC+DS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddSetVC+DS.swift"; sourceTree = "<group>"; };
 		63A0E35C2AE4471D00E6DAAB /* CardVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardVM.swift; sourceTree = "<group>"; };
 		63A3D4342ACE3C9E00E6B10E /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		63A3D4382ACE3CCD00E6B10E /* CircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
@@ -416,7 +418,6 @@
 			isa = PBXGroup;
 			children = (
 				63A0CFC52AE9564C0060B5F9 /* CardFrontView */,
-				633BD4AD2AD7DE22006D6955 /* CardVC+CustomView.swift */,
 				6365713B2AD6DDC0008126C4 /* CardView.swift */,
 				6365713F2AD6DE67008126C4 /* CardCell.swift */,
 				63ABC0BF2ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift */,
@@ -543,6 +544,7 @@
 				63E50EF22AD96A75003E0800 /* AddSetVC+DSM.swift */,
 				631331792AD3FA7A00459515 /* AddSet+Collectionable.swift */,
 				6313317B2AD3FB4F00459515 /* AddSet+Registrations.swift */,
+				63A0CFC62AE9674D0060B5F9 /* AddSetVC+DS.swift */,
 			);
 			path = AddSet;
 			sourceTree = "<group>";
@@ -628,6 +630,7 @@
 		63A0CFC02AE943930060B5F9 /* ViewCPT */ = {
 			isa = PBXGroup;
 			children = (
+				633BD4AD2AD7DE22006D6955 /* CardVC+CustomView.swift */,
 				63A0CFC12AE943AE0060B5F9 /* MoveBtn.swift */,
 			);
 			path = ViewCPT;
@@ -997,6 +1000,7 @@
 				63730F642AD274F800BC8F35 /* DisclosureHeader.swift in Sources */,
 				6357EA4E2ADBBBDA005ED852 /* ShowImageVC+DSM.swift in Sources */,
 				63ABC0C02ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift in Sources */,
+				63A0CFC72AE9674D0060B5F9 /* AddSetVC+DS.swift in Sources */,
 				636571342AD6DC69008126C4 /* SetCardListCell.swift in Sources */,
 				6357EA592ADBE2F4005ED852 /* SettingVC+Delegate.swift in Sources */,
 				6357EA512ADBC3A4005ED852 /* DeletableImageCell.swift in Sources */,

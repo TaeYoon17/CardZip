@@ -12,6 +12,8 @@ extension CardVC{
         collectionView.backgroundColor = .bg
         collectionView.isScrollEnabled = true
         collectionView.prefetchDataSource = self
+        collectionView.isPrefetchingEnabled = true
+        
         collectionView.isPagingEnabled = true
         collectionView.showsVerticalScrollIndicator = false
         collectionView.bounces = false

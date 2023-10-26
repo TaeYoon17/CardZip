@@ -53,6 +53,5 @@ class BaseVC: UIViewController{
         if let navi = navigationController{ navi.popViewController(animated: true) }
         self.dismiss(animated: true)
     }
-
 }
 
