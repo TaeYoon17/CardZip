@@ -23,9 +23,6 @@ final class CardCellVM{
         $cardItem.sink {item in
             cardVM.passthroughUpdateCard.send(item)
         }.store(in: &subscription)
-        showDetailImage.sink { number in
-            cardVM.passthroughExpandImage.send((cardItem,number))
-        }.store(in: &subscription)
     }
     deinit{ print("CardCellVM이 삭제됨!!") }
 }

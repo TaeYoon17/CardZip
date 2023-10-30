@@ -12,7 +12,7 @@ import Combine
 //extension SetListVC{
 final class BackView:BaseView{
     @Published var isSelected:Bool = false
-    private var subscription = Set<AnyCancellable>()
+    private var subscription :AnyCancellable?
     let visualView = UIVisualEffectView(effect: UIBlurEffect(style: .prominent))
     let imageView = {
         let v = UIImageView()
@@ -34,12 +34,10 @@ final class BackView:BaseView{
         super.configureView()
         visualView.alpha = 0.3
         imageView.clipsToBounds = true
-        self.$isSelected.sink {[weak self] val in
-            print("ColorView \(val)")
+        subscription?.cancel()
+        subscription = self.$isSelected.sink {[weak self] val in
             self?.colorView.backgroundColor = val ? .lightBg.withAlphaComponent(0.95) : .bgSecond.withAlphaComponent(0.95)
-            
-//            self?.visualView.isHidden = val
-        }.store(in: &subscription)
+        }
     }
     override func configureLayout() {
         super.configureLayout()

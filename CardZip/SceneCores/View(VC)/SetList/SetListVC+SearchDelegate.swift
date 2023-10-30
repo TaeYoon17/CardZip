@@ -16,10 +16,10 @@ extension SetListVC: UISearchBarDelegate,UISearchControllerDelegate{
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.vm.searchText = searchText
-        guard !searchText.isEmpty else{
-            searchBarCancelButtonClicked(searchBar)
-            return
-        }
+//        guard !searchText.isEmpty else{
+//            searchBarCancelButtonClicked(searchBar)
+//            return
+//        }
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         dataSource.initItem()

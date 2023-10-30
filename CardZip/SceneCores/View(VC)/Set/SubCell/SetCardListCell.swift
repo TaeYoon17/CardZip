@@ -75,7 +75,6 @@ final class SetCardListCell: BaseCell{
     //        didSet{ vm.setVM = setVM }
     //    }
     var subscription = Set<AnyCancellable>()
-    var sinker: AnyCancellable?
     var isSpeaker: Bool = false{
         didSet{ speakerBtn.isTapped = isSpeaker }
     }
@@ -169,9 +168,6 @@ final class SetCardListCell: BaseCell{
         //                    }.store(in: &subscription)
         //        self.checkBtn.addTarget(self, action: #selector(Self.itemtapped), for: .touchUpInside)
         
-    }
-    deinit{
-        print("cell removed!!")
     }
 }
 

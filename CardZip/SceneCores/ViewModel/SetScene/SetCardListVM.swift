@@ -16,9 +16,6 @@ final class SetCardListVM{
         self.setVM = setVM
         self.cardItem = cardItem
     }
-    deinit{
-        print("SetCardListVM이 사라짐!!")
-    }
     func updateCardItem(){
 //        guard let cardItem else {return}
 //        print(#function,"이게 여러번 울리는 거야",cardItem.title)

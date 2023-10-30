@@ -18,9 +18,7 @@ extension AddImageVC{
         dataSource.apply(snapshot,animatingDifferences: true)
     }
     func selectionUpdate(ids: [String]) async{
-        var newSelection:[ String:UIImage] = [:]
-        for str in ids{ newSelection[str] = await .fetchBy(identifier: str) }
-        self.selection = newSelection
+        self.selection = ids
     }
     @MainActor func getCurrentImageIds()->[String]{
         let snapshot = dataSource.snapshot()
@@ -38,7 +36,8 @@ extension AddImageVC{
     }
     @MainActor func deleteCell(item:String){
         var snapshot = dataSource.snapshot()
-        selection.removeValue(forKey: item)
+//        selection.removeValue(forKey: item)
+        selection.removeAll { $0 == item }
         snapshot.deleteItems([item])
         imageCount -= 1
         dataSource.apply(snapshot,animatingDifferences: true)

@@ -14,12 +14,11 @@ extension SetVC: Collectionable{
         let cellRegistration = cardListRegistration
         let cellHeaderRegi = setCardHeaderReusable
         let collectionHeader = setHeaderReusable
-        dataSource = DataSource(vm:vm,collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
+        dataSource = DataSource(vm:vm,collectionView: collectionView, cellProvider: {collectionView, indexPath, itemIdentifier in
             let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
-            guard let cardItem = self?.dataSource.cardModel?.fetchByID(itemIdentifier.id), let self else {return .init()}
            return cell
         })
-        dataSource.supplementaryViewProvider =  {[weak self]collectionView, kind, indexPath in
+        dataSource.supplementaryViewProvider =  { collectionView, kind, indexPath in
             switch kind{
             case "LayoutHeader":
                 let view: TopHeaderReusableView =  collectionView.dequeueConfiguredReusableSupplementary(using: collectionHeader, for: indexPath)

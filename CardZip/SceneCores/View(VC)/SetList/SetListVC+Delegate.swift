@@ -11,22 +11,21 @@ import UIKit
 extension SetListVC:UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath),
-        let setItem = dataSource.setModel.fetchByID(item) else {return}
+              let setItem = dataSource.setModel.fetchByID(item) else {return}
         let vm = SetVM(setItem: setItem)
         let vc = SetVC()
         vc.vm = vm
-//        vc.setItem = setItem
-        print(setItem.id == item)
-        vm.$setItem.receive(on: RunLoop.main).sink {[weak self] setItem in
-            guard let self else {return}
-            dataSource.changeItem(before: item, after: setItem)
-        }.store(in: &subscription)
-
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.01){
-            self.navigationController?.pushViewController(vc, animated: true)
-            tableView.deselectRow(at: indexPath, animated: true)
+        setItemCancel?.cancel()
+        setItemCancel = vm.$setItem
+            .debounce(for: 0.4, scheduler: RunLoop.main)
+            .sink {[weak self] setItem in
+            guard let self,setItem.id != item else {return}
+            
+            dataSource.initItem()
         }
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationController?.pushViewController(vc, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     @objc func editTapped() {
         collectionView.setEditing(!collectionView.isEditing, animated: true)

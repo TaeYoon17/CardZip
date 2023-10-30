@@ -23,7 +23,7 @@ extension CardFrontView: UICollectionViewDelegate{
             let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
             cell.expandAction = {[weak self] in
                 guard let self else {return}
-                print(nowImageIndex)
+//                print(nowImageIndex)
                 if let cardVM{
                     cardVM.showDetailImage.send(nowImageIndex)
                 }else{

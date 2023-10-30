@@ -12,6 +12,7 @@ final class TopHeaderReusableView: UICollectionReusableView{
     weak var vm: SetHeaderVM!{
         didSet{
             guard let vm else {return}
+            subscription.removeAll()
             vm.$setItem.sink {[weak self] item in
                 guard let self else {return}
                 if let path = item?.imagePath{
@@ -34,9 +35,9 @@ final class TopHeaderReusableView: UICollectionReusableView{
                 descriptionLabel.textColor = .cardPrimary
                 Task{ self.playBtn.alpha = CGFloat(max(1,item?.cardCount ?? 0)) }
             }.store(in: &subscription)
-            playBtn.addAction(.init(handler: { _ in
+            playBtn.publisher(for: .touchUpInside).sink { _ in
                 vm.shuffleAction()
-            }), for: .touchUpInside)
+            }.store(in: &subscription)
         }
     }
     var subscription = Set<AnyCancellable>()

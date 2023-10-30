@@ -12,13 +12,13 @@ import RealmSwift
 import Combine
 final class SetListVC: BaseVC{
     enum SectionType:Int{ case main }
-//    lazy var repository = CardSetRepository()
     struct Section:Identifiable{
         let id: SectionType
         var subItems:[SetItem.ID]
     }
     lazy var collectionView = UITableView(frame: .zero, style: .insetGrouped)
     var dataSource: SetListDataSource!
+    var setItemCancel: AnyCancellable?
     let vm = SetListVM()
     lazy var navBackBtn = {
         let btn = NavBarButton(systemName:  "chevron.left")

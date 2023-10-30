@@ -14,6 +14,7 @@ extension AddSetVC{
         weak var vm: AddSetItemCellVM?{
             didSet{
                 guard let vm else {return}
+                subscription.removeAll()
                 vm.$cardItem.prefix(1).sink {[weak self] cardItem in
                     self?.termField.text = cardItem.title
                     self?.definitionField.text = cardItem.definition
@@ -21,6 +22,22 @@ extension AddSetVC{
                 }.store(in: &subscription)
                 termField.textPublisher.assign(to: \.cardItem.title, on: vm).store(in: &subscription)
                 definitionField.textPublisher.assign(to: \.cardItem.definition, on: vm).store(in: &subscription)
+                termField.publisher(for: .editingDidBegin).sink { [weak self] _ in
+                    self?.termField.placeholder = ""
+                }.store(in: &subscription)
+                definitionField.publisher(for: .editingDidBegin).sink { [weak self] _ in
+                    self?.definitionField.placeholder = ""
+                }.store(in: &subscription)
+                definitionField.publisher(for: .editingDidEnd).sink { [weak self] _ in
+                    self?.definitionField.placeholder = "Enter a definition".localized
+                }.store(in: &subscription)
+                termField.publisher(for: .editingDidEnd).sink { [weak self] _ in
+                    self?.termField.placeholder = "Enter a term".localized
+                }.store(in: &subscription)
+                addImageBtn.publisher(for: .touchUpInside).sink { [weak self] _ in
+                    print("버튼이 입력됨!!")
+                    self?.vm?.addImageTapped()
+                }.store(in: &subscription)
             }
         }
         var subscription = Set<AnyCancellable>()
@@ -35,32 +52,14 @@ extension AddSetVC{
         //        var didBegin:(()->Void)?
         lazy var termField = {
             let field = InsetTextField()
-            field.textPublisher.sink(receiveValue: {[weak self] val in
-                            self?.vm?.cardItem.title = val
-                        }).store(in: &subscription)
             field.font = .systemFont(ofSize: 17,weight: .regular)
             field.placeholder = "Enter a term".localized
-            field.addAction(.init(handler: { [weak self] _ in
-                field.placeholder = ""
-                //                self?.didBegin?()
-            }), for: .editingDidBegin)
-            field.addAction(.init(handler: { [weak self] _ in
-                field.placeholder = "Enter a term".localized
-            }), for: .editingDidEnd)
             return field
         }()
         lazy var definitionField = {
             let field = InsetTextField()
             field.font = .systemFont(ofSize: 17,weight: .regular)
             field.placeholder = "Enter a definition".localized
-            field.addAction(.init(handler: { [weak self] _ in
-                field.placeholder = ""
-                //                self?.didBegin?()
-                //                self?.addSetVM.passthroughDidBegin.send()
-            }), for: .editingDidBegin)
-            field.addAction(.init(handler: { [weak self] _ in
-                field.placeholder = "Enter a definition".localized
-            }), for: .editingDidEnd)
             return field
         }()
         lazy var detailBtn = {
@@ -76,9 +75,6 @@ extension AddSetVC{
             config.baseForegroundColor = .secondaryLabel
             config.image = UIImage(systemName: "", withConfiguration: .getConfig(ofSize: 8, weight: .heavy))
             btn.configuration = config
-            btn.addAction(.init(handler: { [weak self] _ in
-                //                self?.detailTapped?()
-            }), for: .touchUpInside)
             return btn
         }()
         lazy var deleteBtn = {
@@ -138,10 +134,6 @@ extension AddSetVC{
             config.imagePadding = 8
             config.imagePlacement = .top
             btn.configuration = config
-            btn.addAction(.init(handler: { [weak self] _ in
-                print("버튼이 입력됨!!")
-                self?.vm?.addImageTapped()
-            }), for: .touchUpInside)
             return btn
         }()
         //        var detailTapped: (()->Void)?
@@ -187,8 +179,9 @@ extension AddSetVC{
             contentView.layer.cornerCurve = .circular
         }
         func getImage(path:String?) async throws {
-            if let path, let image = try await ImageService.shared.fetchByCache(albumID: path,size: .init(width: 44, height: 44)){
-                self.addImageBtn.configuration?.image = image
+            if let path, let image = try await ImageService.shared.fetchByCache(albumID: path,size: .init(width: 360, height: 360)){
+                self.addImageBtn.configuration?.image = image.preparingThumbnail(of: .init(width: 44, height: 44))
+                
                 self.addImageBtn.configuration?.attributedTitle = AttributedString("Edit".localized, attributes: .init([
                     NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12, weight: .medium)]))
             }else{

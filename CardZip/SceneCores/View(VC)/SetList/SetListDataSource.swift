@@ -14,19 +14,12 @@ extension SetListVC{
         typealias Section = SetListVC.Section
         var sectionModel : AnyModelStore<Section>!
         var setModel: AnyModelStore<SetItem>!
-        weak var vm: SetListVM?
+        weak var vm: SetListVM!
         var subscription = Set<AnyCancellable>()
         init(vm: SetListVM,tableView: UITableView, cellProvider: @escaping UITableViewDiffableDataSource<SetListVC.Section.ID, SetItem.ID>.CellProvider) {
             super.init(tableView: tableView, cellProvider: cellProvider)
             self.vm = vm
-            Task{
-                let items =  try await vm.getSetItems()
-                setModel = .init(items)
-                let itemIDs = items.map{$0.id}
-                sectionModel = .init([Section(id: .main, subItems: itemIDs)])
-                initDataSource()
-                vm.isLoading = false
-            }
+            initItem()
             vm.$searchText.sink {[weak self] text in
                 guard let self,let sectionItem = sectionModel?.fetchByID(.main) else {return}
                 if text.isEmpty {
@@ -48,7 +41,16 @@ extension SetListVC{
                 }
             }
         }
-        func initItem(){ initDataSource() }
+        func initItem(){
+            Task{
+                let items =  try await vm.getSetItems()
+                setModel = .init(items)
+                let itemIDs = items.map{$0.id}
+                sectionModel = .init([Section(id: .main, subItems: itemIDs)])
+                initDataSource()
+                vm.isLoading = false
+            }
+        }
         func changeItem(before:SetItem.ID,after:SetItem?){
             if before == after?.id { return }
             var subItems = sectionModel.fetchByID(.main).subItems

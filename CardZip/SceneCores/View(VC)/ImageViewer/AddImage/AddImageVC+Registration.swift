@@ -11,9 +11,10 @@ import Photos
 //MARK: -- CELL REGISTRATION
 extension AddImageVC{
     var imageRegistration:UICollectionView.CellRegistration<DeletableImageCell,String>{
-        UICollectionView.CellRegistration<DeletableImageCell,String> {[weak self] cell, indexPath, itemIdentifier in
-            cell.image = self?.selection[itemIdentifier]
-            
+        UICollectionView.CellRegistration<DeletableImageCell,String> {cell, indexPath, itemIdentifier in
+            Task{
+                cell.image = try await ImageService.shared.fetchByCache(albumID: itemIdentifier)
+            }
         }
     }
     var addRegistration: UICollectionView.CellRegistration<AddItemCell,String>{
@@ -35,6 +36,16 @@ extension AddImageVC{
 //                    })
                 ])
                 self?.present(actionSheet, animated: true)
+            }
+        }
+    }
+}
+extension AddImageVC: UICollectionViewDataSourcePrefetching{
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach {
+            guard let path = dataSource.itemIdentifier(for: $0) else {return}
+            Task{
+                try await ImageService.shared.appendCache(albumID: path )
             }
         }
     }

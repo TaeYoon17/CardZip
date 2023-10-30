@@ -100,7 +100,10 @@ final class CardVC: BaseVC{
             closeBtn.configuration?.attributedTitle = AttributedString(setItem?.title ?? "" ,
                                                                        attributes: .init([NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium),NSAttributedString.Key.foregroundColor : UIColor.cardPrimary]))
         }.store(in: &subscription)
-        vm.passthroughExpandImage.sink {[weak self] cardItem, number in
+        vm.passthroughExpandImage
+            .receive(on: RunLoop.main)
+            .sink {[weak self] cardItem, number in
+//            print("card iamge number \(number)")
             let vc = ShowImageVC()
             vc.cardItem = cardItem
             vc.setName = self?.vm.setItem.title

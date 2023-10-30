@@ -19,39 +19,6 @@ extension SetVC: UISearchControllerDelegate,UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         vm.searchText = searchText
     }
-//    @MainActor func searchAction(text:String){
-//        var snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>()
-//        guard let filterItems = sectionModel?.fetchByID(.main).sumItem.filter ({ item in
-//            guard let card = self.cardModel?.fetchByID(item.id) else {return false}
-//            return card.title.contains(text) || card.definition.contains(text)
-//        }) else {return}
-//        snapshot.appendSections([.main])
-//        snapshot.appendItems(filterItems, toSection: .main)
-//        dataSource.apply(snapshot,animatingDifferences: true)
-//    }
-//    @MainActor func searchAction(text:String) async{
-//        guard !text.isEmpty else {return }
-//        var snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>()
-//        guard let filterItems = sectionModel?.fetchByID(.main).sumItem.filter ({ item in
-//            guard let card = self.cardModel?.fetchByID(item.id) else {return false}
-//            return card.title.contains(text) || card.definition.contains(text)
-//        }) else {return}
-//        snapshot.appendSections([.main])
-//        snapshot.appendItems(filterItems, toSection: .main)
-//        await dataSource.apply(snapshot,animatingDifferences: true)
-//    }
-//    @MainActor func searchAction(text:String) async throws -> Snapshot{
-//        guard !text.isEmpty else { throw DataSourceError.SnapshotQueryInvalid}
-//        let snapshot = dataSource.snapshot()
-//        let filterItems = snapshot.itemIdentifiers(inSection: .main).filter { item in
-//            guard let card = self.cardModel?.fetchByID(item.id) else {return false}
-//            return card.title.contains(text) || card.definition.contains(text)
-//        }
-//        var newSnapshot = Snapshot()
-//        newSnapshot.appendSections([.main])
-//        newSnapshot.appendItems(filterItems,toSection: .main)
-//        return newSnapshot
-//    }
 }
 extension SetVC{
     func willPresentSearchController(_ searchController: UISearchController) {

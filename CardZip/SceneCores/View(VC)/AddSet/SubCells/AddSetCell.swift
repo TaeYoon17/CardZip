@@ -14,6 +14,7 @@ extension AddSetVC{
         weak var vm: AddSetHeaderVM!{
             didSet{
                 guard let vm else {return }
+                subscription.removeAll()
                 vm.$setItem.prefix(1).sink {[weak self] setItem in
                     guard let self else {return}
                     titleField.text = setItem.title
@@ -38,9 +39,9 @@ extension AddSetVC{
                 descriptionField.textPublisher
                     .assign(to: \.setItem.setDescription, on: vm)
                     .store(in: &subscription)
-                emptyBtn.imageTappedAction = { [weak self] in
+                emptyBtn.publisher(for: .touchUpInside).sink { [weak self] _ in
                     self?.vm.imageTappedAction()
-                }
+                }.store(in: &subscription)
                 editBtn.imageTappedAction = { [weak self] in
                     self?.vm.imageTappedAction()
                 }
@@ -217,6 +218,7 @@ fileprivate extension AddSetVC.AddSetCell{
         var imageTappedAction : (()->Void)?
         override init(frame: CGRect) {
             super.init(frame: frame)
+            imageView.contentMode = .scaleAspectFit
             [imageView,bgView,label].forEach{self.addSubview($0)}
             Task{
                 layer.cornerRadius = imageView.bounds.width / 2

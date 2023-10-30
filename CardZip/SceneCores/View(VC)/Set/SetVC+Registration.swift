@@ -11,10 +11,6 @@ extension SetVC{
     var cardListRegistration:UICollectionView.CellRegistration<SetCardListCell,Item> {
         UICollectionView.CellRegistration{[weak self] cell, indexPath, itemIdentifier in
             guard let cardItem = self?.dataSource.cardModel?.fetchByID(itemIdentifier.id), let self else {return}
-//            cell.cardItem = nil
-//            cell.setVM = nil
-//            cell.cardItem = cardItem
-//            cell.setVM = vm
             let cardVM = SetCardListVM(setVM: vm,cardItem: cardItem)
             cell.vm = cardVM
             cell.isSpeaker = false

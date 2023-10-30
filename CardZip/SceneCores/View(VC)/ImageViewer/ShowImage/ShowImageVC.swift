@@ -19,20 +19,26 @@ final class ShowImageVC: ImageViewerVC{
             closeBtn.title = setName
         }
     }
+    override var cardItem: CardItem?{
+        didSet{
+            guard let cardItem else {return}
+            
+        }
+    }
     deinit{ print("ShowImageVC가 사라짐!!") }
     override func configureCollectionView(){
         collectionView.backgroundColor = .bg
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isPagingEnabled = true
+        collectionView.prefetchDataSource = self
         let registration = imageRegistration
         dataSource = UICollectionViewDiffableDataSource<Section,String>(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: itemIdentifier)
         })
-        Task{
-            let imageIds = cardItem?.imageID ?? []
-            await selectionUpdate(ids: imageIds)
-            updateSnapshot(result: imageIds)
-        }
+        guard let cardItem else {return}
+        let imageIds = cardItem.imageID
+        self.selection = imageIds
+        self.updateSnapshot(result: imageIds)
     }
     override func configureNavigation() {
         super.configureNavigation()
@@ -48,6 +54,14 @@ final class ShowImageVC: ImageViewerVC{
         if let startNumber{
             collectionView.scrollToItem(index: startNumber,axis: .x)
             self.startNumber = nil
+        }
+    }
+}
+extension ShowImageVC: UICollectionViewDataSourcePrefetching{
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach { indexPath in
+            guard let imagePath = dataSource.itemIdentifier(for: indexPath) else {return}
+            Task{ try await ImageService.shared.appendCache(albumID: imagePath) }
         }
     }
 }

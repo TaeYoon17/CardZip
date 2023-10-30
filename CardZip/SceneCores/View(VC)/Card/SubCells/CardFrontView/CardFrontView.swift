@@ -13,6 +13,7 @@ final class CardFrontView: BaseView{
         didSet{
             guard let cardVM else { return }
             // 한번만 Stream 받기
+            subscription.removeAll()
             cardVM.$cardItem.prefix(1).sink {[weak self] item in
                 guard let self else {return}
                 initDataSource(images: item.imageID)
@@ -20,6 +21,9 @@ final class CardFrontView: BaseView{
                 titleLabel.alpha = 1
                 imageLabel.isHidden = item.imageID.count < 2
                 imageLabel.text = "\(nowImageIndex + 1) / \(item.imageID.count)"
+                self.isShow = !item.imageID.isEmpty
+                collectionView.isHidden = item.imageID.isEmpty
+                showBtn.isHidden = item.imageID.isEmpty
                 // 여기서 미리 다 캐싱한다.
                 item.imageID.forEach { imagePath in
                     Task{

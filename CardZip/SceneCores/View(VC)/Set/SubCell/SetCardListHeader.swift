@@ -6,17 +6,26 @@
 //
 
 import UIKit
+import Combine
 final class SetCardListHeader: UICollectionReusableView{
 //    @Published var isChecked:Bool = false
+    var subscription = Set<AnyCancellable>()
     weak var vm: SetCardListHeaderVM!{
         didSet{
             guard let vm else {return}
-            segment.addAction(.init(handler: { [weak self] _ in
+            subscription.removeAll()
+            segment.publisher(for: .valueChanged).sink { [weak self] _ in
                 guard let self else {return}
                 let nowType: StudyType = segment.selectedSegmentIndex == 1 ? .check : .basic
                 let prevType = vm.studyType
                 if prevType != nowType{ vm.studyType = nowType }
-            }), for: .valueChanged)
+            }.store(in: &subscription)
+//            segment.addAction(.init(handler: { [weak self] _ in
+//                guard let self else {return}
+//                let nowType: StudyType = segment.selectedSegmentIndex == 1 ? .check : .basic
+//                let prevType = vm.studyType
+//                if prevType != nowType{ vm.studyType = nowType }
+//            }), for: .valueChanged)
         }
     }
     private var prevIdx = 0

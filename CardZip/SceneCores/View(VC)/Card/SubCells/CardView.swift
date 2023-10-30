@@ -14,6 +14,7 @@ final class CardView: BaseView{
     weak var vm: CardCellVM!{
         didSet{
             guard let vm else {return}
+            subscription.removeAll()
             self.frontView.cardVM = vm
             self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(Self.tapped)))
             vm.$isFront.sink {[weak self]  val in

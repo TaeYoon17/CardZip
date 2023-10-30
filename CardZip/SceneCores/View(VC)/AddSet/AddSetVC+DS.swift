@@ -25,12 +25,16 @@ extension AddSetVC{
                 self?.itemModel.insertModel(item: item)
                 if reloadDS{ self?.reconfigureDataSource(cardItem: item) }
             }.store(in: &subscription)
+            
             vm.updatedSetItem.sink { [weak self] (item,reloadDS) in
                 self?.headerModel.insertModel(item: item)
                 if reloadDS {self?.reconfigureDataSource(setItem: item)}
             }.store(in: &subscription)
-            vm.photoService.passthroughIdentifiers.sink {[weak self] (val,vc) in
+            
+            vm.photoService.passthroughIdentifiers
+                .sink {[weak self] (val,vc) in
                 guard let self,let str = val.first else {return}
+                guard vc is AddSetVC else {return}
                 guard let item: Item = snapshot().itemIdentifiers(inSection: .header).first,
                       var cardSetItem = headerModel.fetchByID(item.id) else {return}
                 cardSetItem.imagePath = str
@@ -121,13 +125,12 @@ fileprivate extension AddSetVC.DataSource{
     //MARK: -- RECONFIGURE DATASOURCE
     @MainActor func reconfigureDataSource(cardItem: CardItem){
         var snapshot = snapshot()
-        guard  let item = snapshot.itemIdentifiers(inSection: .cards).first(where: { $0.id == cardItem.id }) else {return}
+        guard let item = snapshot.itemIdentifiers(inSection: .cards).first(where: { $0.id == cardItem.id }) else {return}
         reconfigureDataSource(item: item)
     }
     @MainActor func reconfigureDataSource(setItem: SetItem){
         var snapshot = snapshot()
-        guard let item = snapshot.itemIdentifiers(inSection: .header).first(where: { $0.id == setItem.id
-        }) else {return}
+        guard let item = snapshot.itemIdentifiers(inSection: .header).first(where: { $0.id == setItem.id}) else {return}
         reconfigureDataSource(item: item)
     }
     @MainActor func reconfigureDataSource(item: Item){
@@ -139,8 +142,8 @@ fileprivate extension AddSetVC.DataSource{
     @MainActor func deleteDataSource(deleteItem: Item){
         var snapshot = snapshot()
         snapshot.deleteItems([deleteItem])
-        vm.nowItemsCount = getItemsCount
         apply(snapshot,animatingDifferences: true)
+        vm.nowItemsCount = getItemsCount
     }
     //MARK: -- APPEND DATASOURCE
     @MainActor func appendDataSource(item: Item,toSection: SectionType = .cards){ // 데이터 소스만 추가, DB 저장 아님

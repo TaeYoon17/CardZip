@@ -26,14 +26,6 @@ extension SetVC: UICollectionViewDelegate{
         vc.passthorughCompletion.sink { [weak self]  in
             guard let self else {return}
             self.vm.initModel()
-//            Task{
-//                var snapshot: Snapshot
-//                switch self.vm.studyType{
-//                case .basic,.random: snapshot = try await self.initDataSource()
-//                case .check: snapshot = try await self.initCheckedDataSource()
-//                }
-//                await self.dataSource.apply(snapshot,animatingDifferences: true)
-//            }
         }.store(in: &subscription)
         
         let nav = UINavigationController(rootViewController: vc)
@@ -51,14 +43,6 @@ extension SetVC: UICollectionViewDelegate{
         vc.passthorughCompletion.sink { [weak self]  in
             guard let self else {return}
             self.vm.initModel()
-//            Task{
-//                var snapshot:Snapshot
-//                switch self.vm.studyType{
-//                case .basic,.random: snapshot = try await self.initDataSource()
-//                case .check: snapshot = try await self.initCheckedDataSource()
-//                }
-//                await self.dataSource.apply(snapshot,animatingDifferences: true)
-//            }
         }.store(in: &subscription)
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .fullScreen

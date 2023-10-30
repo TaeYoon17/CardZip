@@ -11,7 +11,7 @@ class ImageViewerVC: BaseVC,ImageCollectionAble{
     enum Section{ case main }
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     var dataSource: UICollectionViewDiffableDataSource<Section,String>!
-    @MainActor final var selection = [String: UIImage]()
+    @MainActor final var selection = [String]()
     var setName:String?
     var cardItem: CardItem?
     final var imageCount: Int = -1{

@@ -27,8 +27,9 @@ final class SetVC: BaseVC{
     var vm:SetVM!{
         didSet{
             guard let vm else { fatalError("SETVM DON'T HAVE IT") }
+            subscription.removeAll()
             vm.initModel()
-            moreBtn.addAction(.init(handler: { [weak self] _ in
+            moreBtn.publisher(for: .touchUpInside).sink { [weak self] _ in
                 let alertVC = CustomAlertController(actionList: [
                     .init(title: "Edit".localized, systemName: "pencil", completion: { [weak self] in
                         guard let self else {return}
@@ -51,10 +52,13 @@ final class SetVC: BaseVC{
                     })
                 ])
                 self?.present(alertVC, animated: true)
-            }), for: .touchUpInside)
-            if vm.likedSetId != vm.setItem.dbKey{
-                rightStView.addArrangedSubview(moreBtn)
-            }
+            }.store(in: &subscription)
+            if vm.likedSetId != vm.setItem.dbKey{ rightStView.addArrangedSubview(moreBtn) }
+            vm.$setItem.sink {[weak self] setItem in
+                Task{
+                    self?.navigationItem.titleView = NavigationTitleView(frame: .zero, title: vm.setItem.title)
+                }
+            }.store(in: &subscription)
         }
     }
 

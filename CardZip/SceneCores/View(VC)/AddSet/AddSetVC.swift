@@ -71,7 +71,9 @@ final class AddSetVC: EditableVC{
         vm.passthroughErrorMessage.sink {[weak self] errorMessage in
             self?.alertLackDatas(title: errorMessage)
         }.store(in: &subscription)
-        vm.cardAction.sink {[weak self] actionType,cardItem in
+        vm.cardAction
+            .receive(on: RunLoop.main)
+            .sink {[weak self] actionType,cardItem in
             guard let self,let cardItem else {return}
             switch actionType{
             case .imageTapped:

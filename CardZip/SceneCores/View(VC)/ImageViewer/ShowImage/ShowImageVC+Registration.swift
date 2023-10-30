@@ -11,8 +11,20 @@ import Photos
 //MARK: -- CELL REGISTRATION
 extension ShowImageVC{
     var imageRegistration:UICollectionView.CellRegistration<ImageCell,String>{
-        UICollectionView.CellRegistration<ImageCell,String> {[weak self] cell, indexPath, itemIdentifier in
-            cell.image = self?.selection[itemIdentifier]
+        UICollectionView.CellRegistration<ImageCell,String> { cell, indexPath, itemIdentifier in
+            Task{ @MainActor in
+                do{
+                    
+                    if let image = try await ImageService.shared.fetchByCache(albumID: itemIdentifier){
+                        cell.image = image
+                    }else{
+                        print("이게 왜 안됨?")
+                    }
+                }catch{
+                    print(error)
+                }
+            }
+//            self?.selection[itemIdentifier]
         }
     }
 }

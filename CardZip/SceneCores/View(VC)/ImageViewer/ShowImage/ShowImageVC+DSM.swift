@@ -16,8 +16,6 @@ extension ShowImageVC{
         dataSource.apply(snapshot,animatingDifferences: true)
     }
     func selectionUpdate(ids: [String]) async{
-        var newSelection:[ String:UIImage] = [:]
-        for str in ids{ newSelection[str] = await .fetchBy(identifier: str) }
-        self.selection = newSelection
+        self.selection = ids
     }
 }
