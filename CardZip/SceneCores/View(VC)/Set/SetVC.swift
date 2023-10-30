@@ -9,10 +9,6 @@ import UIKit
 import SnapKit
 import Combine
 import RealmSwift
-class SetVM{
-    @Published var studyType:StudyType = .basic
-    var searchText:String = ""
-}
 
 final class SetVC: BaseVC{
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>
@@ -26,58 +22,42 @@ final class SetVC: BaseVC{
         let type: SectionType
     }
     enum HeaderType {case full,small}
-    @DefaultsState(\.recentSet) var recentSetId
-    @DefaultsState(\.likedSet) var likedSetId
-    @Published var setItem: SetItem?
     lazy var collectionView = UICollectionView(frame: .zero,collectionViewLayout: layout)
-    let setRepository = CardSetRepository()
-    let cardRepository = CardRepository()
-    
-    var dataSource : UICollectionViewDiffableDataSource<Section.ID,Item>!
-    var cardModel: AnyModelStore<CardItem>?
-    var sectionModel: AnyModelStore<Section>?
-    let vm = SetVM()
-    func initModel(){
-        setRepository?.checkPath()
-        guard let dbKey = setItem?.dbKey,
-              let setTable = setRepository?.getTableBy(tableID: dbKey) else {
-            self.alertLackDatas(title: "Not found card set".localized){
-                self.navigationController?.popViewController(animated: true)
-            }
-            return
-        }
-        if dbKey != likedSetId{ recentSetId = dbKey }
-        else{
-            var image:String? = nil
-            if setTable.cardList.isEmpty{
-                self.alertLackDatas(title: "Cards Empty".localized){
-                    if var setItem = self.setItem{
-                        setItem.imagePath = image
-                        Task{ self.setRepository?.updateHead(set:setTable,setItem:setItem) }
-                    }
-                    self.navigationController?.popViewController(animated: true)
-                }
-            }else if let cardTable = setTable.cardList.where({ ($0.imagePathes).count > 1 }).first{
-                image = cardTable.imagePathes.first
-                if var setItem = self.setItem{
-                    setItem.imagePath = image
-                    Task{
-                        self.setRepository?.updateHead(set:setTable,setItem:setItem)
-                    }
-                }
+    var dataSource : DataSource!
+    var vm:SetVM!{
+        didSet{
+            guard let vm else { fatalError("SETVM DON'T HAVE IT") }
+            vm.initModel()
+            moreBtn.addAction(.init(handler: { [weak self] _ in
+                let alertVC = CustomAlertController(actionList: [
+                    .init(title: "Edit".localized, systemName: "pencil", completion: { [weak self] in
+                        guard let self else {return}
+                        let addSetVM = AddSetVM(dataProcess: .edit, setItem: vm.setItem)
+                        let vc = AddSetVC()
+                        vc.vm = addSetVM
+                        vc.modalPresentationStyle = .pageSheet
+                        addSetVM.passthroughEditSet.sink {[weak self] item in
+                            guard let self else {return}
+                            self.vm.setItem = item
+                            collectionView.reloadData()
+                            self.vm.initModel()
+                        }.store(in: &subscription)
+                        let nav = UINavigationController(rootViewController: vc)
+                        present(nav, animated: true)
+                    }),
+                    .init(title: "Delete".localized, systemName: "trash", completion: { [weak self] in
+                        self?.vm.deleteSet()
+                        self?.closeAction()
+                    })
+                ])
+                self?.present(alertVC, animated: true)
+            }), for: .touchUpInside)
+            if vm.likedSetId != vm.setItem.dbKey{
+                rightStView.addArrangedSubview(moreBtn)
             }
         }
-        let cardTables = Array(setTable.cardList)
-        let cardItems = cardTables.map { table in
-            CardItem(title: table.term, definition: table.definition, imageID: [], dbKey: table._id,isLike: table.isLike,isChecked: table.isCheck)
-        }
-        cardModel = .init(cardItems)
-        sectionModel = .init([Section(id: .main, sumItem: cardItems.map{Item(id: $0.id, type: .main)})])
-//        Task{
-//            collectionView.reloadData() // 레이아웃 헤더를 업데이트 하기 위함
-//            collectionView.reloadSections(_:)
-//        }
     }
+
     
     lazy var closeBtn = {
         let btn = NavBarButton(systemName: "chevron.left")
@@ -89,48 +69,6 @@ final class SetVC: BaseVC{
     }()
     lazy var moreBtn = {
         let btn = NavBarButton(systemName: "ellipsis")
-        btn.addAction(.init(handler: { [weak self] _ in
-            let alertVC = CustomAlertController(actionList: [
-                .init(title: "Edit".localized, systemName: "pencil", completion: { [weak self] in
-                    guard let self else {return}
-                    let vc = AddSetVC()
-//                    vc.vcType = .edit
-                    vc.modalPresentationStyle = .pageSheet
-                    vc.setItem = setItem
-                    vc.passthroughSetItem.sink {[weak self] item in
-                        self?.setItem = item
-                        self?.collectionView.reloadData()
-                        self?.initModel()
-                        guard let self else {return}
-                        Task{
-                            var snapshot:Snapshot
-                            switch self.vm.studyType {
-                            case .random,.basic: snapshot = try await self.initDataSource()
-                            case .check: snapshot = try await self.initCheckedDataSource()
-                            }
-                            await self.dataSource.apply(snapshot)
-                        }
-                    }.store(in: &subscription)
-                    let nav = UINavigationController(rootViewController: vc)
-                    present(nav, animated: true)
-                }),
-                .init(title: "Delete".localized, systemName: "trash", completion: { [weak self] in
-                    guard let dbKey = self?.setItem?.dbKey else{
-                        print("Delete dbkey not found")
-                        return }
-                    do{
-                        self?.setRepository?.deleteAllCards(id: dbKey)
-                        try self?.setRepository?.deleteTableBy(tableID: dbKey)
-                    }catch{
-                        print("DBKey가 없음!!")
-                    }
-                    self?.setItem = nil
-                    self?.recentSetId = nil
-                    self?.closeAction()
-                })
-            ])
-            self?.present(alertVC, animated: true)
-        }), for: .touchUpInside)
         return btn
     }()
     lazy var searchBtn = {
@@ -149,7 +87,7 @@ final class SetVC: BaseVC{
     }()
     lazy var rightStView = {
         let st = UIStackView(arrangedSubviews: [searchBtn,/*moreBtn*/])
-        if likedSetId != setItem?.dbKey{ st.addArrangedSubview(moreBtn) }
+//        if vm.likedSetId != vm.setItem?.dbKey{ st.addArrangedSubview(moreBtn) }
         st.axis = .horizontal
         st.distribution = .equalCentering
         st.spacing = 8
@@ -158,7 +96,8 @@ final class SetVC: BaseVC{
     }()
     override func configureLayout() {
         super.configureLayout()
-        view.addSubview(collectionView) }
+        view.addSubview(collectionView)
+    }
     override func configureConstraints() {
         super.configureConstraints()
         collectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
@@ -166,29 +105,29 @@ final class SetVC: BaseVC{
     override func configureView() {
         super.configureView()
         configureCollectionView()
-        
-        vm.$studyType.sink { [weak self] type in
-            guard let self else {return}
-            Task{
-                let snapshot:Snapshot
-                switch type{
-                case .basic:
-                    snapshot = try await self.initDataSource()
-                    await self.dataSource.apply(snapshot,animatingDifferences: false)
-                case .check:
-                    snapshot = try await self.initCheckedDataSource()
-                    await self.dataSource.apply(snapshot,animatingDifferences: false)
-                default: break
-                }
-                do{
-                    let searchSnapshot = try await self.searchAction(text: self.vm.searchText)
-                    await self.dataSource.apply(searchSnapshot,animatingDifferences: true)
-                }catch{
-                    print(error)
-                }
-            }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        errorBind()
+        vm.passthroughSuffle.sink { [weak self] in
+            self?.selectAction()
         }.store(in: &subscription)
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let searchBar = navigationItem.searchController?.searchBar{ searchBarCancelButtonClicked(searchBar) }
+        navigationController?.appendView(type: .left, view: closeBtn)
+        navigationController?.appendView(type: .right, view: rightStView)
+        Task{
+            navigationItem.titleView = NavigationTitleView(frame: .zero, title: vm.setItem.title)
+        }
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        [closeBtn,rightStView].forEach({$0.removeFromSuperview()})
+    }
+    deinit{ print("SetVC 삭제됨!!") }
     override func configureNavigation() {
         super.configureNavigation()
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -206,21 +145,20 @@ final class SetVC: BaseVC{
             make.trailing.equalToSuperview().inset(16)
         }
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
+}
+extension SetVC{
+    func errorBind(){
+        vm.passthroughError.sink {[weak self] err in
+            switch err{
+            case .card_not_found:
+                self?.alertLackDatas(title: "Not found card set".localized){[weak self] in
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            case .likeSetCardEmpty:
+                self?.alertLackDatas(title: "Cards Empty".localized){[weak self] in
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }
+        }.store(in: &subscription)
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if let searchBar = navigationItem.searchController?.searchBar{ searchBarCancelButtonClicked(searchBar) }
-        navigationController?.appendView(type: .left, view: closeBtn)
-        navigationController?.appendView(type: .right, view: rightStView)
-        Task{
-            navigationItem.titleView = NavigationTitleView(frame: .zero, title: setItem?.title ?? "")
-        }
-    }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        [closeBtn,rightStView].forEach({$0.removeFromSuperview()})
-    }
-    deinit{ print("SetVC 삭제됨!!") }
 }

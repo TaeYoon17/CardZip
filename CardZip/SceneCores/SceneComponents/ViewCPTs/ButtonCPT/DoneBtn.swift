@@ -8,6 +8,14 @@
 import UIKit
 
 final class DoneBtn: UIButton{
+    var title:String = ""{
+        didSet{
+            self.configuration?.attributedTitle = AttributedString(title , attributes: .init([
+                NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17, weight: .bold),
+                NSAttributedString.Key.foregroundColor : UIColor.cardPrimary
+            ]))
+        }
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         var config = UIButton.Configuration.plain()
@@ -24,10 +32,7 @@ final class DoneBtn: UIButton{
     }
     convenience init(title: String) {
         self.init(frame: .zero)
-        self.configuration?.attributedTitle = AttributedString(title , attributes: .init([
-            NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17, weight: .bold),
-            NSAttributedString.Key.foregroundColor : UIColor.cardPrimary
-        ]))
+        self.title = title
     }
     required init?(coder: NSCoder) {
         fatalError("Don't use storyboard")

@@ -14,47 +14,23 @@ extension SetVC: Collectionable{
         let cellRegistration = cardListRegistration
         let cellHeaderRegi = setCardHeaderReusable
         let collectionHeader = setHeaderReusable
-        dataSource = UICollectionViewDiffableDataSource<Section.ID,Item>(collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
-            
+        dataSource = DataSource(vm:vm,collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
             let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
-            guard let self,var card = cardModel?.fetchByID(itemIdentifier.id) else { return .init()}
-            cell.likeAction = { [weak self] isLike in
-                if card.isLike != isLike{
-                    card.isLike = isLike
-                    self?.updateCard(item: &card)
-                }
-            }
-            cell.checkAction = {[weak self] isCheck in
-                if card.isChecked != isCheck{
-                    card.isChecked = isCheck
-                    self?.updateCard(item: &card)
-                }
-            }
-            return cell
+            guard let cardItem = self?.dataSource.cardModel?.fetchByID(itemIdentifier.id), let self else {return .init()}
+           return cell
         })
         dataSource.supplementaryViewProvider =  {[weak self]collectionView, kind, indexPath in
             switch kind{
             case "LayoutHeader":
                 let view: TopHeaderReusableView =  collectionView.dequeueConfiguredReusableSupplementary(using: collectionHeader, for: indexPath)
-                view.shuffleAction = {[weak self] in
-//                    let vc = CardVC()
-//                    vc.studyType = .random
-//                    vc.setItem = self?.setItem
-//                    let nav = UINavigationController(rootViewController: vc)
-//                    nav.modalPresentationStyle = .fullScreen
-//                    self?.present(nav, animated: true)
-                    self?.selectAction()
-                }
                 return view
             case UICollectionView.elementKindSectionHeader:
                 let view =  collectionView.dequeueConfiguredReusableSupplementary(using: cellHeaderRegi, for: indexPath)
                 return view
             default: return nil
             }
-        }
-        initModel()
+        }   
     }
-    
 }
 extension SetVC{
     var layout:UICollectionViewLayout{

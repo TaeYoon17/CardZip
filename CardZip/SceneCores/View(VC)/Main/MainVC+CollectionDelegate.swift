@@ -20,9 +20,12 @@ extension MainVC: UICollectionViewDelegate{
             self.navigationController?.pushViewController(vc, animated: true)
         case .pinned:
 //            let setItem = self.pinnedItemStore.fetchByID(item.id).setItem
-            let setItem = dataSource.pinnedItemStore.fetchByID(item.id).setItem
+            //MARK: -- 아이템은 무조건 있어야함
+            guard let setItem = dataSource.pinnedItemStore.fetchByID(item.id).setItem else {return}
+            let vm = SetVM(setItem: setItem)
             let vc = SetVC()
-            vc.setItem = setItem
+            vc.vm = vm
+//            vc.setItem = setItem
             self.navigationController?.pushViewController(vc, animated: true)
         default: break
         }

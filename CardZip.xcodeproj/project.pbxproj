@@ -66,8 +66,8 @@
 		635C3BCF2ADFEC6900994BD8 /* SetListVC+SearchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635C3BCE2ADFEC6900994BD8 /* SetListVC+SearchDelegate.swift */; };
 		635C3BD12ADFFB0500994BD8 /* NavTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635C3BD02ADFFB0500994BD8 /* NavTitleView.swift */; };
 		635C3BD32ADFFBC800994BD8 /* SetVC+SearchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635C3BD22ADFFBC800994BD8 /* SetVC+SearchDelegate.swift */; };
-		635C3BD52AE0066100994BD8 /* SetVC+DSM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635C3BD42AE0066100994BD8 /* SetVC+DSM.swift */; };
 		635C3BD72AE007DF00994BD8 /* SetCardListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635C3BD62AE007DF00994BD8 /* SetCardListHeader.swift */; };
+		6364D4972AEC1BDC0072C1CE /* UIControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6364D4962AEC1BDC0072C1CE /* UIControlExtension.swift */; };
 		636571282AD6D68A008126C4 /* SetListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636571272AD6D68A008126C4 /* SetListVC.swift */; };
 		6365712A2AD6D6BB008126C4 /* SetListVC+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636571292AD6D6BB008126C4 /* SetListVC+Collectionable.swift */; };
 		6365712E2AD6DAA6008126C4 /* SetListVC+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6365712D2AD6DAA6008126C4 /* SetListVC+Delegate.swift */; };
@@ -118,7 +118,6 @@
 		639976BF2AEA0D7600561439 /* AddSetItemCellVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639976BE2AEA0D7600561439 /* AddSetItemCellVM.swift */; };
 		639976C32AEA68D300561439 /* UITextField+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639976C22AEA68D300561439 /* UITextField+Combine.swift */; };
 		639976C52AEA792A00561439 /* AddSetHeaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639976C42AEA792A00561439 /* AddSetHeaderVM.swift */; };
-		639976C82AEACEA100561439 /* AddSetVC+DS_Method.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639976C72AEACEA100561439 /* AddSetVC+DS_Method.swift */; };
 		639FBF5F2AD5A186004EEE65 /* AddImageVC+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639FBF5E2AD5A186004EEE65 /* AddImageVC+Registration.swift */; };
 		63A0CFBB2AE761140060B5F9 /* SetListVC+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFBA2AE761140060B5F9 /* SetListVC+Cell.swift */; };
 		63A0CFBF2AE9161D0060B5F9 /* CardVC+DS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFBE2AE9161D0060B5F9 /* CardVC+DS.swift */; };
@@ -126,6 +125,11 @@
 		63A0CFC42AE9562B0060B5F9 /* CardFrontView+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFC32AE9562B0060B5F9 /* CardFrontView+Collectionable.swift */; };
 		63A0CFC72AE9674D0060B5F9 /* AddSetVC+DS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFC62AE9674D0060B5F9 /* AddSetVC+DS.swift */; };
 		63A0E35D2AE4471D00E6DAAB /* CardVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0E35C2AE4471D00E6DAAB /* CardVM.swift */; };
+		63A2F8E42AEB4ED9000A2C89 /* SetVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A2F8E32AEB4ED9000A2C89 /* SetVM.swift */; };
+		63A2F8E72AEBA862000A2C89 /* SetCardListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A2F8E62AEBA862000A2C89 /* SetCardListVM.swift */; };
+		63A2F8E92AEBACD2000A2C89 /* SetCardListHeaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A2F8E82AEBACD2000A2C89 /* SetCardListHeaderVM.swift */; };
+		63A2F8EB2AEBADFA000A2C89 /* SetHeaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A2F8EA2AEBADFA000A2C89 /* SetHeaderVM.swift */; };
+		63A2F8EC2AEBD1D8000A2C89 /* SetVC+DS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A2F8E12AEB4EB6000A2C89 /* SetVC+DS.swift */; };
 		63A3D4312ACE3C6B00E6B10E /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 63A3D4302ACE3C6B00E6B10E /* Realm */; };
 		63A3D4332ACE3C6B00E6B10E /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63A3D4322ACE3C6B00E6B10E /* RealmSwift */; };
 		63A3D4352ACE3C9E00E6B10E /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A3D4342ACE3C9E00E6B10E /* NetworkService.swift */; };
@@ -208,8 +212,8 @@
 		635C3BCE2ADFEC6900994BD8 /* SetListVC+SearchDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVC+SearchDelegate.swift"; sourceTree = "<group>"; };
 		635C3BD02ADFFB0500994BD8 /* NavTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavTitleView.swift; sourceTree = "<group>"; };
 		635C3BD22ADFFBC800994BD8 /* SetVC+SearchDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetVC+SearchDelegate.swift"; sourceTree = "<group>"; };
-		635C3BD42AE0066100994BD8 /* SetVC+DSM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetVC+DSM.swift"; sourceTree = "<group>"; };
 		635C3BD62AE007DF00994BD8 /* SetCardListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCardListHeader.swift; sourceTree = "<group>"; };
+		6364D4962AEC1BDC0072C1CE /* UIControlExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIControlExtension.swift; sourceTree = "<group>"; };
 		636571272AD6D68A008126C4 /* SetListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetListVC.swift; sourceTree = "<group>"; };
 		636571292AD6D6BB008126C4 /* SetListVC+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVC+Collectionable.swift"; sourceTree = "<group>"; };
 		6365712D2AD6DAA6008126C4 /* SetListVC+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVC+Delegate.swift"; sourceTree = "<group>"; };
@@ -263,7 +267,6 @@
 		639976BE2AEA0D7600561439 /* AddSetItemCellVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSetItemCellVM.swift; sourceTree = "<group>"; };
 		639976C22AEA68D300561439 /* UITextField+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Combine.swift"; sourceTree = "<group>"; };
 		639976C42AEA792A00561439 /* AddSetHeaderVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSetHeaderVM.swift; sourceTree = "<group>"; };
-		639976C72AEACEA100561439 /* AddSetVC+DS_Method.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddSetVC+DS_Method.swift"; sourceTree = "<group>"; };
 		639FBF5E2AD5A186004EEE65 /* AddImageVC+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddImageVC+Registration.swift"; sourceTree = "<group>"; };
 		63A0CFBA2AE761140060B5F9 /* SetListVC+Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVC+Cell.swift"; sourceTree = "<group>"; };
 		63A0CFBE2AE9161D0060B5F9 /* CardVC+DS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardVC+DS.swift"; sourceTree = "<group>"; };
@@ -271,6 +274,11 @@
 		63A0CFC32AE9562B0060B5F9 /* CardFrontView+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardFrontView+Collectionable.swift"; sourceTree = "<group>"; };
 		63A0CFC62AE9674D0060B5F9 /* AddSetVC+DS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddSetVC+DS.swift"; sourceTree = "<group>"; };
 		63A0E35C2AE4471D00E6DAAB /* CardVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardVM.swift; sourceTree = "<group>"; };
+		63A2F8E12AEB4EB6000A2C89 /* SetVC+DS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetVC+DS.swift"; sourceTree = "<group>"; };
+		63A2F8E32AEB4ED9000A2C89 /* SetVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetVM.swift; sourceTree = "<group>"; };
+		63A2F8E62AEBA862000A2C89 /* SetCardListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCardListVM.swift; sourceTree = "<group>"; };
+		63A2F8E82AEBACD2000A2C89 /* SetCardListHeaderVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCardListHeaderVM.swift; sourceTree = "<group>"; };
+		63A2F8EA2AEBADFA000A2C89 /* SetHeaderVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetHeaderVM.swift; sourceTree = "<group>"; };
 		63A3D4342ACE3C9E00E6B10E /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		63A3D4382ACE3CCD00E6B10E /* CircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		63A3D43B2ACE3D4600E6B10E /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
@@ -484,7 +492,7 @@
 				633BD4AB2AD7D03D006D6955 /* SetVC+Registration.swift */,
 				633BD4A92AD7CF2B006D6955 /* SetVC+Delegate.swift */,
 				635C3BD22ADFFBC800994BD8 /* SetVC+SearchDelegate.swift */,
-				635C3BD42AE0066100994BD8 /* SetVC+DSM.swift */,
+				63A2F8E12AEB4EB6000A2C89 /* SetVC+DS.swift */,
 			);
 			path = Set;
 			sourceTree = "<group>";
@@ -545,7 +553,7 @@
 		63730F772AD29BFF00BC8F35 /* AddSet */ = {
 			isa = PBXGroup;
 			children = (
-				639976C62AEACDE800561439 /* DataSources */,
+				63A0CFC62AE9674D0060B5F9 /* AddSetVC+DS.swift */,
 				631331762AD3F44B00459515 /* SubCells */,
 				63730F782AD29C0C00BC8F35 /* AddSetVC.swift */,
 				631331792AD3FA7A00459515 /* AddSet+Collectionable.swift */,
@@ -646,17 +654,9 @@
 			isa = PBXGroup;
 			children = (
 				639976C22AEA68D300561439 /* UITextField+Combine.swift */,
+				6364D4962AEC1BDC0072C1CE /* UIControlExtension.swift */,
 			);
 			path = Combines;
-			sourceTree = "<group>";
-		};
-		639976C62AEACDE800561439 /* DataSources */ = {
-			isa = PBXGroup;
-			children = (
-				63A0CFC62AE9674D0060B5F9 /* AddSetVC+DS.swift */,
-				639976C72AEACEA100561439 /* AddSetVC+DS_Method.swift */,
-			);
-			path = DataSources;
 			sourceTree = "<group>";
 		};
 		63A0CFC02AE943930060B5F9 /* ViewCPT */ = {
@@ -687,6 +687,17 @@
 			path = CardScene;
 			sourceTree = "<group>";
 		};
+		63A2F8E52AEBA844000A2C89 /* SetScene */ = {
+			isa = PBXGroup;
+			children = (
+				63A2F8E32AEB4ED9000A2C89 /* SetVM.swift */,
+				63A2F8E62AEBA862000A2C89 /* SetCardListVM.swift */,
+				63A2F8E82AEBACD2000A2C89 /* SetCardListHeaderVM.swift */,
+				63A2F8EA2AEBADFA000A2C89 /* SetHeaderVM.swift */,
+			);
+			path = SetScene;
+			sourceTree = "<group>";
+		};
 		63A3D4292ACE3BF200E6B10E /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -714,6 +725,7 @@
 		63A3D42B2ACE3C1700E6B10E /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				63A2F8E52AEBA844000A2C89 /* SetScene */,
 				639976C02AEA5F0100561439 /* AddSetScene */,
 				63A0E35B2AE4471400E6DAAB /* CardScene */,
 				63F27D3C2AE600ED007A11A0 /* MainVM.swift */,
@@ -951,6 +963,7 @@
 				63730F802AD29D0300BC8F35 /* InsetTextField.swift in Sources */,
 				633BB4652AD6E0ED005E8E09 /* SetVC+Collectionable.swift in Sources */,
 				63ADFEA12AE6A55C00C03B5E /* ImageService.swift in Sources */,
+				63A2F8E72AEBA862000A2C89 /* SetCardListVM.swift in Sources */,
 				633BD4AE2AD7DE22006D6955 /* CardVC+CustomView.swift in Sources */,
 				63A3D4352ACE3C9E00E6B10E /* NetworkService.swift in Sources */,
 				6365713A2AD6DD46008126C4 /* TempCard.swift in Sources */,
@@ -965,6 +978,7 @@
 				63730F862AD29E1600BC8F35 /* CustomAlertController.swift in Sources */,
 				636571382AD6DD1A008126C4 /* CardVC.swift in Sources */,
 				639352102ACE43F500F8B31B /* AddFolderBtn.swift in Sources */,
+				63A2F8E92AEBACD2000A2C89 /* SetCardListHeaderVM.swift in Sources */,
 				63ADFE9E2AE685BC00C03B5E /* PublisherExtension.swift in Sources */,
 				63A3D4412ACE3EF500E6B10E /* NavRightStack.swift in Sources */,
 				630DD8DC2AD9A09500B51662 /* ImageTransition.swift in Sources */,
@@ -993,13 +1007,14 @@
 				63A3D43F2ACE3EDD00E6B10E /* NavBarButton.swift in Sources */,
 				631331782AD3F56F00459515 /* AddSetVM.swift in Sources */,
 				636571402AD6DE67008126C4 /* CardCell.swift in Sources */,
+				63A2F8E42AEB4ED9000A2C89 /* SetVM.swift in Sources */,
 				63EAED4E2ADD05EA00046C44 /* EditableVC.swift in Sources */,
 				635C3BCD2ADFDC0100994BD8 /* StringExtension.swift in Sources */,
 				639352182ACE591A00F8B31B /* MainVC+CollectionDelegate.swift in Sources */,
+				6364D4972AEC1BDC0072C1CE /* UIControlExtension.swift in Sources */,
 				636571312AD6DB37008126C4 /* SetVC.swift in Sources */,
 				632A484A2ACCE81B00413AF4 /* AppDelegate.swift in Sources */,
 				630DD8DE2AD9A83B00B51662 /* PHImageManagerExtensions.swift in Sources */,
-				639976C82AEACEA100561439 /* AddSetVC+DS_Method.swift in Sources */,
 				633BD4AC2AD7D03D006D6955 /* SetVC+Registration.swift in Sources */,
 				63730F8C2AD2A8DF00BC8F35 /* BottomImageBtn.swift in Sources */,
 				636571422AD6DE96008126C4 /* CardIconBtn.swift in Sources */,
@@ -1024,6 +1039,7 @@
 				63E50EF62AD9820A003E0800 /* ErrorPolicy.swift in Sources */,
 				631E53932ADAA42B0010E11E /* CardBackView.swift in Sources */,
 				63F27D3F2AE6019E007A11A0 /* MainDataSource.swift in Sources */,
+				63A2F8EC2AEBD1D8000A2C89 /* SetVC+DS.swift in Sources */,
 				6365712E2AD6DAA6008126C4 /* SetListVC+Delegate.swift in Sources */,
 				635C3BD12ADFFB0500994BD8 /* NavTitleView.swift in Sources */,
 				63A3D4482ACE3F9A00E6B10E /* BaseCell.swift in Sources */,
@@ -1055,7 +1071,6 @@
 				63730F602AD2740600BC8F35 /* UIViewExtension.swift in Sources */,
 				63552A402AD51FDA00A7063A /* PhotoService.swift in Sources */,
 				639976C32AEA68D300561439 /* UITextField+Combine.swift in Sources */,
-				635C3BD52AE0066100994BD8 /* SetVC+DSM.swift in Sources */,
 				632A484C2ACCE81B00413AF4 /* SceneDelegate.swift in Sources */,
 				6393520E2ACE43DB00F8B31B /* NewCardSetBtn.swift in Sources */,
 				63A0CFBB2AE761140060B5F9 /* SetListVC+Cell.swift in Sources */,
@@ -1065,6 +1080,7 @@
 				6365713C2AD6DDC0008126C4 /* CardView.swift in Sources */,
 				63730F662AD2768000BC8F35 /* DisclosureItemCell.swift in Sources */,
 				635C3BD32ADFFBC800994BD8 /* SetVC+SearchDelegate.swift in Sources */,
+				63A2F8EB2AEBADFA000A2C89 /* SetHeaderVM.swift in Sources */,
 				63A0CFBF2AE9161D0060B5F9 /* CardVC+DS.swift in Sources */,
 				63A0CFC42AE9562B0060B5F9 /* CardFrontView+Collectionable.swift in Sources */,
 			);

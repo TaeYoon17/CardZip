@@ -20,15 +20,14 @@ extension AddSetVC{
         init(vm: AddSetVM,collectionView: UICollectionView, cellProvider: @escaping UICollectionViewDiffableDataSource<AddSetVC.Section.ID, AddSetVC.Item>.CellProvider) {
             super.init(collectionView: collectionView, cellProvider: cellProvider)
             self.vm = vm
-            
-            
             initModels()
             vm.updatedCardItem.sink {[weak self] (item,reloadDS) in
                 self?.itemModel.insertModel(item: item)
                 if reloadDS{ self?.reconfigureDataSource(cardItem: item) }
             }.store(in: &subscription)
-            vm.updatedSetItem.sink { [weak self] item in
+            vm.updatedSetItem.sink { [weak self] (item,reloadDS) in
                 self?.headerModel.insertModel(item: item)
+                if reloadDS {self?.reconfigureDataSource(setItem: item)}
             }.store(in: &subscription)
             vm.photoService.passthroughIdentifiers.sink {[weak self] (val,vc) in
                 guard let self,let str = val.first else {return}
@@ -103,7 +102,8 @@ extension AddSetVC.DataSource{
             let description = $0.definition.replacingOccurrences(of: " ", with: "")
             return title == "" || description == ""
         }){
-            vm.passthroughErrorMessage.send("There are cards with empty terms and descriptions.".localized)
+            vm.passthroughErrorMessage
+                .send("There are cards with empty terms and descriptions.".localized)
             return
         }
         // 3. 이 카드 세트가 이미 데베에 존재하는 경우 (수정하는 경우)

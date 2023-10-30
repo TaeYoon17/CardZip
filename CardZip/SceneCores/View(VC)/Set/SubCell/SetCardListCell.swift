@@ -9,41 +9,84 @@ import UIKit
 import SnapKit
 import Combine
 import AVFoundation
+// 권한 에러...?
 final class SetCardListCell: BaseCell{
-    var isLike: Bool = false{
-        didSet{ heartBtn.isTapped = isLike }
+    var vm: SetCardListVM!{
+        didSet{
+            guard let vm else {return}
+            subscription.removeAll()
+            vm.$cardItem.sink {[weak self] item in
+                guard let self else {return}
+                self.heartBtn.isTapped = item.isLike
+                self.checkBtn.isTapped = item.isChecked
+                termLabel.text = item.title
+                descriptionLabel.text = item.definition
+            }.store(in: &subscription)
+            self.checkBtn.publisher(for: .touchUpInside).sink { _ in
+                vm.cardItem.isChecked.toggle()
+                vm.updateCardItem()
+            }.store(in: &subscription)
+            self.heartBtn.publisher(for: .touchUpInside).sink { _ in
+                vm.cardItem.isLike.toggle()
+                vm.updateCardItem()
+            }.store(in: &subscription)
+        }
     }
-    var isCheck: Bool = false{
-        didSet{ checkBtn.isTapped = isCheck }
-    }
+    //    var cardItem: CardItem?{
+    //        didSet{
+    //            vm.cardItem = cardItem
+    //            if let sinker {
+    //                print("이게 계속 존재해서 문제였다")
+    //                sinker.cancel()
+    //            }
+    //            sinker = vm.$cardItem.sink {[weak self] item in
+    //                guard let self,let item else {return}
+    //                self.heartBtn.isTapped = item.isLike
+    //                self.checkBtn.isTapped = item.isChecked
+    //                termLabel.text = item.title
+    //                descriptionLabel.text = item.definition
+    //            }
+    ////            self.heartBtn.isTapped = cardItem?.isLike ?? false
+    ////            self.checkBtn.isTapped = cardItem?.isChecked ?? false
+    ////            termLabel.text = cardItem?.title
+    ////            descriptionLabel.text = cardItem?.definition
+    ////            self.checkBtn.addAction(.init(handler: { [weak self] _ in
+    ////                guard let self else {return}
+    ////                print("addAction checkbtn")
+    ////                vm.cardItem?.isChecked.toggle()
+    ////                vm.updateCardItem()
+    ////            }), for: .touchUpInside)
+    //
+    ////                        var heartAction = UIAction.init(handler: {[weak self] _ in
+    ////                            vm.cardItem?.isLike.toggle()
+    ////                            vm.updateCardItem()
+    ////                        })
+    ////                        var checkAction = UIAction.init {[weak self] _ in
+    ////                            vm.cardItem.isChecked.toggle()
+    ////                            vm.updateCardItem()
+    ////                        }
+    //        }
+    //    }
+    //    @objc func itemtapped(){
+    //        vm.cardItem?.isChecked.toggle()
+    //        vm.updateCardItem()
+    //    }
+    //    weak var setVM: SetVM!{
+    //        didSet{ vm.setVM = setVM }
+    //    }
+    var subscription = Set<AnyCancellable>()
+    var sinker: AnyCancellable?
     var isSpeaker: Bool = false{
         didSet{ speakerBtn.isTapped = isSpeaker }
     }
-    var term: String = ""{
-        didSet{
-            termLabel.text = term
-        }
-    }
-    var mainDescription: String = ""{
-        didSet{
-            descriptionLabel.text = mainDescription
-        }
-    }
-    var subscription = Set<AnyCancellable>()
     private let termLabel = UILabel()
     private let descriptionLabel = UILabel()
-    var likeAction: ((Bool)->())?
-    private lazy var heartBtn = {
+    private var heartBtn = {
         let btn = SetCardListBtn()
         btn.logo = App.Logo.like
-        btn.addAction(.init(handler: { [weak self] _ in
-            guard let self else {return}
-            isLike.toggle()
-            likeAction?(isLike)
-        }), for: .touchUpInside)
         return btn
     }()
-    var speakerAction: ((Bool)->())?
+    //    var speakerAction: ((Bool)->())?
     private lazy var speakerBtn = {
         let btn = SetCardListBtn()
         btn.logo = App.Logo.speaker
@@ -51,7 +94,7 @@ final class SetCardListCell: BaseCell{
         btn.addAction(.init(handler: { [weak self] _ in
             guard let self else {return}
             btn.isTapped.toggle()
-            TTS.shared.textToSpeech(text: term, language: App.Manager.shared.termLanguageCode ?? .ko)
+            TTS.shared.textToSpeech(text: vm.cardItem.title ?? "", language: App.Manager.shared.termLanguageCode ?? .ko)
             UIView.animate(withDuration: 0.6) { [weak self] in
                 btn.configuration?.baseForegroundColor = .secondary
             }completion: { _ in
@@ -61,16 +104,10 @@ final class SetCardListCell: BaseCell{
         }), for: .touchUpInside)
         return btn
     }()
-    var checkAction:((Bool) -> ())?
-    private lazy var checkBtn = {
+    //    var checkAction:((Bool) -> ())?
+    private var checkBtn = {
         let btn = SetCardListBtn(frame: .zero)
         btn.logo = App.Logo.check
-        btn.isTapped = isCheck
-        btn.addAction(.init(handler: { [weak self] _ in
-            guard let self else {return}
-            isCheck.toggle()
-            checkAction?(isCheck)
-        }), for: .touchUpInside)
         return btn
     }()
     private lazy var mainStView = {
@@ -92,6 +129,7 @@ final class SetCardListCell: BaseCell{
         return stView
     }()
     override func configureLayout() {
+        super.configureLayout()
         [bottomBtnStView,mainStView].forEach{self.contentView.addSubview($0)}
     }
     override func configureConstraints() {
@@ -99,13 +137,12 @@ final class SetCardListCell: BaseCell{
             make.top.leading.trailing.equalToSuperview().inset(12)
             
             make.bottom.lessThanOrEqualTo(bottomBtnStView.snp.top).priority(.high)
-//            make.bottom.equalToSuperview().inset(12)
+            //            make.bottom.equalToSuperview().inset(12)
         }
         bottomBtnStView.snp.makeConstraints { make in
             make.bottom.trailing.equalToSuperview().inset(8)
         }
         descriptionLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
-//        mainStView.setContentCompressionResistancePriority(.def, for: .vertical)
         bottomBtnStView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         speakerBtn.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
     }
@@ -118,6 +155,23 @@ final class SetCardListCell: BaseCell{
         termLabel.font = .systemFont(ofSize: 21, weight: .semibold)
         descriptionLabel.numberOfLines = 4
         descriptionLabel.font = .systemFont(ofSize: 17, weight: .regular)
+        
+        //            self.heartBtn.publisher(for: .touchUpInside).sink { [weak self] _ in
+        //                guard let self else {return}
+        //                vm?.cardItem.isLike.toggle()
+        //                vm?.updateCardItem()
+        //            }.store(in: &subscription)
+        //                    self.checkBtn.publisher(for: .touchUpInside).sink { [weak self] _   in
+        //                        guard let self else {return}
+        //                        print("istapped",vm)
+        //                        vm.cardItem?.isChecked.toggle()
+        //                        vm.updateCardItem()
+        //                    }.store(in: &subscription)
+        //        self.checkBtn.addTarget(self, action: #selector(Self.itemtapped), for: .touchUpInside)
+        
+    }
+    deinit{
+        print("cell removed!!")
     }
 }
 
@@ -138,7 +192,6 @@ final class SetCardListBtn: UIButton{
             configuration?.image = .init(systemName: logo)
         }
     }
-    var subscription = Set<AnyCancellable>()
     override init(frame: CGRect) {
         super.init(frame: frame)
         var config = UIButton.Configuration.plain()

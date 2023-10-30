@@ -44,12 +44,13 @@ final class SplashController: BaseVC{
         let nav = UINavigationController(rootViewController: vc)
         if let recent,let recentTable = repository?.getTableBy(tableID: recent){
             let setItem = SetItem(table: recentTable)
+            let setVM = SetVM(setItem: setItem)
             let setVC = SetVC()
-            setVC.setItem = setItem
+            setVC.vm = setVM
             vc.navigationController?.pushViewController(setVC, animated: false)
-            if setItem.cardCount > 0{
-                Task{ setVC.selectAction() }
-            }
+//            if setItem.cardCount > 0{
+//                Task{ setVC.selectAction() }
+//            }
         }
         window?.rootViewController = nav
         window?.makeKeyAndVisible()

@@ -7,17 +7,47 @@
 
 import UIKit
 import SnapKit
+import Combine
 final class TopHeaderReusableView: UICollectionReusableView{
-    var image : UIImage?{
+    weak var vm: SetHeaderVM!{
         didSet{
-            UIView.imageAppear(view: imageView) {[weak self ] in
+            guard let vm else {return}
+            vm.$setItem.sink {[weak self] item in
                 guard let self else {return}
-                imageView.image = image
-                imageView.tintColor = .secondary
-            }
-
+                if let path = item?.imagePath{
+                    Task{
+                        if let image = await UIImage.fetchBy(identifier: path,ofSize: .init(width: 600, height: 600)){
+                            self.applyImage(image: image)
+                            self.errorMessage = ""
+                        }else{
+                            self.applyImage(image: .init(systemName: "questionmark.circle", ofSize: 88, weight: .medium))
+                            self.errorMessage = "Image not found"
+                        }
+                    }
+                }else{
+                    applyImage(image: .init(systemName: "questionmark.circle", ofSize: 88, weight: .medium))
+                    errorMessage = "Empty Image"
+                }
+                titleLabel.text = item?.title
+                titleLabel.textColor = .cardPrimary
+                descriptionLabel.text = item?.setDescription
+                descriptionLabel.textColor = .cardPrimary
+                Task{ self.playBtn.alpha = CGFloat(max(1,item?.cardCount ?? 0)) }
+            }.store(in: &subscription)
+            playBtn.addAction(.init(handler: { _ in
+                vm.shuffleAction()
+            }), for: .touchUpInside)
         }
     }
+    var subscription = Set<AnyCancellable>()
+    func applyImage(image: UIImage?){
+        UIView.imageAppear(view: self.imageView) {[weak self] in
+            guard let self else {return}
+            imageView.image = image
+            imageView.tintColor = .secondary
+        }
+    }
+    
     var errorMessage:String = ""{
         didSet{
             errorLabel.text = errorMessage
@@ -30,19 +60,6 @@ final class TopHeaderReusableView: UICollectionReusableView{
             }
         }
     }
-    var collectionTitle: String = ""{
-        didSet{ 
-            titleLabel.text = collectionTitle
-            titleLabel.textColor = .cardPrimary
-        }
-    }
-    var shuffleAction:(()->Void)?
-    var collectionDescription: String?{
-        didSet{ descriptionLabel.text = collectionDescription
-            descriptionLabel.textColor = .cardPrimary
-        }
-    }
-    var collectionType = "Set"
     private let contentView = UIView()
     private let imageView = UIImageView()
     private let titleLabel = UILabel()
@@ -56,7 +73,7 @@ final class TopHeaderReusableView: UICollectionReusableView{
     }()
     let playBtn = NavBarButton(title: "Shuffle".localized, systemName: "shuffle")
     var imageHeight: Constraint?
-//    "play" ,"menucard"
+    //    "play" ,"menucard"
     private lazy var stView = {
         let stView = UIStackView(arrangedSubviews: [typeLabel,titleLabel,descriptionLabel])
         stView.axis = .vertical
@@ -73,6 +90,8 @@ final class TopHeaderReusableView: UICollectionReusableView{
     }
     required init?(coder: NSCoder) { fatalError("이건 안됨" ) }
     
+}
+fileprivate extension TopHeaderReusableView{
     func configureLayout(){
         self.addSubview(contentView)
         [imageView,errorLabel,textBoxView].forEach{contentView.addSubview($0)}
@@ -111,7 +130,7 @@ final class TopHeaderReusableView: UICollectionReusableView{
         playBtn.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(16)
             make.centerY.equalToSuperview()
-//            make.trailing.lessThanOrEqualTo(playBtn.snp.leading).inset(-32)
+            //            make.trailing.lessThanOrEqualTo(playBtn.snp.leading).inset(-32)
             
         }
         textBoxView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
@@ -152,8 +171,5 @@ final class TopHeaderReusableView: UICollectionReusableView{
         playBtn.configuration?.imagePadding = 8
         playBtn.configuration?.contentInsets = .init(top: 8, leading: 12, bottom: 8, trailing: 12)
         playBtn.configuration?.imagePlacement = .trailing
-        playBtn.addAction(.init(handler: { [weak self] _ in
-            self?.shuffleAction?()
-        }), for: .touchUpInside)
     }
 }

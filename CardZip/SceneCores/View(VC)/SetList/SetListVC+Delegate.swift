@@ -12,15 +12,16 @@ extension SetListVC:UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath),
         let setItem = dataSource.setModel.fetchByID(item) else {return}
+        let vm = SetVM(setItem: setItem)
         let vc = SetVC()
-        vc.setItem = setItem
+        vc.vm = vm
+//        vc.setItem = setItem
         print(setItem.id == item)
-        vc.$setItem
-            .receive(on: RunLoop.main)
-            .sink {[weak self] setItem in
+        vm.$setItem.receive(on: RunLoop.main).sink {[weak self] setItem in
             guard let self else {return}
             dataSource.changeItem(before: item, after: setItem)
         }.store(in: &subscription)
+
         self.navigationController?.navigationBar.prefersLargeTitles = false
         DispatchQueue.main.asyncAfter(deadline: .now()+0.01){
             self.navigationController?.pushViewController(vc, animated: true)

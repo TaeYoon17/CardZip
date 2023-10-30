@@ -19,7 +19,7 @@ final class AddSetHeaderVM{
         self.setItem = setItem
         
         $setItem.sink {setItem in
-            addSetVM.updatedSetItem.send(setItem)
+            addSetVM.updatedSetItem.send((setItem,false))
         }.store(in: &subscription)
     }
     func imageTappedAction(){

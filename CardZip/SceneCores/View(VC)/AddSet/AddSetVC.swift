@@ -23,87 +23,30 @@ final class AddSetVC: EditableVC{
     var passthroughSetItem = PassthroughSubject<SetItem,Never>()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     var dataSource : DataSource!
-    var setItem: SetItem?
-    
     var vm :AddSetVM! // 여기 수정해야함!
-//    weak var photoService:PhotoService! = PhotoService.shared
-    func emptyCheck(){
-        guard let setItem = vm?.setItem else {return}
-        self.alertLackDatas(title: "Not found card set".localized) {[weak self] in
-            self?.dismiss(animated: true)
-        }
-    }
-    //    func initModels(){
-    //        print(vcType)
-    //        switch vcType {
-    //        case .add:
-    //            let cardItem = [CardItem()]
-    //            let headerItem = [SetItem()]
-    //            itemModel = .init(cardItem)
-    //            headerModel = .init(headerItem)
-    //            sectionModel = .init([
-    //                Section(id: .header, subItems: headerItem.map{Item(id: $0.id, type: .header)})
-    //                ,Section(id: .cards, subItems: cardItem.map{
-    //                Item(id: $0.id, type: .cards)
-    //            })])
-    //            self.initDataSource()
-    //        case .edit:
-    //            if let setItem,let dbKey = setItem.dbKey ,let table = repository?.getTableBy(tableID: dbKey){
-    //                let cardItems = Array(table.cardList).map{CardItem(table: $0)}
-    //                let headerItem = [SetItem(table: table)]
-    //                itemModel = .init(cardItems)
-    //                headerModel = .init(headerItem)
-    //                sectionModel = .init([
-    //                    Section(id: .header, subItems: headerItem.map{Item(id: $0.id, type: .header)})
-    //                    ,Section(id: .cards, subItems: cardItems.map{
-    //                    Item(id: $0.id, type: .cards)
-    //                })])
-    //                self.initDataSource()
-    //            }else{
-    //                self.alertLackDatas(title: "Not found card set".localized) {[weak self] in
-    //                    self?.dismiss(animated: true)
-    //                }
-    //            }
-    //        }
-    //    }
     
     //MARK: -- 뷰 구성
+    let navBarView = NavBarView()
+    var bottomUpHeight:Constraint?
     lazy var navCloseBtn = {
         let btn = NavBarButton(systemName: "xmark")
         btn.addAction(.init(handler: { [weak self] _ in
-            self?.closeBtnTapped()
-        }), for: .touchUpInside)
-        switch vm.dataProcess {
-        case .add: break
-        case .edit: btn.alpha = 0
-        }
+            self?.closeBtnTapped() 
+        }),for: .touchUpInside)
         return btn
     }()
-    
-    lazy var navDoneBtn = {
-        let text:String
-        switch vm.dataProcess {
-        case .add: text = "Create".localized
-        case .edit: text = "Edit".localized
-        }
-        let btn = DoneBtn(title: text)
+    lazy var navDoneBtn : DoneBtn = {
+        let btn = DoneBtn(title: "")
         btn.addAction(.init(handler: { [weak self] _ in
             self?.dataSource.saveData()
         }), for: .touchUpInside)
         return btn
     }()
-    var nowItemsCount: Int = 0{
-        didSet{
-            navLabel.text = "\(nowItemsCount) / 100"
-        }
-    }
     lazy var navLabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .headline)
         return label
     }()
-    let navBarView = NavBarView()
-    var bottomUpHeight:Constraint?
     
     lazy var appendItemBtn = {
         let btn = BottomImageBtn(systemName: "plus")
@@ -114,17 +57,20 @@ final class AddSetVC: EditableVC{
                 return
             }
             self?.dataSource.createItem()
-//            self?.vm.addCardItem()
             self?.collectionView.scrollToLastItem()
         }), for: .touchUpInside)
         return btn
     }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(true, animated: true)
         vm?.passthroughCloseAction.sink(receiveValue: { [weak self] in
             self?.closeAction()
         }).store(in: &subscription)
+        vm.passthroughErrorMessage.sink {[weak self] errorMessage in
+            self?.alertLackDatas(title: errorMessage)
+        }.store(in: &subscription)
         vm.cardAction.sink {[weak self] actionType,cardItem in
             guard let self,let cardItem else {return}
             switch actionType{
@@ -148,12 +94,6 @@ final class AddSetVC: EditableVC{
                 vm.photoService.presentPicker(vc: self,multipleSelection: false)
             }
         }.store(in: &subscription)
-        vm.passthroughErrorMessage.sink {[weak self] errorMessage in
-            self?.alertLackDatas(title: errorMessage)
-        }.store(in: &subscription)
-        vm.passthroughCloseAction.sink { [weak self] _ in
-            self?.closeAction()
-        }.store(in: &subscription)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -164,7 +104,6 @@ final class AddSetVC: EditableVC{
             }
         }
     }
-    deinit{ print("AddSetVC 사라지기 완료!!") }
     override func configureView() {
         super.configureView()
         view.backgroundColor = .bg
@@ -177,6 +116,18 @@ final class AddSetVC: EditableVC{
                 UIView.animate(withDuration: 0.2,delay: 0.8) {
                     self?.appendItemBtn.alpha = isShow ? 0 : 1
                 }
+            }
+        }.store(in: &subscription)
+        vm.$nowItemsCount.sink {[weak self] count in
+            self?.navLabel.text = "\(count) / 100"
+        }.store(in: &subscription)
+        vm.$dataProcess.sink {[weak self] type in
+            switch type {
+            case .add:
+                self?.navDoneBtn.title = "Create".localized
+            case .edit:
+                self?.navDoneBtn.title = "Edit".localized
+                self?.navCloseBtn.alpha = 0
             }
         }.store(in: &subscription)
     }
@@ -233,5 +184,11 @@ extension AddSetVC{
             }
         }
         self.closeAction()
+    }
+    func emptyCheck(){
+        guard (vm?.setItem) != nil else {return}
+        self.alertLackDatas(title: "Not found card set".localized) {[weak self] in
+            self?.dismiss(animated: true)
+        }
     }
 }

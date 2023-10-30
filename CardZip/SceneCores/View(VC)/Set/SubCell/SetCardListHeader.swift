@@ -8,18 +8,22 @@
 import UIKit
 final class SetCardListHeader: UICollectionReusableView{
 //    @Published var isChecked:Bool = false
-    weak var vm: SetVM!
+    weak var vm: SetCardListHeaderVM!{
+        didSet{
+            guard let vm else {return}
+            segment.addAction(.init(handler: { [weak self] _ in
+                guard let self else {return}
+                let nowType: StudyType = segment.selectedSegmentIndex == 1 ? .check : .basic
+                let prevType = vm.studyType
+                if prevType != nowType{ vm.studyType = nowType }
+            }), for: .valueChanged)
+        }
+    }
     private var prevIdx = 0
     lazy var segment = {
         let control = CustomSegmentControl(items: [ "Default".localized,"Unmemorized".localized ])
         control.highlightSize = 16
         control.selectedSegmentIndex = 0
-        control.addAction(.init(handler: { [weak self] _ in
-            let nowType: StudyType = control.selectedSegmentIndex == 1 ? .check : .basic
-            if let prevType = self?.vm.studyType, prevType != nowType{
-                self?.vm.studyType = nowType
-            }
-        }), for: .valueChanged)
         return control
     }()
     // MARK:-- 추가할 기능, 순서 및 필터
@@ -39,7 +43,6 @@ final class SetCardListHeader: UICollectionReusableView{
         super.init(frame: frame)
         self.backgroundColor = .bg.withAlphaComponent(0.95)
         [segment,/*filterBtn*/ ].forEach { view in self.addSubview(view) }
-        
         
         segment.snp.makeConstraints { make in
 //            make.centerY.equalToSuperview()

@@ -12,23 +12,20 @@ extension AddSetVM{
     enum SetActionType{ case imageTapped }
 }
 final class AddSetVM{
-    @MainActor let repository = CardSetRepository()
-    @MainActor let cardRepository = CardRepository()
+    @MainActor private let repository = CardSetRepository()
+    @MainActor private let cardRepository = CardRepository()
     weak var photoService:PhotoService! = PhotoService.shared
-    var dataProcess: DataProcessType = .add
-    var setItem: SetItem?
-    var nowItemsCount: Int = 0
+    @Published var dataProcess: DataProcessType
+    @Published var nowItemsCount: Int = 0
     
+    var setItem: SetItem?
     // DataProcessTyppe Edit했을 때 변경 사항을 던져주는 passthrough
     var passthroughEditSet = PassthroughSubject<SetItem,Never>()
     
-    
     var passthroughCloseAction = PassthroughSubject<Void,Never>() // 닫을 때
     var passthroughErrorMessage = PassthroughSubject<String,Never>() // 에러 메시지를 던질 때
-//    var passthroughDidBegin = PassthroughSubject<Void,Never>() // 시작할떼..?
-    
     var updatedCardItem = PassthroughSubject<(CardItem,Bool),Never>() // 리스트에서 단일 카드 내용을 업데이트 할 때
-    var updatedSetItem = PassthroughSubject<SetItem,Never>() // 세트 정보를 업데이트 할 때
+    var updatedSetItem = PassthroughSubject<(SetItem,Bool),Never>() // 세트 정보를 업데이트 할 때
     // 카드에서 뷰컨 프로퍼티를 사용하는 액션을 요청할 때
     var cardAction = PassthroughSubject<(CardActionType,CardItem?),Never>()
     var setAction = PassthroughSubject<(SetActionType,SetItem?),Never>()
@@ -38,17 +35,20 @@ final class AddSetVM{
         case.add:
             self.setItem = .init(title: "", setDescription: "", cardList: [CardItem()], cardCount: 0)
         case .edit:
-            if let setItem{
+//            if let setItem{
                 self.setItem = setItem
-            }else{
-                passthroughErrorMessage.send("Not found card set".localized)
-                passthroughCloseAction.send()
-            }
+//            }else{
+//                passthroughErrorMessage.send("Not found card set".localized)
+//                passthroughCloseAction.send()
+//            }
         }
     }
-    
+}
+//MARK: -- REALM 테이블에 대하여
+extension AddSetVM{
     @MainActor var setTable:CardSetTable?{
-        if let dbKey = setItem?.dbKey,let table = repository?.getTableBy(tableID: dbKey){
+        if let dbKey = setItem?.dbKey,
+           let table = repository?.getTableBy(tableID: dbKey){
             return table
         }
         return nil
@@ -62,8 +62,6 @@ final class AddSetVM{
             print("데베에 없어서 삭제 못하는 데이터")
         }
     }
-    
-
     @MainActor func saveRepository(setItem: SetItem,cardItems:[CardItem]){
         var setItem = setItem
         let cardSetTable:CardSetTable
@@ -95,3 +93,4 @@ final class AddSetVM{
         passthroughCloseAction.send()
     }
 }
+ 
