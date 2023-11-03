@@ -21,9 +21,7 @@ final class BackView:BaseView{
         return v
     }()
     lazy var colorView = {
-        let v = UIView()
-        //        v.backgroundColor = .bg.withAlphaComponent(0.9)
-        
+        let v = UIView() 
         return v
     }()
     convenience init(image: UIImage?) {

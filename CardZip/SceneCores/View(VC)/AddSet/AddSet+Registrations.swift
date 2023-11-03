@@ -71,4 +71,10 @@ extension AddSetVC{
     var layoutFooterRegistration: UICollectionView.SupplementaryRegistration<UICollectionReusableView>{
         UICollectionView.SupplementaryRegistration(elementKind: "LayoutFooter") { supplementaryView,elementKind,indexPath in }
     }
+    
+    var cellItemHeaderRegistration: UICollectionView.SupplementaryRegistration<AddSetItemHeader>{
+        UICollectionView.SupplementaryRegistration(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView,elementKind,indexPath in
+            supplementaryView.title = "Cards"
+        }
+    }
 }

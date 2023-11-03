@@ -10,19 +10,34 @@ import Combine
 extension ImageSearchVC{
     final class ImageSearchDS: UICollectionViewDiffableDataSource<Section,ImageSearch.ID>{
         typealias Section = ImageSearchVC.Section
-        private var itemModel: AnyModelStore<ImageSearch>!
-        private var itemIDs: [ImageSearch.ID]
+        private var itemModel: AnyModelStore<ImageSearch> = .init([])
+        private var itemIDs: [ImageSearch.ID] = []
         weak var vm: ImageSearchVM!
         var subscription = Set<AnyCancellable>()
         init(vm: ImageSearchVM,collectionView: UICollectionView, cellProvider: @escaping UICollectionViewDiffableDataSource<ImageSearchVC.Section, ImageSearch.ID>.CellProvider) {
             super.init(collectionView: collectionView, cellProvider: cellProvider)
             self.vm = vm
-            vm.$images.sink {[weak self] items in
-                items.forEach { self?.itemModel.insertModel(item: $0) }
+            vm.$imagePathes.sink {[weak self] items in
+                self?.appendImagePathes(items)
+                self?.resetDataSource()
+            }.store(in: &subscription)
+            
+            vm.updateItemPassthrough.sink { completion in
+                print("여긴 아무 변화 없음")
+            } receiveValue: {[weak self] imageSearch in
+                guard let self else {return}
+                itemModel.insertModel(item: imageSearch)
+                updateDataSource(id: imageSearch.id)
             }.store(in: &subscription)
         }
-        
-        func fetchItem(id: ImageSearch.ID)-> ImageSearch?{ self.itemModel?.fetchByID(id) }
+        func appendImagePathes(_ pathes:[String]){
+            let imgSearchItems = pathes.map{ImageSearch(imagePath: $0)}
+            imgSearchItems.forEach {
+                itemModel.insertModel(item: $0)
+                if !itemIDs.contains($0.id){ itemIDs.append($0.id) }
+            }
+        }
+        func fetchItem(id: ImageSearch.ID)-> ImageSearch?{ self.itemModel.fetchByID(id) }
     }
 }
 

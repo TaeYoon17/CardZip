@@ -10,4 +10,6 @@ import Combine
 
 final class MainVM{
     @Published var isExist : Bool = false
+    @DefaultsState(\.recentSet) var recentSetTableId
+    @DefaultsState(\.likedSet) var likedSetTableId
 }

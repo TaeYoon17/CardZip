@@ -5,4 +5,70 @@
 //  Created by 김태윤 on 2023/10/31.
 //
 
-import Foundation
+import UIKit
+import SnapKit
+
+final class ImageSearchVC: BaseVC{
+    enum Section:Int{case main}
+    lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    let searchController = UISearchController()
+    var vm = ImageSearchVM()
+    var dataSource: ImageSearchDS!
+    override func configureLayout() {
+        super.configureLayout()
+        [collectionView].forEach{view.addSubview($0)}
+    }
+    override func configureConstraints() {
+        super.configureConstraints()
+        collectionView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    override func configureNavigation() {
+        super.configureNavigation()
+        isModalInPresentation = true // present 내려가게 못하게 하는 코드
+        searchController.delegate = self
+        searchController.searchBar.delegate = self
+        navigationItem.hidesSearchBarWhenScrolling = false
+        self.navigationItem.searchController = searchController
+        self.navigationItem.leftBarButtonItem = .init(title: "Cancel", style: .plain, target: self, action: #selector(Self.cancelTapped))
+        self.navigationItem.rightBarButtonItem = .init(title: "Add", style: .done, target: self, action: #selector(Self.doneTapped))
+        searchController.searchBar.placeholder = "검색 결과를 보여주자"
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.automaticallyShowsCancelButton = false
+        searchController.searchBar.text = vm.searchText
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .clear
+        navigationItem.standardAppearance = appearance
+        navigationItem.scrollEdgeAppearance = appearance
+    }
+    override func configureView() {
+        super.configureView()
+        configureCollectionView()
+        vm.$searchText.sink {[weak self] text in
+            print(text)
+        }.store(in: &subscription)
+        vm.$selectedCount.sink {[weak self] selectCnt in
+            Task{
+                self?.navigationItem.rightBarButtonItem?.isEnabled = selectCnt > 0
+            }
+        }.store(in: &subscription)
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    @objc func cancelTapped(){
+        self.dismiss(animated: true)
+    }
+    @objc func doneTapped(){
+        self.dismiss(animated: true)
+    }
+}

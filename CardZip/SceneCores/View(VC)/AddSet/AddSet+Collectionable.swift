@@ -16,6 +16,8 @@ extension AddSetVC:Collectionable,UICollectionViewDelegate{
         let layoutFooterRegi = layoutFooterRegistration
         let editCellRegi = setCardRegistration
         let headerCellRegi = setHeaderRegistration
+        let itemHeaderReigi = cellItemHeaderRegistration
+        guard let vm else {return}
         dataSource = DataSource(vm:vm,collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             switch itemIdentifier.type{
             case .cards:
@@ -32,6 +34,10 @@ extension AddSetVC:Collectionable,UICollectionViewDelegate{
                 return collectionView.dequeueConfiguredReusableSupplementary(using: layoutHeaderRegi, for: indexPath)
             case "LayoutFooter":
                 return collectionView.dequeueConfiguredReusableSupplementary(using: layoutFooterRegi, for: indexPath)
+            case UICollectionView.elementKindSectionHeader:
+                let header =  collectionView.dequeueConfiguredReusableSupplementary(using: itemHeaderReigi, for: indexPath)
+                header.count = vm.nowItemsCount
+                return header
             default: return nil
             }
         }
@@ -54,10 +60,14 @@ extension AddSetVC{
                 }
                 listConfig.showsSeparators = false
                 listConfig.backgroundColor = .bg
+                
                 let section = NSCollectionLayoutSection.list(using: listConfig, layoutEnvironment: environment)
                 section.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
                 section.interGroupSpacing = 16
-                
+                let header : NSCollectionLayoutBoundarySupplementaryItem = .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(28)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                header.pinToVisibleBounds = true
+                header.zIndex = Int.max
+                section.boundarySupplementaryItems = [header]
                 return section
             case .header:
                 let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(180)))
@@ -69,7 +79,8 @@ extension AddSetVC{
             }
         })
         let layoutConfig = UICollectionViewCompositionalLayoutConfiguration()
-        layoutConfig.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60)), elementKind: "LayoutHeader", alignment: .top), .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(120)),elementKind: "LayoutFooter",alignment: .bottom)]
+        layoutConfig.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(0)), elementKind: "LayoutHeader", alignment: .top),
+                                                   .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(120)),elementKind: "LayoutFooter",alignment: .bottom)]
         layout.configuration = layoutConfig
         
         return layout

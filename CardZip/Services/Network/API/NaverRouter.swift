@@ -6,6 +6,8 @@
 //
 
 import Foundation
-enum Router{
-    
+import Alamofire
+enum NaverRouter{
+    static let API = "https://openapi.naver.com/v1"
 }
+

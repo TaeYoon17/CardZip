@@ -12,16 +12,18 @@ extension AddSetVM{
     enum SetActionType{ case imageTapped }
 }
 final class AddSetVM{
+    deinit{
+        print("AddSetVM DEINIT!")
+    }
     @MainActor private let repository = CardSetRepository()
     @MainActor private let cardRepository = CardRepository()
     weak var photoService:PhotoService! = PhotoService.shared
     @Published var dataProcess: DataProcessType
     @Published var nowItemsCount: Int = 0
-    
+    @DefaultsState(\.recentSet) var recentKey
     var setItem: SetItem?
     // DataProcessTyppe Edit했을 때 변경 사항을 던져주는 passthrough
     var passthroughEditSet = PassthroughSubject<SetItem,Never>()
-    
     var passthroughCloseAction = PassthroughSubject<Void,Never>() // 닫을 때
     var passthroughErrorMessage = PassthroughSubject<String,Never>() // 에러 메시지를 던질 때
     var updatedCardItem = PassthroughSubject<(CardItem,Bool),Never>() // 리스트에서 단일 카드 내용을 업데이트 할 때
@@ -35,12 +37,7 @@ final class AddSetVM{
         case.add:
             self.setItem = .init(title: "", setDescription: "", cardList: [CardItem()], cardCount: 0)
         case .edit:
-//            if let setItem{
-                self.setItem = setItem
-//            }else{
-//                passthroughErrorMessage.send("Not found card set".localized)
-//                passthroughCloseAction.send()
-//            }
+            self.setItem = setItem
         }
     }
 }
@@ -85,11 +82,9 @@ extension AddSetVM{
         prevCardTables.subtracting(results).forEach { cardRepository?.delete(item: $0) } // 이전에 존재한 카드 테이블들을 삭제한다.
         repository?.removeAllCards(set: cardSetTable)
         repository?.replaceAllCards(set: cardSetTable, cards: results)
-        
-        if dataProcess == .edit{
-            setItem.cardList = cardItems
-            passthroughEditSet.send(setItem)
-        }
+        setItem.dbKey = cardSetTable._id
+        setItem.cardList = cardItems
+        passthroughEditSet.send(setItem)
         passthroughCloseAction.send()
     }
 }

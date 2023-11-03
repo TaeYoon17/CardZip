@@ -21,7 +21,7 @@ struct FolderListItem: Identifiable{
 
 final class MainVC: BaseVC {
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>
-    enum SectionType: Int, CaseIterable{ 
+    enum SectionType: Int, CaseIterable{
         case pinned,setList,folderList
         var title:String{
             let data:String
@@ -61,11 +61,25 @@ final class MainVC: BaseVC {
     lazy var addCardSetBtn = {
         let btn = NewCardSetBtn()
         btn.addAction(.init(handler: {[weak self] _ in
+            guard let self else {return}
             let vm = AddSetVM(dataProcess: .add, setItem: nil)
             let vc = AddSetVC()
             vc.vm = vm
+            vm.passthroughEditSet
+                .receive(on: RunLoop.main)
+                .sink(receiveValue: { [weak self ] setItem in
+                    guard let self else {return}
+                    vm.recentKey = setItem.dbKey
+                    print("이거 가져온다")
+                    let setvc = SetVC()
+                    let setVM = SetVM(setItem: setItem)
+                    setvc.vm = setVM
+                    Task{
+                        self.navigationController?.pushViewController(setvc, animated: true)
+                    }
+                }).store(in: &subscription)
             let nav = UINavigationController(rootViewController: vc)
-            self?.present(nav, animated: true)
+            self.present(nav, animated: true)
         }), for: .touchUpInside)
         return btn
     }()
@@ -90,10 +104,10 @@ final class MainVC: BaseVC {
     }
     override func configureLayout() {
         super.configureLayout()
-//        initStores()
-//        .addFolderBtn
+        //        initStores()
+        //        .addFolderBtn
         [collectionView,settingBtn,
-//         navStack,
+         //         navStack,
          addCardSetBtn].forEach({view.addSubview($0)})
     }
     override func configureConstraints() {
@@ -108,11 +122,11 @@ final class MainVC: BaseVC {
             }
             make.trailing.equalToSuperview().inset(16)
         }
-// MARK: -- Add Folder Btn
-//        addFolderBtn.snp.makeConstraints { make in
-//            make.centerY.equalTo(addCardSetBtn)
-//            make.trailing.equalToSuperview().inset(16)
-//        }
+        // MARK: -- Add Folder Btn
+        //        addFolderBtn.snp.makeConstraints { make in
+        //            make.centerY.equalTo(addCardSetBtn)
+        //            make.trailing.equalToSuperview().inset(16)
+        //        }
     }
     override func configureNavigation(){
         navigationItem.largeTitleDisplayMode = .automatic
@@ -127,7 +141,7 @@ final class MainVC: BaseVC {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.appendView(type: .left, view: settingBtn)
-//        navigationController?.appendView(type: .right, view: navStack)
+        //        navigationController?.appendView(type: .right, view: navStack)
         
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -138,6 +152,6 @@ final class MainVC: BaseVC {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
         settingBtn.removeFromSuperview()
-//        navStack.removeFromSuperview()
+        //        navStack.removeFromSuperview()
     }
 }

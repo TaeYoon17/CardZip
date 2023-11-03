@@ -29,7 +29,7 @@
 
 //MARK: -- 메인 컬렉션 뷰 섹션 타입
 "MainPinned" = "Pinned";
-"MainSets" = "Sets";
+"MainSets" = "All sets";
 "MainFolders" = "Folders";
 
 //MARK: -- 핀 타입
@@ -51,6 +51,8 @@
 "Edit Image" = "Edit Image";
 "Enter a term" = "Enter a term";
 "Enter a definition" = "Enter a definition";
+"Set Create" = "Set Create";
+"Set Edit" = "Set Edit";
 
 //MARK: -- 이미지 뷰 관련
 "Original" = "Original";

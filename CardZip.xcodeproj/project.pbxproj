@@ -49,6 +49,9 @@
 		633BD4B72AD7F1E1006D6955 /* CardFrontView+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633BD4B62AD7F1E1006D6955 /* CardFrontView+Cell.swift */; };
 		633BD4B92AD7FCC9006D6955 /* CardVC+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633BD4B82AD7FCC9006D6955 /* CardVC+Delegate.swift */; };
 		633DA7392AE3C06D0047C138 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 633DA7382AE3C06D0047C138 /* Lottie */; };
+		634CF0182AF0D7CE00BEF819 /* ImageSearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634CF0172AF0D7CE00BEF819 /* ImageSearchVC.swift */; };
+		63548F5F2AF0AA0900C16CCA /* NaverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63548F5E2AF0AA0900C16CCA /* NaverRouter.swift */; };
+		63548F612AF0AAAE00C16CCA /* SearchRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63548F602AF0AAAE00C16CCA /* SearchRouter.swift */; };
 		63552A3B2AD4DCAB00A7063A /* CardItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63552A3A2AD4DCAB00A7063A /* CardItem.swift */; };
 		63552A3D2AD4DD8A00A7063A /* SetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63552A3C2AD4DD8A00A7063A /* SetItem.swift */; };
 		63552A402AD51FDA00A7063A /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63552A3F2AD51FDA00A7063A /* PhotoService.swift */; };
@@ -81,6 +84,8 @@
 		636571402AD6DE67008126C4 /* CardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6365713F2AD6DE67008126C4 /* CardCell.swift */; };
 		636571422AD6DE96008126C4 /* CardIconBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636571412AD6DE96008126C4 /* CardIconBtn.swift */; };
 		636571442AD6DF02008126C4 /* NSProviderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636571432AD6DF02008126C4 /* NSProviderExtension.swift */; };
+		6366E67C2AEFE931006A85BB /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6366E67B2AEFE931006A85BB /* Alamofire */; };
+		6366E67E2AEFFEC5006A85BB /* AddSetItemHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6366E67D2AEFFEC5006A85BB /* AddSetItemHeader.swift */; };
 		636855422AE146E700FCD7A5 /* TTS_Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636855412AE146E700FCD7A5 /* TTS_Service.swift */; };
 		636C51E62ADCC5770087A1A4 /* ViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636C51E52ADCC5770087A1A4 /* ViewControllerExtensions.swift */; };
 		63730F5E2AD26ECC00BC8F35 /* PinnedSetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F5D2AD26ECC00BC8F35 /* PinnedSetCell.swift */; };
@@ -125,6 +130,9 @@
 		63A0CFC42AE9562B0060B5F9 /* CardFrontView+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFC32AE9562B0060B5F9 /* CardFrontView+Collectionable.swift */; };
 		63A0CFC72AE9674D0060B5F9 /* AddSetVC+DS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0CFC62AE9674D0060B5F9 /* AddSetVC+DS.swift */; };
 		63A0E35D2AE4471D00E6DAAB /* CardVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A0E35C2AE4471D00E6DAAB /* CardVM.swift */; };
+		63A266FB2AF374990062DD6A /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 63A266FA2AF374990062DD6A /* Collections */; };
+		63A266FD2AF374990062DD6A /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 63A266FC2AF374990062DD6A /* DequeModule */; };
+		63A266FF2AF374990062DD6A /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 63A266FE2AF374990062DD6A /* OrderedCollections */; };
 		63A2F8E42AEB4ED9000A2C89 /* SetVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A2F8E32AEB4ED9000A2C89 /* SetVM.swift */; };
 		63A2F8E72AEBA862000A2C89 /* SetCardListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A2F8E62AEBA862000A2C89 /* SetCardListVM.swift */; };
 		63A2F8E92AEBACD2000A2C89 /* SetCardListHeaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A2F8E82AEBACD2000A2C89 /* SetCardListHeaderVM.swift */; };
@@ -141,12 +149,21 @@
 		63A3D4482ACE3F9A00E6B10E /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A3D4472ACE3F9A00E6B10E /* BaseCell.swift */; };
 		63A3D44A2ACE3FC500E6B10E /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A3D4492ACE3FC500E6B10E /* BaseView.swift */; };
 		63A3D44C2ACE3FE300E6B10E /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A3D44B2ACE3FE300E6B10E /* BaseVC.swift */; };
+		63A9A3CC2AF1FC3A00F9A147 /* ImageSearchDS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A9A3CB2AF1FC3A00F9A147 /* ImageSearchDS.swift */; };
+		63A9A3CE2AF1FE5900F9A147 /* ImageSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A9A3CD2AF1FE5900F9A147 /* ImageSearch.swift */; };
+		63A9A3D12AF1FFCA00F9A147 /* ImageSearchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A9A3D02AF1FFCA00F9A147 /* ImageSearchVM.swift */; };
+		63A9A3D32AF2425400F9A147 /* ImageSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A9A3D22AF2425400F9A147 /* ImageSearchCell.swift */; };
+		63A9A3D52AF24B9E00F9A147 /* ImageSearchVC+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A9A3D42AF24B9E00F9A147 /* ImageSearchVC+Registration.swift */; };
+		63A9A3D72AF268CF00F9A147 /* ImageSearchVC+SearchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A9A3D62AF268CF00F9A147 /* ImageSearchVC+SearchDelegate.swift */; };
 		63ABC0C02ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ABC0BF2ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift */; };
 		63ADFE982AE6478B00C03B5E /* SetListVM+BackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFE972AE6478B00C03B5E /* SetListVM+BackView.swift */; };
 		63ADFE9A2AE6483400C03B5E /* SetListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFE992AE6483400C03B5E /* SetListVM.swift */; };
 		63ADFE9C2AE6485900C03B5E /* SetListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFE9B2AE6485900C03B5E /* SetListDataSource.swift */; };
 		63ADFE9E2AE685BC00C03B5E /* PublisherExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFE9D2AE685BC00C03B5E /* PublisherExtension.swift */; };
 		63ADFEA12AE6A55C00C03B5E /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADFEA02AE6A55C00C03B5E /* ImageService.swift */; };
+		63C3EC322AF1F50600A426EC /* ImageSearchVC+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C3EC312AF1F50600A426EC /* ImageSearchVC+Collectionable.swift */; };
+		63C3EC342AF1F83500A426EC /* ImageSearchVC+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C3EC332AF1F83500A426EC /* ImageSearchVC+Delegate.swift */; };
+		63C3EC372AF1F8F700A426EC /* ImagePreviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C3EC362AF1F8F700A426EC /* ImagePreviewVC.swift */; };
 		63E50EF62AD9820A003E0800 /* ErrorPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */; };
 		63EAED4E2ADD05EA00046C44 /* EditableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EAED4D2ADD05EA00046C44 /* EditableVC.swift */; };
 		63F27D3D2AE600ED007A11A0 /* MainVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F27D3C2AE600ED007A11A0 /* MainVM.swift */; };
@@ -195,6 +212,9 @@
 		633BD4B42AD7EB8A006D6955 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		633BD4B62AD7F1E1006D6955 /* CardFrontView+Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardFrontView+Cell.swift"; sourceTree = "<group>"; };
 		633BD4B82AD7FCC9006D6955 /* CardVC+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardVC+Delegate.swift"; sourceTree = "<group>"; };
+		634CF0172AF0D7CE00BEF819 /* ImageSearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearchVC.swift; sourceTree = "<group>"; };
+		63548F5E2AF0AA0900C16CCA /* NaverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverRouter.swift; sourceTree = "<group>"; };
+		63548F602AF0AAAE00C16CCA /* SearchRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRouter.swift; sourceTree = "<group>"; };
 		63552A3A2AD4DCAB00A7063A /* CardItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardItem.swift; sourceTree = "<group>"; };
 		63552A3C2AD4DD8A00A7063A /* SetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetItem.swift; sourceTree = "<group>"; };
 		63552A3F2AD51FDA00A7063A /* PhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoService.swift; sourceTree = "<group>"; };
@@ -227,6 +247,7 @@
 		6365713F2AD6DE67008126C4 /* CardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCell.swift; sourceTree = "<group>"; };
 		636571412AD6DE96008126C4 /* CardIconBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardIconBtn.swift; sourceTree = "<group>"; };
 		636571432AD6DF02008126C4 /* NSProviderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSProviderExtension.swift; sourceTree = "<group>"; };
+		6366E67D2AEFFEC5006A85BB /* AddSetItemHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSetItemHeader.swift; sourceTree = "<group>"; };
 		636855412AE146E700FCD7A5 /* TTS_Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTS_Service.swift; sourceTree = "<group>"; };
 		636C51E52ADCC5770087A1A4 /* ViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtensions.swift; sourceTree = "<group>"; };
 		63730F5D2AD26ECC00BC8F35 /* PinnedSetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedSetCell.swift; sourceTree = "<group>"; };
@@ -288,12 +309,21 @@
 		63A3D4472ACE3F9A00E6B10E /* BaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		63A3D4492ACE3FC500E6B10E /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		63A3D44B2ACE3FE300E6B10E /* BaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
+		63A9A3CB2AF1FC3A00F9A147 /* ImageSearchDS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearchDS.swift; sourceTree = "<group>"; };
+		63A9A3CD2AF1FE5900F9A147 /* ImageSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearch.swift; sourceTree = "<group>"; };
+		63A9A3D02AF1FFCA00F9A147 /* ImageSearchVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearchVM.swift; sourceTree = "<group>"; };
+		63A9A3D22AF2425400F9A147 /* ImageSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearchCell.swift; sourceTree = "<group>"; };
+		63A9A3D42AF24B9E00F9A147 /* ImageSearchVC+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageSearchVC+Registration.swift"; sourceTree = "<group>"; };
+		63A9A3D62AF268CF00F9A147 /* ImageSearchVC+SearchDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageSearchVC+SearchDelegate.swift"; sourceTree = "<group>"; };
 		63ABC0BF2ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardVC+AttributeStringExtension.swift"; sourceTree = "<group>"; };
 		63ADFE972AE6478B00C03B5E /* SetListVM+BackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetListVM+BackView.swift"; sourceTree = "<group>"; };
 		63ADFE992AE6483400C03B5E /* SetListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetListVM.swift; sourceTree = "<group>"; };
 		63ADFE9B2AE6485900C03B5E /* SetListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetListDataSource.swift; sourceTree = "<group>"; };
 		63ADFE9D2AE685BC00C03B5E /* PublisherExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublisherExtension.swift; sourceTree = "<group>"; };
 		63ADFEA02AE6A55C00C03B5E /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
+		63C3EC312AF1F50600A426EC /* ImageSearchVC+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageSearchVC+Collectionable.swift"; sourceTree = "<group>"; };
+		63C3EC332AF1F83500A426EC /* ImageSearchVC+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageSearchVC+Delegate.swift"; sourceTree = "<group>"; };
+		63C3EC362AF1F8F700A426EC /* ImagePreviewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewVC.swift; sourceTree = "<group>"; };
 		63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPolicy.swift; sourceTree = "<group>"; };
 		63EAED4D2ADD05EA00046C44 /* EditableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableVC.swift; sourceTree = "<group>"; };
 		63F27D3C2AE600ED007A11A0 /* MainVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVM.swift; sourceTree = "<group>"; };
@@ -308,9 +338,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63A266FB2AF374990062DD6A /* Collections in Frameworks */,
 				633DA7392AE3C06D0047C138 /* Lottie in Frameworks */,
 				63A3D4332ACE3C6B00E6B10E /* RealmSwift in Frameworks */,
 				631331832AD46B6300459515 /* TextFieldEffects in Frameworks */,
+				6366E67C2AEFE931006A85BB /* Alamofire in Frameworks */,
+				63A266FF2AF374990062DD6A /* OrderedCollections in Frameworks */,
+				63A266FD2AF374990062DD6A /* DequeModule in Frameworks */,
 				63A3D4312ACE3C6B00E6B10E /* Realm in Frameworks */,
 				632A48C22ACD3B6200413AF4 /* SnapKit in Frameworks */,
 			);
@@ -364,6 +398,7 @@
 			children = (
 				63730F7D2AD29CE500BC8F35 /* AddSetItemCell.swift */,
 				6313317F2AD4427700459515 /* AddSetCell.swift */,
+				6366E67D2AEFFEC5006A85BB /* AddSetItemHeader.swift */,
 			);
 			path = SubCells;
 			sourceTree = "<group>";
@@ -414,6 +449,7 @@
 		632A485D2ACCEBC600413AF4 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				63548F5D2AF0A99E00C16CCA /* API */,
 				632A48642ACCED6A00413AF4 /* API_Key.swift */,
 				63A3D4342ACE3C9E00E6B10E /* NetworkService.swift */,
 			);
@@ -438,6 +474,28 @@
 				631E53922ADAA42B0010E11E /* CardBackView.swift */,
 			);
 			path = SubCells;
+			sourceTree = "<group>";
+		};
+		634CF0162AF0D7C000BEF819 /* ImageSearch */ = {
+			isa = PBXGroup;
+			children = (
+				63C3EC352AF1F85600A426EC /* SubViews */,
+				634CF0172AF0D7CE00BEF819 /* ImageSearchVC.swift */,
+				63C3EC312AF1F50600A426EC /* ImageSearchVC+Collectionable.swift */,
+				63C3EC332AF1F83500A426EC /* ImageSearchVC+Delegate.swift */,
+				63A9A3D62AF268CF00F9A147 /* ImageSearchVC+SearchDelegate.swift */,
+				63A9A3D42AF24B9E00F9A147 /* ImageSearchVC+Registration.swift */,
+			);
+			path = ImageSearch;
+			sourceTree = "<group>";
+		};
+		63548F5D2AF0A99E00C16CCA /* API */ = {
+			isa = PBXGroup;
+			children = (
+				63548F5E2AF0AA0900C16CCA /* NaverRouter.swift */,
+				63548F602AF0AAAE00C16CCA /* SearchRouter.swift */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 		63552A3E2AD51F7F00A7063A /* PhotoService */ = {
@@ -725,6 +783,7 @@
 		63A3D42B2ACE3C1700E6B10E /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				63A9A3CF2AF1FFBF00F9A147 /* ImageSearch */,
 				63A2F8E52AEBA844000A2C89 /* SetScene */,
 				639976C02AEA5F0100561439 /* AddSetScene */,
 				63A0E35B2AE4471400E6DAAB /* CardScene */,
@@ -737,6 +796,7 @@
 		63A3D42C2ACE3C1E00E6B10E /* View(VC) */ = {
 			isa = PBXGroup;
 			children = (
+				634CF0162AF0D7C000BEF819 /* ImageSearch */,
 				6357EA4F2ADBC380005ED852 /* ImageViewer */,
 				63288AC02AD8E7DC008BEDDF /* Setting */,
 				636571322AD6DC2E008126C4 /* Card */,
@@ -756,6 +816,7 @@
 				63552A3A2AD4DCAB00A7063A /* CardItem.swift */,
 				63552A3C2AD4DD8A00A7063A /* SetItem.swift */,
 				636571392AD6DD46008126C4 /* TempCard.swift */,
+				63A9A3CD2AF1FE5900F9A147 /* ImageSearch.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -852,6 +913,24 @@
 			path = UIBase;
 			sourceTree = "<group>";
 		};
+		63A9A3CF2AF1FFBF00F9A147 /* ImageSearch */ = {
+			isa = PBXGroup;
+			children = (
+				63A9A3D02AF1FFCA00F9A147 /* ImageSearchVM.swift */,
+			);
+			path = ImageSearch;
+			sourceTree = "<group>";
+		};
+		63C3EC352AF1F85600A426EC /* SubViews */ = {
+			isa = PBXGroup;
+			children = (
+				63A9A3CB2AF1FC3A00F9A147 /* ImageSearchDS.swift */,
+				63C3EC362AF1F8F700A426EC /* ImagePreviewVC.swift */,
+				63A9A3D22AF2425400F9A147 /* ImageSearchCell.swift */,
+			);
+			path = SubViews;
+			sourceTree = "<group>";
+		};
 		63E50EF42AD981FF003E0800 /* ErrorPolicy */ = {
 			isa = PBXGroup;
 			children = (
@@ -882,6 +961,10 @@
 				63A3D4322ACE3C6B00E6B10E /* RealmSwift */,
 				631331822AD46B6300459515 /* TextFieldEffects */,
 				633DA7382AE3C06D0047C138 /* Lottie */,
+				6366E67B2AEFE931006A85BB /* Alamofire */,
+				63A266FA2AF374990062DD6A /* Collections */,
+				63A266FC2AF374990062DD6A /* DequeModule */,
+				63A266FE2AF374990062DD6A /* OrderedCollections */,
 			);
 			productName = CardZip;
 			productReference = 632A48462ACCE81B00413AF4 /* CardZip.app */;
@@ -917,6 +1000,8 @@
 				63A3D42F2ACE3C6B00E6B10E /* XCRemoteSwiftPackageReference "realm-swift" */,
 				631331812AD46B6300459515 /* XCRemoteSwiftPackageReference "TextFieldEffects" */,
 				633DA7372AE3C06D0047C138 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				6366E67A2AEFE931006A85BB /* XCRemoteSwiftPackageReference "Alamofire" */,
+				63A266F92AF374990062DD6A /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 632A48472ACCE81B00413AF4 /* Products */;
 			projectDirPath = "";
@@ -950,12 +1035,14 @@
 			files = (
 				63730F5E2AD26ECC00BC8F35 /* PinnedSetCell.swift in Sources */,
 				63288AC22AD8E7F7008BEDDF /* SettingVC.swift in Sources */,
+				63C3EC372AF1F8F700A426EC /* ImagePreviewVC.swift in Sources */,
 				6313317C2AD3FB4F00459515 /* AddSet+Registrations.swift in Sources */,
 				6373B2A72AE37BA7009A39FA /* SettingItemCell.swift in Sources */,
 				63A3D43C2ACE3D4600E6B10E /* AppManager.swift in Sources */,
 				639FBF5F2AD5A186004EEE65 /* AddImageVC+Registration.swift in Sources */,
 				6309478F2AE288690095BFEA /* Setting+Image.swift in Sources */,
 				635C3BCF2ADFEC6900994BD8 /* SetListVC+SearchDelegate.swift in Sources */,
+				63A9A3D12AF1FFCA00F9A147 /* ImageSearchVM.swift in Sources */,
 				633BD4B92AD7FCC9006D6955 /* CardVC+Delegate.swift in Sources */,
 				63730F7C2AD29C5700BC8F35 /* DoneBtn.swift in Sources */,
 				63730F882AD29EDD00BC8F35 /* CardSegmentControl.swift in Sources */,
@@ -982,17 +1069,21 @@
 				63ADFE9E2AE685BC00C03B5E /* PublisherExtension.swift in Sources */,
 				63A3D4412ACE3EF500E6B10E /* NavRightStack.swift in Sources */,
 				630DD8DC2AD9A09500B51662 /* ImageTransition.swift in Sources */,
+				63C3EC342AF1F83500A426EC /* ImageSearchVC+Delegate.swift in Sources */,
 				63730F622AD2742400BC8F35 /* UIImageExtensions.swift in Sources */,
 				63A3D44A2ACE3FC500E6B10E /* BaseView.swift in Sources */,
+				63548F612AF0AAAE00C16CCA /* SearchRouter.swift in Sources */,
 				63F27D3D2AE600ED007A11A0 /* MainVM.swift in Sources */,
 				636571362AD6DC9A008126C4 /* SetHeaderReusableView.swift in Sources */,
 				639352122ACE442F00F8B31B /* NavBarView.swift in Sources */,
 				63730F8A2AD29EFD00BC8F35 /* CardCellVM.swift in Sources */,
+				634CF0182AF0D7CE00BEF819 /* ImageSearchVC.swift in Sources */,
 				636855422AE146E700FCD7A5 /* TTS_Service.swift in Sources */,
 				6313316F2AD3F37000459515 /* ImageCell.swift in Sources */,
 				639352092ACE423500F8B31B /* MainVC+Collectionable.swift in Sources */,
 				63ADFE982AE6478B00C03B5E /* SetListVM+BackView.swift in Sources */,
 				635C3BCB2ADFD9A300994BD8 /* App.swift in Sources */,
+				63548F5F2AF0AA0900C16CCA /* NaverRouter.swift in Sources */,
 				63552A3B2AD4DCAB00A7063A /* CardItem.swift in Sources */,
 				630DD8E12ADA647100B51662 /* AddImageVC+DSM.swift in Sources */,
 				639352142ACE448D00F8B31B /* Collectionable.swift in Sources */,
@@ -1030,6 +1121,7 @@
 				6357EA482ADBB9EF005ED852 /* ShowImageVC.swift in Sources */,
 				6393520B2ACE42BC00F8B31B /* ModelStructures.swift in Sources */,
 				635C3BD72AE007DF00994BD8 /* SetCardListHeader.swift in Sources */,
+				63A9A3D52AF24B9E00F9A147 /* ImageSearchVC+Registration.swift in Sources */,
 				6357EA532ADBC6E8005ED852 /* ImageCollectionable.swift in Sources */,
 				636571282AD6D68A008126C4 /* SetListVC.swift in Sources */,
 				63730F6B2AD27BC300BC8F35 /* SectionBackground.swift in Sources */,
@@ -1039,14 +1131,17 @@
 				63E50EF62AD9820A003E0800 /* ErrorPolicy.swift in Sources */,
 				631E53932ADAA42B0010E11E /* CardBackView.swift in Sources */,
 				63F27D3F2AE6019E007A11A0 /* MainDataSource.swift in Sources */,
+				63A9A3D32AF2425400F9A147 /* ImageSearchCell.swift in Sources */,
 				63A2F8EC2AEBD1D8000A2C89 /* SetVC+DS.swift in Sources */,
 				6365712E2AD6DAA6008126C4 /* SetListVC+Delegate.swift in Sources */,
 				635C3BD12ADFFB0500994BD8 /* NavTitleView.swift in Sources */,
+				6366E67E2AEFFEC5006A85BB /* AddSetItemHeader.swift in Sources */,
 				63A3D4482ACE3F9A00E6B10E /* BaseCell.swift in Sources */,
 				63A3D4392ACE3CCD00E6B10E /* CircleButton.swift in Sources */,
 				63730F6D2AD28D3100BC8F35 /* UserDefults.swift in Sources */,
 				639976BF2AEA0D7600561439 /* AddSetItemCellVM.swift in Sources */,
 				633BD4B02AD7DEB8006D6955 /* CardVC+Collectionable.swift in Sources */,
+				63A9A3CC2AF1FC3A00F9A147 /* ImageSearchDS.swift in Sources */,
 				6357EA572ADBCCD8005ED852 /* ImageViewerVC.swift in Sources */,
 				63730F642AD274F800BC8F35 /* DisclosureHeader.swift in Sources */,
 				6357EA4E2ADBBBDA005ED852 /* ShowImageVC+DSM.swift in Sources */,
@@ -1054,6 +1149,7 @@
 				63A0CFC72AE9674D0060B5F9 /* AddSetVC+DS.swift in Sources */,
 				636571342AD6DC69008126C4 /* SetCardListCell.swift in Sources */,
 				6357EA592ADBE2F4005ED852 /* SettingVC+Delegate.swift in Sources */,
+				63C3EC322AF1F50600A426EC /* ImageSearchVC+Collectionable.swift in Sources */,
 				6357EA512ADBC3A4005ED852 /* DeletableImageCell.swift in Sources */,
 				63730F712AD2901800BC8F35 /* CardSetRepository.swift in Sources */,
 				63730F832AD29D6500BC8F35 /* AddImageVC.swift in Sources */,
@@ -1076,9 +1172,11 @@
 				63A0CFBB2AE761140060B5F9 /* SetListVC+Cell.swift in Sources */,
 				63730F762AD2974E00BC8F35 /* CardTable.swift in Sources */,
 				639352072ACE41CF00F8B31B /* MainVC.swift in Sources */,
+				63A9A3D72AF268CF00F9A147 /* ImageSearchVC+SearchDelegate.swift in Sources */,
 				6357EA5B2ADC05C5005ED852 /* Setting.swift in Sources */,
 				6365713C2AD6DDC0008126C4 /* CardView.swift in Sources */,
 				63730F662AD2768000BC8F35 /* DisclosureItemCell.swift in Sources */,
+				63A9A3CE2AF1FE5900F9A147 /* ImageSearch.swift in Sources */,
 				635C3BD32ADFFBC800994BD8 /* SetVC+SearchDelegate.swift in Sources */,
 				63A2F8EB2AEBADFA000A2C89 /* SetHeaderVM.swift in Sources */,
 				63A0CFBF2AE9161D0060B5F9 /* CardVC+DS.swift in Sources */,
@@ -1355,6 +1453,22 @@
 				minimumVersion = 4.3.3;
 			};
 		};
+		6366E67A2AEFE931006A85BB /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		63A266F92AF374990062DD6A /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.5;
+			};
+		};
 		63A3D42F2ACE3C6B00E6B10E /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -1380,6 +1494,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 633DA7372AE3C06D0047C138 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
+		};
+		6366E67B2AEFE931006A85BB /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6366E67A2AEFE931006A85BB /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		63A266FA2AF374990062DD6A /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 63A266F92AF374990062DD6A /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		63A266FC2AF374990062DD6A /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 63A266F92AF374990062DD6A /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		63A266FE2AF374990062DD6A /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 63A266F92AF374990062DD6A /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 		63A3D4302ACE3C6B00E6B10E /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;

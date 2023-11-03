@@ -36,7 +36,7 @@ final class ImagePreviewVC: UIViewController {
         view.backgroundColor = .white
 //        imageView.load(url: URL(string: imageThumbnail))
         let image = UIImage(named: imageThumbnail)!
-        let maxMultiply:CGFloat = 2
+        let maxMultiply:CGFloat = App.Manager.shared.hasNotch() ? 2 : 1.85
         let ratio =  image.size.height / image.size.width
         print(ratio)
         if ratio > maxMultiply{

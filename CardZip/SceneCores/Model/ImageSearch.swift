@@ -9,5 +9,5 @@ import Foundation
 struct ImageSearch:Identifiable,Hashable{
     var id:String { imagePath }
     var imagePath: String
-    var isChecked: Bool = false
+    var isCheck: Bool = false
 }

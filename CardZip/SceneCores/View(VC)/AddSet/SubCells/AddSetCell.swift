@@ -132,8 +132,17 @@ extension AddSetVC{
         override func configureView() {
             super.configureView()
             contentView.backgroundColor = .lightBg
-            titleField.placeholder = "Enter a set title".localized
-            descriptionField.placeholder = "Enter a description".localized
+            
+            titleField.attributedPlaceholder = NSAttributedString(
+                string: "Enter a set title".localized,
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.cardPrimary,
+                             NSAttributedString.Key.font : UIFont.systemFont(ofSize: 21, weight: .medium)]
+            )
+            descriptionField.attributedPlaceholder = NSAttributedString(
+                string: "Enter a description".localized,
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.cardPrimary,
+                             NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17, weight: .medium)]
+            )
             editBtn.alpha = 0
             Task{
                 contentView.layer.cornerRadius = 16

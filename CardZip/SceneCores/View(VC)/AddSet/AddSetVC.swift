@@ -11,6 +11,10 @@ import Combine
 import Photos
 enum DataProcessType{case add, edit}
 final class AddSetVC: EditableVC{
+    deinit{
+        subscription.removeAll()
+        print("AddSet DEINIT")
+    }
     enum SectionType:Int{ case header,cards }
     struct Section:Identifiable,Hashable{
         let id: SectionType
@@ -23,7 +27,25 @@ final class AddSetVC: EditableVC{
     var passthroughSetItem = PassthroughSubject<SetItem,Never>()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     var dataSource : DataSource!
-    var vm :AddSetVM! // 여기 수정해야함!
+     
+    weak var vm :AddSetVM?{
+        didSet{
+            guard vm != nil else {return}
+            subscription.removeAll()
+            appendItemBtn.publisher(for: .touchUpInside).sink { [weak self] _ in
+                print("일단 버튼은 눌림")
+                if self?.vm?.nowItemsCount ?? 1000 >= 100{
+                    self?.alertLackDatas(title: "Too many datas".localized)
+                    return
+                }
+                self?.dataSource.createItem()
+                self?.collectionView.scrollToLastItem()
+            }.store(in: &subscription)
+            navDoneBtn.publisher(for: .touchUpInside).sink { [weak self] _ in
+                self?.dataSource.saveData()
+            }.store(in: &subscription)
+        }
+    } // 여기 수정해야함!
     
     //MARK: -- 뷰 구성
     let navBarView = NavBarView()
@@ -35,44 +57,23 @@ final class AddSetVC: EditableVC{
         }),for: .touchUpInside)
         return btn
     }()
-    lazy var navDoneBtn : DoneBtn = {
-        let btn = DoneBtn(title: "")
-        btn.addAction(.init(handler: { [weak self] _ in
-            self?.dataSource.saveData()
-        }), for: .touchUpInside)
-        return btn
-    }()
+    let navDoneBtn = DoneBtn(title: "")
     lazy var navLabel = {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .headline)
         return label
     }()
-    
-    lazy var appendItemBtn = {
-        let btn = BottomImageBtn(systemName: "plus")
-        btn.addAction(.init(handler: {[weak self] _ in
-            print("일단 버튼은 눌림")
-            if self?.vm.nowItemsCount ?? 1000 >= 100{
-                self?.alertLackDatas(title: "Too many datas".localized)
-                return
-            }
-            self?.dataSource.createItem()
-            self?.collectionView.scrollToLastItem()
-        }), for: .touchUpInside)
-        return btn
-    }()
+    let appendItemBtn = BottomImageBtn(systemName: "plus")
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
         vm?.passthroughCloseAction.sink(receiveValue: { [weak self] in
             self?.closeAction()
         }).store(in: &subscription)
-        vm.passthroughErrorMessage.sink {[weak self] errorMessage in
+        vm?.passthroughErrorMessage.sink {[weak self] errorMessage in
             self?.alertLackDatas(title: errorMessage)
         }.store(in: &subscription)
-        vm.cardAction
-            .receive(on: RunLoop.main)
+        vm?.cardAction.receive(on: RunLoop.main)
             .sink {[weak self] actionType,cardItem in
             guard let self,let cardItem else {return}
             switch actionType{
@@ -83,22 +84,24 @@ final class AddSetVC: EditableVC{
                     guard let self else {return}
                     var newCardItem = cardItem
                     newCardItem.imageID = imagesID
-                    vm.updatedCardItem.send((newCardItem,true))
+                    vm?.updatedCardItem.send((newCardItem,true))
                 }.store(in: &subscription)
                 navigationController?.pushViewController(vc, animated: true)
             case .delete: dataSource.deleteItem(cardItem: cardItem)
             }
         }.store(in: &subscription)
-        vm.setAction.sink { [weak self] actionType, setItem in
+        vm?.setAction.sink { [weak self] actionType, setItem in
             guard let self else {return}
             switch actionType{
             case .imageTapped:
-                vm.photoService.presentPicker(vc: self,multipleSelection: false)
+                vm?.photoService.presentPicker(vc: self,multipleSelection: false)
             }
         }.store(in: &subscription)
+        
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        guard let vm else {return}
         Task{
             if await !vm.photoService.isValidAuthorization(){
                 self.alertLackDatas(title: "Album images are not available".localized,
@@ -120,38 +123,36 @@ final class AddSetVC: EditableVC{
                 }
             }
         }.store(in: &subscription)
-        vm.$nowItemsCount.sink {[weak self] count in
-            self?.navLabel.text = "\(count) / 100"
+        vm?.$nowItemsCount.sink {[weak self] count in
+//            self?.navLabel.text = "\(count) / 100"
+//            self?.navigationItem.title = "\(count) / 100"
+//            "\(count) / 100"
         }.store(in: &subscription)
-        vm.$dataProcess.sink {[weak self] type in
+        vm?.$dataProcess.sink {[weak self] type in
             switch type {
             case .add:
-                self?.navDoneBtn.title = "Create".localized
+                self?.navigationItem.title = "Set Create".localized
             case .edit:
-                self?.navDoneBtn.title = "Edit".localized
+                self?.navigationItem.title = "Set Edit".localized
                 self?.navCloseBtn.alpha = 0
             }
+            self?.navDoneBtn.title = "Done".localized
         }.store(in: &subscription)
     }
     override func configureNavigation() {
         super.configureNavigation()
-        navCloseBtn.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().inset(16)
-        }
-        navDoneBtn.snp.makeConstraints { make in
-            make.centerY.equalTo(navCloseBtn)
-            make.trailing.equalToSuperview().inset(16)
-        }
-        navLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalTo(navCloseBtn)
-        }
-        navBarView.alpha = 1
-        navBarView.snp.makeConstraints { make in
-            make.horizontalEdges.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(60)
-        }
+        
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.appendView(type: .left, view: navCloseBtn,topInset: 16)
+        navigationController?.appendView(type: .right, view: navDoneBtn,topInset: 16)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navCloseBtn.removeFromSuperview()
+        navDoneBtn.removeFromSuperview()
     }
     override func configureConstraints() {
         super.configureConstraints()
@@ -165,8 +166,9 @@ final class AddSetVC: EditableVC{
         }
     }
     override func configureLayout() {
+//        navBarView,navCloseBtn,navDoneBtn,navLabel
         super.configureLayout()
-        [collectionView,navBarView,navCloseBtn,navDoneBtn,navLabel,appendItemBtn].forEach{view.addSubview($0)}
+        [collectionView,appendItemBtn].forEach{view.addSubview($0)}
     }
 }
 //MARK: -- Set Button Policy

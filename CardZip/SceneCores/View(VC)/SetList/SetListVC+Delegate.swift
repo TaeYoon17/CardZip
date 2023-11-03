@@ -7,7 +7,6 @@
 
 import SnapKit
 import UIKit
-
 extension SetListVC:UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath),
@@ -20,7 +19,6 @@ extension SetListVC:UITableViewDelegate{
             .debounce(for: 0.4, scheduler: RunLoop.main)
             .sink {[weak self] setItem in
             guard let self,setItem.id != item else {return}
-            
             dataSource.initItem()
         }
         self.navigationController?.navigationBar.prefersLargeTitles = false
@@ -32,7 +30,10 @@ extension SetListVC:UITableViewDelegate{
         configureNavigationItem()
     }
     func configureNavigationItem() {
-        let editingItem = UIBarButtonItem(title: (collectionView.isEditing ? "Done" : "Edit").localized, style: .plain, target: self, action: #selector(Self.editTapped))
+        let editingItem = UIBarButtonItem(title: (collectionView.isEditing ? "Done" : "Edit").localized,
+                                          style: .plain,
+                                          target: self,
+                                          action: #selector(Self.editTapped))
         navigationItem.rightBarButtonItems = [editingItem]
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 88 }

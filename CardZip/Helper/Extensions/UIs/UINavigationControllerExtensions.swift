@@ -9,10 +9,15 @@ import UIKit
 import SnapKit
 extension UINavigationController{
     enum SideType{case left,right}
-    func appendView(type: SideType,view: UIView){
+    func appendView(type: SideType,view: UIView,topInset: CGFloat = 4){
         self.navigationBar.addSubview(view)
         view.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(4)
+
+            if self.navigationBar.prefersLargeTitles{
+                make.top.equalToSuperview().inset(topInset)
+            }else{
+                make.centerY.equalToSuperview()
+            }
             switch type{
             case .left:
                 make.leading.equalToSuperview().inset(16)

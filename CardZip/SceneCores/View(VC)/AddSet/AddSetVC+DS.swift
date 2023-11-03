@@ -144,13 +144,21 @@ fileprivate extension AddSetVC.DataSource{
         snapshot.deleteItems([deleteItem])
         apply(snapshot,animatingDifferences: true)
         vm.nowItemsCount = getItemsCount
+        snapshot.reloadSections([.cards])
+        Task{
+            await apply(snapshot,animatingDifferences: false)
+        }
     }
     //MARK: -- APPEND DATASOURCE
     @MainActor func appendDataSource(item: Item,toSection: SectionType = .cards){ // 데이터 소스만 추가, DB 저장 아님
         var snapshot = snapshot()
-        snapshot.appendItems([item], toSection: .cards)
+        snapshot.appendItems([item], toSection: toSection)
         apply(snapshot,animatingDifferences: true)
         vm.nowItemsCount = getItemsCount
+        snapshot.reloadSections([.cards])
+        Task{
+            await apply(snapshot,animatingDifferences: false)
+        }
     }
     //MARK: -- INIT DATASOURCE
     @MainActor func initDataSource(){

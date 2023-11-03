@@ -28,7 +28,7 @@
 "Save the image" = "이미지를 저장합니다";
 //MARK: -- 메인 컬렉션 뷰 섹션 타입
 "MainPinned" = "핀";
-"MainSets" = "세트 목록";
+"MainSets" = "전체 세트";
 "MainFolders" = "폴더 목록";
 //MARK: -- 핀 타입
 "Pin Starred Card Set" = "별표 카드";
@@ -48,6 +48,8 @@
 "Edit Image" = "이미지 수정";
 "Enter a term" = "용어";
 "Enter a definition" = "의미";
+"Set Create" = "세트 생성";
+"Set Edit" = "세트 수정";
 //MARK: -- 이미지 뷰 관련
 "Original" = "원본 비율";
 "Square" = "정방형";

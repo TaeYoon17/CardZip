@@ -17,7 +17,7 @@ final class CustomAlertController: UIAlertController{
     convenience init(actionList: [UIAlertAction]) {
         self.init(nibName: nil, bundle: nil)
         view.tintColor = .cardPrimary
-        view.backgroundColor = .bg?.withAlphaComponent(0.33)
+        view.backgroundColor = .bg.withAlphaComponent(0.33)
         view.alpha = 0.95
         actionList.forEach({self.addAction($0)})
         self.addAction(.init(title: "취소", style: .cancel))
@@ -45,7 +45,7 @@ final class BackAlertController: UIAlertController{
         self.init(nibName: nil, bundle: nil)
     
         view.tintColor = .cardPrimary
-        view.backgroundColor = .bg?.withAlphaComponent(0.33)
+        view.backgroundColor = .bg.withAlphaComponent(0.33)
         view.alpha = 0.95
         self.addAction(.init(title: title, style: .cancel, handler: { _ in
             vc?.navigationController?.popViewController(animated: true)

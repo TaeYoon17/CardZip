@@ -6,6 +6,8 @@
 //
 
 import Foundation
-class NetworkService:NSObject{
-    
+import Alamofire
+final class NetworkService{
+    static let shared = NetworkService()
+    private init(){}
 }

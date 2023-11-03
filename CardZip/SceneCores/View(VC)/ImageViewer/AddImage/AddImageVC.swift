@@ -43,6 +43,10 @@ final class AddImageVC: ImageViewerVC{
             }
         }.store(in: &subscription)
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
     deinit{ print("AddImageVC가 사라짐!!") }
     override func configureCollectionView(){
         collectionView.backgroundColor = .bg
@@ -55,6 +59,7 @@ final class AddImageVC: ImageViewerVC{
                 return collectionView.dequeueConfiguredReusableCell(using: addRegistration, for: indexPath, item: itemIdentifier)
             }else{
                 let cell = collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: itemIdentifier)
+                
                 cell.deleteAction = { [weak self] in
                     let actionSheet = CustomAlertController(actionList: [
                         .init(title: "Delete".localized, systemName: "trash", completion: {[weak self] in
