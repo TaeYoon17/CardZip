@@ -13,7 +13,7 @@ extension ImageSearchVC{
             guard let self,let item = dataSource.fetchItem(id: itemIdentifier) else {return}
             cell.model = item
             if item.isCheck{
-                cell.selectNumber = vm.getItemCount(item)
+                cell.selectNumber = self.vm.getItemCount(item)
             }
         }
     }

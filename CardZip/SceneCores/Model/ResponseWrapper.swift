@@ -12,7 +12,7 @@ struct ResponseWrapper<T:Codable>:Codable{
     let lastBuildDate: String
     let total:Int
     let display: Int
-    let start: String
+    let start: Int
     enum CodingKeys:String, CodingKey {
         case lastBuildDate
         case items

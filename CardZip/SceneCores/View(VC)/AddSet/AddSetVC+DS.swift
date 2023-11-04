@@ -153,7 +153,7 @@ fileprivate extension AddSetVC.DataSource{
     @MainActor func appendDataSource(item: Item,toSection: SectionType = .cards){ // 데이터 소스만 추가, DB 저장 아님
         var snapshot = snapshot()
         snapshot.appendItems([item], toSection: toSection)
-        apply(snapshot,animatingDifferences: true)
+        apply(snapshot,animatingDifferences: false)
         vm.nowItemsCount = getItemsCount
         snapshot.reloadSections([.cards])
         Task{

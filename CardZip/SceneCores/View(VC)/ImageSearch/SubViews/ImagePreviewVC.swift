@@ -13,6 +13,7 @@ final class ImagePreviewVC: UIViewController {
     private let imageView: UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
         imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "getup")
         return imageView
     }()
     
@@ -28,7 +29,7 @@ final class ImagePreviewVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
+//        setupView()
     }
     
     private func setupView() {

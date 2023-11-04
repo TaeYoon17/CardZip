@@ -22,7 +22,6 @@ final class ShowImageVC: ImageViewerVC{
     override var cardItem: CardItem?{
         didSet{
             guard let cardItem else {return}
-            
         }
     }
     deinit{ print("ShowImageVC가 사라짐!!") }

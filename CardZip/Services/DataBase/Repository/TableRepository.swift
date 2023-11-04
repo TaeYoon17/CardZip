@@ -17,7 +17,7 @@ enum RepositoryError: Error{
     private(set) var tasks: Results<T>!
     @MainActor var getTasks:Results<T>{ realm.objects(T.self) }
     init?() {
-         realm = try! Realm()
+        realm = try! Realm()
     }
     func checkPath(){
         print(Realm.Configuration.defaultConfiguration.fileURL ?? "경로 없음")
@@ -77,7 +77,7 @@ enum RepositoryError: Error{
         return self
     }
     func objectByPrimaryKey<U: ObjectId>(primaryKey: U) -> T? {
-            return realm?.object(ofType: T.self, forPrimaryKey: primaryKey)
+        return realm?.object(ofType: T.self, forPrimaryKey: primaryKey)
     }
     func getTableBy<U: ObjectId>(tableID: U) -> T?{
         return realm?.object(ofType: T.self, forPrimaryKey: tableID)
@@ -89,5 +89,32 @@ enum RepositoryError: Error{
         }
         delete(item: obj)
         print("Repository 데이터 삭제 완료")
+    }
+    static func getVersion(){
+        do{
+            
+            let config = Realm.Configuration(schemaVersion: 1){ migration, oldSchemaVersion in // 현재 사용하자 사용하는 스키마
+                /// 스키마 추가 삭제는 별도의 내용이 추가 될 필요 없음
+                if oldSchemaVersion < 1 {
+                    migration.enumerateObjects(ofType: CardTable.className()) { oldObject, newObject in
+                        guard let new = newObject else {return}
+                        guard let old = oldObject else {return}
+                        new["imagePathes"] = "요약하기"
+                    }
+                }
+                //                if oldSchemaVersion < 2 {
+                //
+                //                }
+                //            if oldSchemaVersion < 3 {
+                //                migration.renameProperty(onType: DiaryTable.className(), from: "diaryPhoto", to: "photo")
+                //            }
+                //                if oldSchemaVersion < 4 { }
+                //                if oldSchemaVersion < 5{
+                //                    // diarySummary 컬럼 추가, title + contents 합쳐서 넣기
+                
+                //                }
+            }
+            //            Realm.Configuration.defaultConfiguration = config
+        }
     }
 }

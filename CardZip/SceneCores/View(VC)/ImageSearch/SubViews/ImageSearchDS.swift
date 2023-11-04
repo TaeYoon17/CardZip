@@ -14,43 +14,79 @@ extension ImageSearchVC{
         private var itemIDs: [ImageSearch.ID] = []
         weak var vm: ImageSearchVM!
         var subscription = Set<AnyCancellable>()
+        var prevSearch: String?
         init(vm: ImageSearchVM,collectionView: UICollectionView, cellProvider: @escaping UICollectionViewDiffableDataSource<ImageSearchVC.Section, ImageSearch.ID>.CellProvider) {
             super.init(collectionView: collectionView, cellProvider: cellProvider)
             self.vm = vm
-            vm.$imagePathes.sink {[weak self] items in
-                self?.appendImagePathes(items)
-                self?.resetDataSource()
+            vm.searchText
+                .sink {[weak self] newSearch in // 검색어 초기화
+                guard let self else {return}
+                if prevSearch != nil, prevSearch == newSearch { return }
+                resetItem()
+                prevSearch = newSearch
             }.store(in: &subscription)
-            
-            vm.updateItemPassthrough.sink { completion in
+            vm.$imageResults.sink { [weak self] items in // 이미지 결과 추가하기
+                self?.appendImageResults(items)
+                Task{
+                    self?.vm.loadingStatusPassthrough.send(true)
+                    try await ImageService.shared.appendCache(links: items.map{$0.thumbnail},
+                                                              size: .init(width: 360, height: 360))
+                    self?.vm.loadingStatusPassthrough.send(false)
+                    self?.resetDataSource()
+                }
+            }.store(in: &subscription)
+            vm.updateItemPassthrough
+                .receive(on: RunLoop.main)
+                .sink { completion in // 체크 후 값이 바뀌는 아이템
                 print("여긴 아무 변화 없음")
             } receiveValue: {[weak self] imageSearch in
                 guard let self else {return}
                 itemModel.insertModel(item: imageSearch)
                 updateDataSource(id: imageSearch.id)
             }.store(in: &subscription)
-        }
-        func appendImagePathes(_ pathes:[String]){
-            let imgSearchItems = pathes.map{ImageSearch(imagePath: $0)}
-            imgSearchItems.forEach {
-                itemModel.insertModel(item: $0)
-                if !itemIDs.contains($0.id){ itemIDs.append($0.id) }
-            }
+            vm.reloadItemsPassthrough
+                .debounce(for: 0.2, scheduler: RunLoop.main)
+                .sink {[weak self] reloadItems in // 체크된 후 순서가 바뀌는 아이템
+                guard let self else {return}
+                reconfigureDataSources(ids: reloadItems.map{$0.id})
+            }.store(in: &subscription)
         }
         func fetchItem(id: ImageSearch.ID)-> ImageSearch?{ self.itemModel.fetchByID(id) }
     }
 }
-
+fileprivate extension ImageSearchVC.ImageSearchDS{
+    func appendImageResults(_ imageSearches:[ImageSearch]){
+        for imageSearch in imageSearches {
+            itemModel.insertModel(item: imageSearch)
+            if !itemIDs.contains(imageSearch.id){ itemIDs.append(imageSearch.id) }
+        }
+    }
+    func resetItem(){
+        itemModel = .init([])
+        itemIDs = []
+    }
+}
 extension ImageSearchVC.ImageSearchDS{
     @MainActor func resetDataSource(){
         var snapshot = NSDiffableDataSourceSnapshot<Section,ImageSearch.ID>()
         snapshot.appendSections([.main])
         snapshot.appendItems(itemIDs,toSection: .main)
-        apply(snapshot,animatingDifferences: true)
+        Task{@MainActor in
+            apply(snapshot,animatingDifferences: true)
+        }
     }
     @MainActor func updateDataSource(id: ImageSearch.ID){
-        var snapshot = snapshot()
+        var snapshot = self.snapshot()
         snapshot.reconfigureItems([id])
-        apply(snapshot,animatingDifferences: false)
+        Task{ @MainActor in
+            apply(snapshot,animatingDifferences: false)
+        }
+    }
+    @MainActor func reconfigureDataSources(ids: [ImageSearch.ID]){
+        var snapshot = snapshot()
+        snapshot.reconfigureItems(ids)
+        Task{@MainActor in
+            apply(snapshot,animatingDifferences: false)
+        }
     }
 }

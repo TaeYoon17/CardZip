@@ -6,8 +6,20 @@
 //
 
 import Foundation
-struct ImageSearch:Identifiable,Hashable{
-    var id:String { imagePath }
+struct ImageSearch:Identifiable,Hashable,ImageSearchable,Codable{
+    var sizeheight: String
+    var sizewidth: String
     var imagePath: String
-    var isCheck: Bool = false
+    var thumbnail: String
+    var id:String { imagePath }
+    var height: Int{ Int(sizeheight) ?? -1}
+    var width: Int{  Int(sizewidth) ?? -1 }
+    var isCheck: Bool! = false
+    
+    enum CodingKeys:String, CodingKey {
+        case thumbnail
+        case sizeheight
+        case sizewidth
+        case imagePath = "link"
+    }
 }

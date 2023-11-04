@@ -10,6 +10,6 @@ import SnapKit
 
 extension ImageSearchVC:UISearchBarDelegate,UISearchControllerDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.vm.searchText = searchText
+        self.vm.searchText.send(searchText)
     }
 }

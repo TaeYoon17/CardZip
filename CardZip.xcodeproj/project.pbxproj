@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		630248A92AF519C500D76D33 /* ResponseWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630248A82AF519C500D76D33 /* ResponseWrapper.swift */; };
+		630248AB2AF519DB00D76D33 /* ResponseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630248AA2AF519DB00D76D33 /* ResponseError.swift */; };
+		630248AD2AF51C7500D76D33 /* ImageSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630248AC2AF51C7500D76D33 /* ImageSearchResponse.swift */; };
+		630248AF2AF51E6100D76D33 /* ImageSearchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630248AE2AF51E6100D76D33 /* ImageSearchable.swift */; };
+		630248B12AF54A6600D76D33 /* ImageSearchVC+Prefetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630248B02AF54A6600D76D33 /* ImageSearchVC+Prefetch.swift */; };
 		630947892AE259A90095BFEA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6309478B2AE259A90095BFEA /* InfoPlist.strings */; };
 		6309478F2AE288690095BFEA /* Setting+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6309478E2AE288690095BFEA /* Setting+Image.swift */; };
 		630947912AE2889B0095BFEA /* Setting+Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630947902AE2889B0095BFEA /* Setting+Speaker.swift */; };
@@ -164,6 +169,7 @@
 		63C3EC322AF1F50600A426EC /* ImageSearchVC+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C3EC312AF1F50600A426EC /* ImageSearchVC+Collectionable.swift */; };
 		63C3EC342AF1F83500A426EC /* ImageSearchVC+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C3EC332AF1F83500A426EC /* ImageSearchVC+Delegate.swift */; };
 		63C3EC372AF1F8F700A426EC /* ImagePreviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C3EC362AF1F8F700A426EC /* ImagePreviewVC.swift */; };
+		63C7EB022AF499F0001A02CC /* ImageLocalSaveExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C7EB012AF499F0001A02CC /* ImageLocalSaveExtension.swift */; };
 		63E50EF62AD9820A003E0800 /* ErrorPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */; };
 		63EAED4E2ADD05EA00046C44 /* EditableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63EAED4D2ADD05EA00046C44 /* EditableVC.swift */; };
 		63F27D3D2AE600ED007A11A0 /* MainVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F27D3C2AE600ED007A11A0 /* MainVM.swift */; };
@@ -173,6 +179,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		630248A82AF519C500D76D33 /* ResponseWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseWrapper.swift; sourceTree = "<group>"; };
+		630248AA2AF519DB00D76D33 /* ResponseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseError.swift; sourceTree = "<group>"; };
+		630248AC2AF51C7500D76D33 /* ImageSearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearchResponse.swift; sourceTree = "<group>"; };
+		630248AE2AF51E6100D76D33 /* ImageSearchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearchable.swift; sourceTree = "<group>"; };
+		630248B02AF54A6600D76D33 /* ImageSearchVC+Prefetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageSearchVC+Prefetch.swift"; sourceTree = "<group>"; };
 		6309478E2AE288690095BFEA /* Setting+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Setting+Image.swift"; sourceTree = "<group>"; };
 		630947902AE2889B0095BFEA /* Setting+Speaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Setting+Speaker.swift"; sourceTree = "<group>"; };
 		630947922AE288AE0095BFEA /* Setting+Information.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Setting+Information.swift"; sourceTree = "<group>"; };
@@ -324,6 +335,7 @@
 		63C3EC312AF1F50600A426EC /* ImageSearchVC+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageSearchVC+Collectionable.swift"; sourceTree = "<group>"; };
 		63C3EC332AF1F83500A426EC /* ImageSearchVC+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageSearchVC+Delegate.swift"; sourceTree = "<group>"; };
 		63C3EC362AF1F8F700A426EC /* ImagePreviewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewVC.swift; sourceTree = "<group>"; };
+		63C7EB012AF499F0001A02CC /* ImageLocalSaveExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLocalSaveExtension.swift; sourceTree = "<group>"; };
 		63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPolicy.swift; sourceTree = "<group>"; };
 		63EAED4D2ADD05EA00046C44 /* EditableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableVC.swift; sourceTree = "<group>"; };
 		63F27D3C2AE600ED007A11A0 /* MainVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVM.swift; sourceTree = "<group>"; };
@@ -353,6 +365,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		630248A72AF519B400D76D33 /* ImageSearch */ = {
+			isa = PBXGroup;
+			children = (
+				63A9A3CD2AF1FE5900F9A147 /* ImageSearch.swift */,
+				630248AC2AF51C7500D76D33 /* ImageSearchResponse.swift */,
+				630248AE2AF51E6100D76D33 /* ImageSearchable.swift */,
+			);
+			path = ImageSearch;
+			sourceTree = "<group>";
+		};
 		6309478D2AE2885E0095BFEA /* Setting */ = {
 			isa = PBXGroup;
 			children = (
@@ -481,6 +503,7 @@
 			children = (
 				63C3EC352AF1F85600A426EC /* SubViews */,
 				634CF0172AF0D7CE00BEF819 /* ImageSearchVC.swift */,
+				630248B02AF54A6600D76D33 /* ImageSearchVC+Prefetch.swift */,
 				63C3EC312AF1F50600A426EC /* ImageSearchVC+Collectionable.swift */,
 				63C3EC332AF1F83500A426EC /* ImageSearchVC+Delegate.swift */,
 				63A9A3D62AF268CF00F9A147 /* ImageSearchVC+SearchDelegate.swift */,
@@ -577,6 +600,7 @@
 				633BD4B42AD7EB8A006D6955 /* Sequence.swift */,
 				630DD8DD2AD9A83B00B51662 /* PHImageManagerExtensions.swift */,
 				63ADFE9D2AE685BC00C03B5E /* PublisherExtension.swift */,
+				63C7EB012AF499F0001A02CC /* ImageLocalSaveExtension.swift */,
 			);
 			path = Logics;
 			sourceTree = "<group>";
@@ -811,12 +835,13 @@
 		63A3D42D2ACE3C3900E6B10E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				630248A82AF519C500D76D33 /* ResponseWrapper.swift */,
+				630248A72AF519B400D76D33 /* ImageSearch */,
 				6309478D2AE2885E0095BFEA /* Setting */,
 				6393520A2ACE42BC00F8B31B /* ModelStructures.swift */,
 				63552A3A2AD4DCAB00A7063A /* CardItem.swift */,
 				63552A3C2AD4DD8A00A7063A /* SetItem.swift */,
 				636571392AD6DD46008126C4 /* TempCard.swift */,
-				63A9A3CD2AF1FE5900F9A147 /* ImageSearch.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -935,6 +960,7 @@
 			isa = PBXGroup;
 			children = (
 				63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */,
+				630248AA2AF519DB00D76D33 /* ResponseError.swift */,
 			);
 			path = ErrorPolicy;
 			sourceTree = "<group>";
@@ -1040,8 +1066,10 @@
 				6373B2A72AE37BA7009A39FA /* SettingItemCell.swift in Sources */,
 				63A3D43C2ACE3D4600E6B10E /* AppManager.swift in Sources */,
 				639FBF5F2AD5A186004EEE65 /* AddImageVC+Registration.swift in Sources */,
+				630248AF2AF51E6100D76D33 /* ImageSearchable.swift in Sources */,
 				6309478F2AE288690095BFEA /* Setting+Image.swift in Sources */,
 				635C3BCF2ADFEC6900994BD8 /* SetListVC+SearchDelegate.swift in Sources */,
+				630248AB2AF519DB00D76D33 /* ResponseError.swift in Sources */,
 				63A9A3D12AF1FFCA00F9A147 /* ImageSearchVM.swift in Sources */,
 				633BD4B92AD7FCC9006D6955 /* CardVC+Delegate.swift in Sources */,
 				63730F7C2AD29C5700BC8F35 /* DoneBtn.swift in Sources */,
@@ -1094,6 +1122,7 @@
 				63730F6F2AD28F3900BC8F35 /* TableRepository.swift in Sources */,
 				632A484E2ACCE81B00413AF4 /* ViewController.swift in Sources */,
 				639976C52AEA792A00561439 /* AddSetHeaderVM.swift in Sources */,
+				630248B12AF54A6600D76D33 /* ImageSearchVC+Prefetch.swift in Sources */,
 				6313317A2AD3FA7A00459515 /* AddSet+Collectionable.swift in Sources */,
 				63A3D43F2ACE3EDD00E6B10E /* NavBarButton.swift in Sources */,
 				631331782AD3F56F00459515 /* AddSetVM.swift in Sources */,
@@ -1126,12 +1155,14 @@
 				636571282AD6D68A008126C4 /* SetListVC.swift in Sources */,
 				63730F6B2AD27BC300BC8F35 /* SectionBackground.swift in Sources */,
 				63A3D44C2ACE3FE300E6B10E /* BaseVC.swift in Sources */,
+				63C7EB022AF499F0001A02CC /* ImageLocalSaveExtension.swift in Sources */,
 				6313317E2AD431EC00459515 /* CardRepository.swift in Sources */,
 				6357EA5D2ADC23F5005ED852 /* BackgroundConfigurations.swift in Sources */,
 				63E50EF62AD9820A003E0800 /* ErrorPolicy.swift in Sources */,
 				631E53932ADAA42B0010E11E /* CardBackView.swift in Sources */,
 				63F27D3F2AE6019E007A11A0 /* MainDataSource.swift in Sources */,
 				63A9A3D32AF2425400F9A147 /* ImageSearchCell.swift in Sources */,
+				630248A92AF519C500D76D33 /* ResponseWrapper.swift in Sources */,
 				63A2F8EC2AEBD1D8000A2C89 /* SetVC+DS.swift in Sources */,
 				6365712E2AD6DAA6008126C4 /* SetListVC+Delegate.swift in Sources */,
 				635C3BD12ADFFB0500994BD8 /* NavTitleView.swift in Sources */,
@@ -1162,6 +1193,7 @@
 				6373B2AB2AE3CBF0009A39FA /* SplashController.swift in Sources */,
 				6357EA4C2ADBBB6F005ED852 /* ShowImageVC+Registration.swift in Sources */,
 				633BB4672AD6EB04005E8E09 /* UINavigationControllerExtensions.swift in Sources */,
+				630248AD2AF51C7500D76D33 /* ImageSearchResponse.swift in Sources */,
 				631331732AD3F3D400459515 /* InfoView.swift in Sources */,
 				633BD4AA2AD7CF2B006D6955 /* SetVC+Delegate.swift in Sources */,
 				63730F602AD2740600BC8F35 /* UIViewExtension.swift in Sources */,

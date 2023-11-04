@@ -6,3 +6,9 @@
 //
 
 import Foundation
+protocol ImageSearchable{
+    var thumbnail:String {get set}
+    var imagePath: String{ get set}
+    var sizeheight:String {get set}
+    var sizewidth:String {get set}
+}

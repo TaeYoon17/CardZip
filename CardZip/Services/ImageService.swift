@@ -10,6 +10,7 @@ final class ImageService{
     static let shared = ImageService()
     // 키 이름: 앨범ID_width_height
     private let albumCache = NSCache<NSString, UIImage>()
+    private let searchCache = NSCache<NSString, UIImage>()
     private init(){}
     func getKeyname(albumID: String,size:CGSize? = nil)-> String{
         guard let size else {return albumID}
@@ -38,6 +39,58 @@ final class ImageService{
         }
     }
     
+    func appendCache(links:[String],size:CGSize? = nil) async throws{
+        await withThrowingTaskGroup(of: Void.self) {[weak self] group in
+            for link in links {
+                group.addTask{[weak self] in
+                    try await self?.appendCache(link: link, size: size)
+                }
+            }
+        }
+    }
+    func appendCache(link: String,size: CGSize? = nil) async throws{
+        let keyStr = if let size{
+            "\(link)_\(Int(size.width))_\(Int(size.height))"
+        }else { "\(link)" }
+        guard let url = URL(string: link) else { throw FetchError.fetch }
+        guard nil == albumCache.object(forKey: keyStr as NSString) else {
+            print("이미 존재하는 아이템")
+            return
+        }
+        do{
+            let data = try Data(contentsOf: url)
+            let image = if let size{
+                await UIImage(data: data)?.byPreparingThumbnail(ofSize: size)
+            }else{
+                await UIImage(data: data)?.byPreparingForDisplay()
+            }
+            guard let image else { throw FetchError.fetch }
+            searchCache.setObject(image, forKey: keyStr as NSString)
+        }catch{
+            throw error
+        }
+    }
+    @MainActor func fetchByCache(link: String, size:CGSize? = nil) async throws -> UIImage?{
+        let keyStr = if let size{
+            "\(link)_\(Int(size.width))_\(Int(size.height))"
+        }else { 
+            "\(link)"
+        }
+        let image = if let size{
+            await searchCache.object(forKey: keyStr as NSString)?.byPreparingThumbnail(ofSize: size)
+        }else{
+            await searchCache.object(forKey: keyStr as NSString)?.byPreparingForDisplay()
+        }
+        if let image{ return image
+        }else{
+            try await appendCache(link: link,size: size)
+        }
+        return if let size{
+            await searchCache.object(forKey: keyStr as NSString)?.byPreparingThumbnail(ofSize: size)
+        }else{
+            await searchCache.object(forKey: keyStr as NSString)?.byPreparingForDisplay()
+        }
+    }
     
     func appendCache(albumID: String,size: CGSize? = nil) async throws {
         let image:UIImage?
@@ -60,7 +113,7 @@ final class ImageService{
             try await appendCache(albumID: albumID)
         }
     }
-    func fetchByCache(albumID: String,size: CGSize? = nil) async throws -> UIImage?{
+    @MainActor func fetchByCache(albumID: String,size: CGSize? = nil) async throws -> UIImage?{
         let keyStr:String
         let image: UIImage?
         if let size{
@@ -87,5 +140,5 @@ final class ImageService{
         }
         return image
     }
-    
+
 }

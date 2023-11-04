@@ -9,9 +9,10 @@ import Foundation
 import Alamofire
 extension NaverRouter{
     enum Search:URLRequestConvertible{
-//        case shopping(query:String,start:Int? = nil,display:Int? = nil,sort:Sort? = nil)
-        case image(query:String,display: Int = 40, start: Int = 1, sort:String,filter:String)
+        //        case shopping(query:String,start:Int? = nil,display:Int? = nil,sort:Sort? = nil)
+        case image(query:String,display: Int = 72, start: Int = 1, sort:SortType,filter:FilterType)
         var baseURL:URL{ URL(string: NaverRouter.API + "/search")! }
+        
         var endPoint:String{
             switch self{
             case .image: return "/image"
@@ -31,73 +32,31 @@ extension NaverRouter{
             }
             return header
         }
-//        var body: Parameters{
-//            let params = Parameters()
-//            switch self{
-//            case .shopping(query: _): return params
-//            }
-//        }
-//        var queries:Queries{
-//            var queries = Queries()
-//            switch self{
-//            case let .shopping(query: query, start: start, display: display,sort: sort):
-//                queries["query"] = query
-////                query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-//                if let display { queries["display"] = String(display)}
-//                if let start { queries["start"] = String( (start - 1) * (display ?? 0) + 1) }
-//                if let sort{ queries["sort"] = sort.query}
-//            }
-//            return queries
-//        }
-//        var headers: Headers{
-//            var headers = Headers()
-//            switch self{
-//            case .shopping:
-//                headers["X-Naver-Client-Id"] = ApiKey.Naver.id
-//                headers["X-Naver-Client-Secret"] = ApiKey.Naver.secret
-//            }
-//            return headers
-//        }
-        
-//        var getRequest:URLRequest{
-//            // queries : [String:String] -> key = value
-//            let url = baseURL.appendingPathComponent(endPoint)
-//            guard var urlComponents = URLComponents(url: url,resolvingAgainstBaseURL: true) else {
-//                return URLRequest(url: url)
-//            }
-//            urlComponents.queryItems = queries.map { URLQueryItem(name: $0, value: $1) }
-//            var request = URLRequest(url: urlComponents.url!)
-//            request.httpMethod = self.method.rawValue
-//            headers.forEach{ request.setValue($1, forHTTPHeaderField: $0) }
-//            return request
-//        }
+        var queries:Queries{
+            var queries = Queries()
+            switch self{
+            case let .image(query: query, display: display, start: start, sort: sort, filter: filter):
+                queries["query"] = query
+                queries["display"] = String(display)
+                queries["start"] = String(start)
+                queries["sort"] = sort.rawValue
+                queries["filter"] = filter.rawValue
+            }
+            return queries
+        }
         func asURLRequest() throws -> URLRequest {
-            return try .init(url: URL(string: "asdf")!, method: .get)
-        }
-    }
-}
-extension NaverRouter.Search{
-    /// - sim: 정확도순으로 내림차순 정렬(기본값)
-    /// - date: 날짜순으로 내림차순 정렬
-    /// - asc: 가격순으로 오름차순 정렬
-    /// - dsc: 가격순으로 내림차순 정렬
-    enum Sort:Int,CaseIterable{
-        case sim,date,asc,dsc
-        var query:String{
-            switch self{
-            case .asc: return "asc"
-            case .date: return "date"
-            case .dsc: return "dsc"
-            case .sim: return "sim"
+            // queries : [String:String] -> key = value
+            let url = baseURL.appendingPathComponent(endPoint)
+            guard var urlComponents = URLComponents(url: url,resolvingAgainstBaseURL: true) else {
+                return URLRequest(url: url)
             }
-        }
-        var korean:String{
-            switch self{
-            case .sim: return "정확도"
-            case .dsc: return "가격높은순"
-            case .asc: return "가격낮은순"
-            case .date: return "날짜순"
-            }
+            urlComponents.queryItems = queries.map { URLQueryItem(name: $0, value: $1) }
+            var request = URLRequest(url: urlComponents.url!)
+            request.method = self.method
+            request.headers = self.header
+            print(request)
+            return request
+            //            return try .init(url: URL(string: "asdf")!, method: .get)
         }
     }
 }

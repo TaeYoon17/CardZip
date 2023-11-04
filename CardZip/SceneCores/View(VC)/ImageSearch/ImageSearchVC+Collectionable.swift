@@ -11,6 +11,8 @@ import UIKit
 extension ImageSearchVC:Collectionable{
     func configureCollectionView() {
         collectionView.delegate = self
+        collectionView.isPrefetchingEnabled = true
+        collectionView.prefetchDataSource = self
         let searchImageCellRegi = searchImageCellRegistration
         dataSource = .init(vm: vm, collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             collectionView.dequeueConfiguredReusableCell(using: searchImageCellRegi, for: indexPath, item: itemIdentifier)
