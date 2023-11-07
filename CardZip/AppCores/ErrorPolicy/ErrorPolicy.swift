@@ -8,6 +8,8 @@
 import Foundation
 enum FetchError:Error{
     case fetch
+    case load
+    case empty
 }
 enum SettingError: Error{
     case FailItemable

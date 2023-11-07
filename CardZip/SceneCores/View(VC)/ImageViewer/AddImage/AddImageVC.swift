@@ -17,6 +17,16 @@ final class AddImageVC: ImageViewerVC{
         vm.$selection.sink {[weak self] imagePathes in
             self?.updateSnapshot(result: imagePathes)
         }.store(in: &subscription)
+        vm.passthoroughLoading
+            .receive(on: RunLoop.main)
+            .sink{[weak self] isLoading in
+            self?.collectionView.isHidden = isLoading
+            if isLoading{
+                self?.activitiIndicator.startAnimating()
+            }else{
+                self?.activitiIndicator.stopAnimating()
+            }
+        }.store(in: &subscription)
     }
     
     lazy var navDoneBtn = {

@@ -492,7 +492,6 @@
 			isa = PBXGroup;
 			children = (
 				63548F5D2AF0A99E00C16CCA /* API */,
-				632A48642ACCED6A00413AF4 /* API_Key.swift */,
 				63A3D4342ACE3C9E00E6B10E /* NetworkService.swift */,
 			);
 			path = Network;
@@ -923,6 +922,7 @@
 		63A3D43A2ACE3CF400E6B10E /* AppCores */ = {
 			isa = PBXGroup;
 			children = (
+				632A48642ACCED6A00413AF4 /* API_Key.swift */,
 				6386E0C32AE5781A0044F7DF /* Splash */,
 				63E50EF42AD981FF003E0800 /* ErrorPolicy */,
 				632A48522ACCE81C00413AF4 /* Assets.xcassets */,

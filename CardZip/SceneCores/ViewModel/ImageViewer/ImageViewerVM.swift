@@ -16,9 +16,13 @@ class ImageViewerVM{
     @Published final var cardItem: CardItem!
     @Published final var setName: String?
     var selectedItems : OrderedSet<String> = []{
-        didSet{ selection = Array(selectedItems) }
+        didSet{ 
+            Task{@MainActor in
+                self.selection = Array(selectedItems)
+            }
+        }
     }
-    @Published private(set) var selection: [ String] = []
+    @Published @MainActor private(set) var selection: [ String] = []
     
     var imageCount = CurrentValueSubject<Int, Never>(-1)
     var subscription = Set<AnyCancellable>()

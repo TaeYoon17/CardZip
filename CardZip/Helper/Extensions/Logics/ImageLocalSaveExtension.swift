@@ -35,7 +35,6 @@ extension UIImage{
         guard let data = self.jpegData(compressionQuality: 1) else {return}
         let mbBytes = bytesToMegabytes(bytes: data.count)
         let maxQuality = min(5 / mbBytes,1) // 모든 이미지 데이터를 5mb 이하로 맞추기
-        print("압축 비율: \(maxQuality) 원본 MB: \(mbBytes), 변환 MB: \(mbBytes * maxQuality) ")
         guard let data = self.jpegData(compressionQuality: maxQuality) else {
             return
         }

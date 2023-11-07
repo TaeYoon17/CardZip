@@ -10,8 +10,9 @@ import SnapKit
 extension App{
     final class Manager{
         static let shared = Manager()
+        
         @DefaultsState(\.likedSet) var liked
-        @DefaultsState(\.termLanguageCode) var rawTermCode
+//        @DefaultsState(\.termLanguageCode) var rawTermCode
         @DefaultsState(\.descriptionLanguageCode) var descriptionLanguageCode
         @DefaultsState(\.termLanguageCode) var termLanguageCode
         private init(){ }

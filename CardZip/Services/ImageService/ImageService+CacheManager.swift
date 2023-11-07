@@ -61,14 +61,12 @@ extension ImageService{
         let image = switch type{
         case .album: try await UIImage.fetchBy(link: name)
         case .file: try await UIImage.fetchBy(fileName: name)
-        case .search: try await UIImage.fetchBy(identifier: name)
+        case .search: await UIImage.fetchBy(identifier: name)
         }
         guard let image else {throw FetchError.fetch}
         let ratio = min(1,min(maxSize.height / image.size.height, maxSize.width / image.size.width))
         let size = CGSize(width: image.size.width * ratio, height: image.size.height * ratio)
-        print(ratio,"비율ㄹ",size,"사이즈")
         guard let img = await image.byPreparingThumbnail(ofSize: size) else { return}
-        
         cacheTable[type]?.setObject(img, forKey: keyName as NSString)
     }
     @MainActor func fetchByCache(type:SourceType,name: String, maxSize:CGSize) async throws -> UIImage?{
@@ -77,7 +75,6 @@ extension ImageService{
         if let image{
             return image
         }else{
-            print("이거 호출")
             try await appendCache(type: type, name: name, maxSize: maxSize)
         }
         do{
@@ -85,7 +82,6 @@ extension ImageService{
         }catch{
             print(error)
         }
-        print("fetchByCache!!")
         return cacheTable[type]?.object(forKey: keyName as NSString)
     }
 }

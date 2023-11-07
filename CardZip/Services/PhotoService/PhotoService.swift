@@ -12,6 +12,7 @@ import Combine
 import UIKit
 final class PhotoService{
     static let shared = PhotoService()
+    
     var passthroughIdentifiers = PassthroughSubject<([String],UIViewController),Never>()
     private weak var viewController: UIViewController?
     

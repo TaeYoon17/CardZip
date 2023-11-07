@@ -9,16 +9,18 @@ import UIKit
 import SnapKit
 class ImageCell: BaseCell{
     enum ImageType:Int,CaseIterable{ case original, square }
-    @MainActor var image: UIImage?{
+    final var image: UIImage?{
         didSet{
             guard let image else { getEmptyImageView(); return }
             emptyImageView.isHidden = true
             originalRatioImageView.contentMode = .scaleToFill
-            originalRatioImageView.image = image
             squareView.contentMode = .scaleAspectFit
-            squareView.image = image
+            UIView.imageAppear(view: squareView) {@MainActor [weak self] in
+                self?.originalRatioImageView.image = image
+                self?.squareView.image = image
+            }
             let ratio =  image.size.height / image.size.width
-            originalRatioImageView.snp.makeConstraints { make in
+            originalRatioImageView.snp.remakeConstraints { make in
                 make.center.equalToSuperview()
                 let maxMultiply = App.Manager.shared.hasNotch() ? 2 : 1.85
                 if ratio > maxMultiply{
@@ -29,19 +31,11 @@ class ImageCell: BaseCell{
                     make.height.equalTo(originalRatioImageView.snp.width).multipliedBy(ratio)
                 }
             }
-            squareView.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-                make.width.equalToSuperview().multipliedBy(0.67)
-                make.height.equalTo(squareView.snp.width)
-            }
-            
         }
     }
-//    var deleteAction: (()->())?
-//    private let deleteBtn = BottomImageBtn(systemName: "xmark")
-    private let originalRatioImageView = UIImageView()
-    private let squareView = UIImageView()
-    private lazy var emptyImageView = {
+    @MainActor final private let originalRatioImageView = UIImageView()
+    @MainActor final private let squareView = UIImageView()
+    final private lazy var emptyImageView = {
         let v = AddImageVC.InfoView(title: "Not found image".localized, systemName: "questionmark")
         v.isUserInteractionEnabled = false
         return v
@@ -86,6 +80,11 @@ class ImageCell: BaseCell{
             make.top.equalToSuperview().offset(56)
             make.centerX.equalToSuperview()
         }
+        squareView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.67)
+            make.height.equalTo(squareView.snp.width)
+        }
     }
     override func configureView() {
         super.configureView()
@@ -104,6 +103,11 @@ class ImageCell: BaseCell{
         originalRatioImageView.addGestureRecognizer(imageTapRecognizer)
         squareView.addGestureRecognizer(imageTapRecognizer)
         segmentControl.addTarget(self, action: #selector(Self.selectionTapped(_:)), for: .valueChanged)
+        emptyImageView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(contentView.safeAreaLayoutGuide).multipliedBy(0.666)
+            make.height.equalTo(emptyImageView.snp.width)
+        }
 //        configureDeleteBtn()
     }
 //    func configureDeleteBtn(){
@@ -128,11 +132,7 @@ class ImageCell: BaseCell{
     }
     func getEmptyImageView(){
         [originalRatioImageView,squareView,segmentControl].forEach{$0.isHidden = true}
-        emptyImageView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.width.equalTo(contentView.safeAreaLayoutGuide).multipliedBy(0.666)
-            make.height.equalTo(emptyImageView.snp.width)
-        }
+        
     }
 }
 

@@ -40,8 +40,8 @@ final class ImageService{
     }
     func saveToDocumentBy(photoID: String) async {
         let image = await UIImage.fetchBy(identifier: photoID)
-        if !FileManager.checkExistDocument(fileName: "albumImage\(photoID)", type: .jpg){
-            image?.saveToDocument(fileName: "albumImage\(photoID)")
+        if !FileManager.checkExistDocument(fileName: photoID.getLocalPathName(type: .photo), type: .jpg){
+            image?.saveToDocument(fileName: photoID.getLocalPathName(type: .photo))
         }
     }
     func saveToDocumentBy(photoIDs: [String]) async{

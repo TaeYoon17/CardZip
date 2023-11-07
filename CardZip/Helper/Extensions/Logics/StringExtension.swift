@@ -17,7 +17,6 @@ extension String{
     }
     var localized:String{
         let str = String(format: NSLocalizedString(self, comment: ""))
-        
         return str
     }
     static func localized(_ str:String) -> String{
@@ -26,5 +25,25 @@ extension String{
     }
     init(local:String){
         self.init(format: NSLocalizedString(local, comment: ""))
+    }
+}
+//MARK: -- 앨범 이미지 이름 변환 Extension
+extension String{
+    enum SourceType{
+        case photo
+    }
+    func getLocalPathName(type: SourceType)->String{
+        switch type{
+        case .photo:
+            PhotoService.Key.getLocalFilename(id: self)
+        }
+    }
+    func extractID(type: SourceType) ->String{
+        PhotoService.Key.extractID(fileName: self)
+    }
+    func checkFilepath(type: SourceType)->Bool{
+        switch type{
+        case .photo: PhotoService.Key.isAlbumFile(fileName: self)
+        }
     }
 }

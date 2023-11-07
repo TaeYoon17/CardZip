@@ -26,18 +26,16 @@ extension AddImageVC{
             config.imagePlacement = .top
             addBtn.configuration = config
             addSubview(addBtn)
-            addBtn.snp.makeConstraints { make in
-                make.edges.equalToSuperview()
-            }
-            addBtn.addAction(.init(handler: { [weak self] _ in
-                self?.action?()
-                print("안녕하세요")
-            }), for: .touchUpInside)
+            addBtn.snp.makeConstraints { $0.edges.equalToSuperview() }
+            if let prevAction{ addBtn.removeAction(prevAction, for: .touchUpInside) }
+            prevAction = .init(handler: { [weak self] _ in self?.action?() })
+            if let prevAction{ addBtn.addAction(prevAction, for: .touchUpInside)}
             setShadowLayer()
             backgroundColor = .lightBg
             layer.cornerRadius = 20
             layer.cornerCurve = .circular
         }
+        var prevAction: UIAction?
         var action: (()->Void)?
         required init?(coder: NSCoder) {
             fatalError("이건 아니고")
