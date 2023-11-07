@@ -8,12 +8,17 @@
 import UIKit
 import SnapKit
 import Combine
-import Photos
-import PhotosUI
 
 final class AddImageVC: ImageViewerVC{
-    var passthorughImgID = PassthroughSubject<[String],Never>()
-    var photoService = PhotoService.shared
+    var vm: AddImageVM!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        vm.$selection.sink {[weak self] imagePathes in
+            self?.updateSnapshot(result: imagePathes)
+        }.store(in: &subscription)
+    }
+    
     lazy var navDoneBtn = {
         let btn = DoneBtn()
         btn.addAction(.init(handler: { [weak self] _ in
@@ -33,51 +38,16 @@ final class AddImageVC: ImageViewerVC{
             make.centerY.equalTo(imageCountlabel)
         }
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        photoService.passthroughIdentifiers.sink {[weak self] (collections,vc) in
-            guard let self, vc == self else {return}
-            Task{
-                await self.selectionUpdate(ids:collections)
-                self.updateSnapshot(result: collections)
-            }
-        }.store(in: &subscription)
-    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     deinit{ print("AddImageVC가 사라짐!!") }
     override func configureCollectionView(){
-        collectionView.backgroundColor = .bg
-        collectionView.isPagingEnabled = true
-        collectionView.showsHorizontalScrollIndicator = false
-        let registration = imageRegistration
-        let addRegistration = addRegistration
-        dataSource = UICollectionViewDiffableDataSource<Section,String>(collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
-            if itemIdentifier == "addBtn"{
-                return collectionView.dequeueConfiguredReusableCell(using: addRegistration, for: indexPath, item: itemIdentifier)
-            }else{
-                let cell = collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: itemIdentifier)
-                
-                cell.deleteAction = { [weak self] in
-                    let actionSheet = CustomAlertController(actionList: [
-                        .init(title: "Delete".localized, systemName: "trash", completion: {[weak self] in
-                            self?.deleteCell(item: itemIdentifier)
-                        })])
-                    self?.present(actionSheet, animated: true)
-                }
-                return cell
-            }
-        })
-        Task{
-            let imageIds = cardItem?.imageID ?? []
-            await selectionUpdate(ids: imageIds)
-            updateSnapshot(result: imageIds)
-        }
+        collectionViewConfig()
     }
     override func closeBtnAction() {
-        if !selection.isEmpty{
+        if !vm.selection.isEmpty{
             let alert = UIAlertController(title: "Do you want to save?".localized, message: "Save the image".localized, preferredStyle: .alert)
             alert.addAction(.init(title: "Save".localized, style: .default, handler: { [weak self] _ in
                 self?.sendImageIDs()

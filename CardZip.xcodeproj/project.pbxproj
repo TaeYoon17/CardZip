@@ -42,6 +42,16 @@
 		632A48652ACCED6A00413AF4 /* API_Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632A48642ACCED6A00413AF4 /* API_Key.swift */; };
 		632A48BB2ACD0FA500413AF4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 632A48BD2ACD0FA500413AF4 /* Localizable.strings */; };
 		632A48C22ACD3B6200413AF4 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 632A48C12ACD3B6200413AF4 /* SnapKit */; };
+		632F91DD2AF86AAF001784C0 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F91DC2AF86AAF001784C0 /* ImageRepository.swift */; };
+		632F91DF2AF86AE2001784C0 /* ImageTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F91DE2AF86AE2001784C0 /* ImageTable.swift */; };
+		632F91E12AF86CE4001784C0 /* ImageViewerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F91E02AF86CE4001784C0 /* ImageViewerVM.swift */; };
+		632F91E62AF8753B001784C0 /* AddImageVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F91E52AF8753B001784C0 /* AddImageVM.swift */; };
+		632F91E82AF875DB001784C0 /* AddImageVC+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F91E72AF875DB001784C0 /* AddImageVC+Collectionable.swift */; };
+		632F91EC2AF8E54C001784C0 /* FileManagerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F91EB2AF8E54C001784C0 /* FileManagerExtensions.swift */; };
+		632F91F02AF90DB0001784C0 /* ImageService+Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F91EF2AF90DB0001784C0 /* ImageService+Album.swift */; };
+		632F91F22AF90E09001784C0 /* ImageService+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F91F12AF90E09001784C0 /* ImageService+Network.swift */; };
+		632F91F42AF932CA001784C0 /* ImageService+FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F91F32AF932CA001784C0 /* ImageService+FileManager.swift */; };
+		632F91F62AF93B18001784C0 /* ImageService+CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632F91F52AF93B18001784C0 /* ImageService+CacheManager.swift */; };
 		633BB4652AD6E0ED005E8E09 /* SetVC+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633BB4642AD6E0ED005E8E09 /* SetVC+Collectionable.swift */; };
 		633BB4672AD6EB04005E8E09 /* UINavigationControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633BB4662AD6EB04005E8E09 /* UINavigationControllerExtensions.swift */; };
 		633BD4A82AD7C736006D6955 /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633BD4A72AD7C736006D6955 /* UIAlertControllerExtension.swift */; };
@@ -212,6 +222,16 @@
 		632A48622ACCED4B00413AF4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		632A48642ACCED6A00413AF4 /* API_Key.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API_Key.swift; sourceTree = "<group>"; };
 		632A48BC2ACD0FA500413AF4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		632F91DC2AF86AAF001784C0 /* ImageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
+		632F91DE2AF86AE2001784C0 /* ImageTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTable.swift; sourceTree = "<group>"; };
+		632F91E02AF86CE4001784C0 /* ImageViewerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewerVM.swift; sourceTree = "<group>"; };
+		632F91E52AF8753B001784C0 /* AddImageVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddImageVM.swift; sourceTree = "<group>"; };
+		632F91E72AF875DB001784C0 /* AddImageVC+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddImageVC+Collectionable.swift"; sourceTree = "<group>"; };
+		632F91EB2AF8E54C001784C0 /* FileManagerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerExtensions.swift; sourceTree = "<group>"; };
+		632F91EF2AF90DB0001784C0 /* ImageService+Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageService+Album.swift"; sourceTree = "<group>"; };
+		632F91F12AF90E09001784C0 /* ImageService+Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageService+Network.swift"; sourceTree = "<group>"; };
+		632F91F32AF932CA001784C0 /* ImageService+FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageService+FileManager.swift"; sourceTree = "<group>"; };
+		632F91F52AF93B18001784C0 /* ImageService+CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageService+CacheManager.swift"; sourceTree = "<group>"; };
 		633BB4642AD6E0ED005E8E09 /* SetVC+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetVC+Collectionable.swift"; sourceTree = "<group>"; };
 		633BB4662AD6EB04005E8E09 /* UINavigationControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtensions.swift; sourceTree = "<group>"; };
 		633BD4A72AD7C736006D6955 /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
@@ -486,6 +506,27 @@
 			path = Localized;
 			sourceTree = "<group>";
 		};
+		632F91ED2AF8E698001784C0 /* ImageViewer */ = {
+			isa = PBXGroup;
+			children = (
+				632F91E02AF86CE4001784C0 /* ImageViewerVM.swift */,
+				632F91E52AF8753B001784C0 /* AddImageVM.swift */,
+			);
+			path = ImageViewer;
+			sourceTree = "<group>";
+		};
+		632F91EE2AF90CFE001784C0 /* ImageService */ = {
+			isa = PBXGroup;
+			children = (
+				63ADFEA02AE6A55C00C03B5E /* ImageService.swift */,
+				632F91EF2AF90DB0001784C0 /* ImageService+Album.swift */,
+				632F91F12AF90E09001784C0 /* ImageService+Network.swift */,
+				632F91F32AF932CA001784C0 /* ImageService+FileManager.swift */,
+				632F91F52AF93B18001784C0 /* ImageService+CacheManager.swift */,
+			);
+			path = ImageService;
+			sourceTree = "<group>";
+		};
 		633BD4B12AD7DEBB006D6955 /* SubCells */ = {
 			isa = PBXGroup;
 			children = (
@@ -601,6 +642,7 @@
 				630DD8DD2AD9A83B00B51662 /* PHImageManagerExtensions.swift */,
 				63ADFE9D2AE685BC00C03B5E /* PublisherExtension.swift */,
 				63C7EB012AF499F0001A02CC /* ImageLocalSaveExtension.swift */,
+				632F91EB2AF8E54C001784C0 /* FileManagerExtensions.swift */,
 			);
 			path = Logics;
 			sourceTree = "<group>";
@@ -628,6 +670,7 @@
 				63730F6E2AD28F3900BC8F35 /* TableRepository.swift */,
 				63730F702AD2901800BC8F35 /* CardSetRepository.swift */,
 				6313317D2AD431EC00459515 /* CardRepository.swift */,
+				632F91DC2AF86AAF001784C0 /* ImageRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -662,6 +705,7 @@
 			children = (
 				631331722AD3F3D400459515 /* InfoView.swift */,
 				63730F822AD29D6500BC8F35 /* AddImageVC.swift */,
+				632F91E72AF875DB001784C0 /* AddImageVC+Collectionable.swift */,
 				639FBF5E2AD5A186004EEE65 /* AddImageVC+Registration.swift */,
 				630DD8E02ADA647100B51662 /* AddImageVC+DSM.swift */,
 			);
@@ -783,12 +827,12 @@
 		63A3D4292ACE3BF200E6B10E /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				632F91EE2AF90CFE001784C0 /* ImageService */,
 				636855412AE146E700FCD7A5 /* TTS_Service.swift */,
 				63552A3E2AD51F7F00A7063A /* PhotoService */,
 				63A3D42E2ACE3C4500E6B10E /* DataBase */,
 				632A48B82ACD0E1600413AF4 /* Localized */,
 				632A485D2ACCEBC600413AF4 /* Network */,
-				63ADFEA02AE6A55C00C03B5E /* ImageService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -807,6 +851,7 @@
 		63A3D42B2ACE3C1700E6B10E /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				632F91ED2AF8E698001784C0 /* ImageViewer */,
 				63A9A3CF2AF1FFBF00F9A147 /* ImageSearch */,
 				63A2F8E52AEBA844000A2C89 /* SetScene */,
 				639976C02AEA5F0100561439 /* AddSetScene */,
@@ -852,6 +897,7 @@
 				63730F722AD2909300BC8F35 /* Repository */,
 				63730F732AD290B000BC8F35 /* CardSetTable.swift */,
 				63730F752AD2974E00BC8F35 /* CardTable.swift */,
+				632F91DE2AF86AE2001784C0 /* ImageTable.swift */,
 			);
 			path = DataBase;
 			sourceTree = "<group>";
@@ -1075,12 +1121,14 @@
 				63730F7C2AD29C5700BC8F35 /* DoneBtn.swift in Sources */,
 				63730F882AD29EDD00BC8F35 /* CardSegmentControl.swift in Sources */,
 				633BD4B72AD7F1E1006D6955 /* CardFrontView+Cell.swift in Sources */,
+				632F91F42AF932CA001784C0 /* ImageService+FileManager.swift in Sources */,
 				63730F802AD29D0300BC8F35 /* InsetTextField.swift in Sources */,
 				633BB4652AD6E0ED005E8E09 /* SetVC+Collectionable.swift in Sources */,
 				63ADFEA12AE6A55C00C03B5E /* ImageService.swift in Sources */,
 				63A2F8E72AEBA862000A2C89 /* SetCardListVM.swift in Sources */,
 				633BD4AE2AD7DE22006D6955 /* CardVC+CustomView.swift in Sources */,
 				63A3D4352ACE3C9E00E6B10E /* NetworkService.swift in Sources */,
+				632F91DD2AF86AAF001784C0 /* ImageRepository.swift in Sources */,
 				6365713A2AD6DD46008126C4 /* TempCard.swift in Sources */,
 				633BD4B52AD7EB8A006D6955 /* Sequence.swift in Sources */,
 				636C51E62ADCC5770087A1A4 /* ViewControllerExtensions.swift in Sources */,
@@ -1091,6 +1139,7 @@
 				633BD4B32AD7DF2A006D6955 /* CardVC+Registration.swift in Sources */,
 				631331802AD4427700459515 /* AddSetCell.swift in Sources */,
 				63730F862AD29E1600BC8F35 /* CustomAlertController.swift in Sources */,
+				632F91EC2AF8E54C001784C0 /* FileManagerExtensions.swift in Sources */,
 				636571382AD6DD1A008126C4 /* CardVC.swift in Sources */,
 				639352102ACE43F500F8B31B /* AddFolderBtn.swift in Sources */,
 				63A2F8E92AEBACD2000A2C89 /* SetCardListHeaderVM.swift in Sources */,
@@ -1100,12 +1149,14 @@
 				63C3EC342AF1F83500A426EC /* ImageSearchVC+Delegate.swift in Sources */,
 				63730F622AD2742400BC8F35 /* UIImageExtensions.swift in Sources */,
 				63A3D44A2ACE3FC500E6B10E /* BaseView.swift in Sources */,
+				632F91F02AF90DB0001784C0 /* ImageService+Album.swift in Sources */,
 				63548F612AF0AAAE00C16CCA /* SearchRouter.swift in Sources */,
 				63F27D3D2AE600ED007A11A0 /* MainVM.swift in Sources */,
 				636571362AD6DC9A008126C4 /* SetHeaderReusableView.swift in Sources */,
 				639352122ACE442F00F8B31B /* NavBarView.swift in Sources */,
 				63730F8A2AD29EFD00BC8F35 /* CardCellVM.swift in Sources */,
 				634CF0182AF0D7CE00BEF819 /* ImageSearchVC.swift in Sources */,
+				632F91E82AF875DB001784C0 /* AddImageVC+Collectionable.swift in Sources */,
 				636855422AE146E700FCD7A5 /* TTS_Service.swift in Sources */,
 				6313316F2AD3F37000459515 /* ImageCell.swift in Sources */,
 				639352092ACE423500F8B31B /* MainVC+Collectionable.swift in Sources */,
@@ -1116,6 +1167,8 @@
 				630DD8E12ADA647100B51662 /* AddImageVC+DSM.swift in Sources */,
 				639352142ACE448D00F8B31B /* Collectionable.swift in Sources */,
 				633BD4A82AD7C736006D6955 /* UIAlertControllerExtension.swift in Sources */,
+				632F91E62AF8753B001784C0 /* AddImageVM.swift in Sources */,
+				632F91DF2AF86AE2001784C0 /* ImageTable.swift in Sources */,
 				63730F792AD29C0C00BC8F35 /* AddSetVC.swift in Sources */,
 				63730F742AD290B000BC8F35 /* CardSetTable.swift in Sources */,
 				63F4195E2AE2CF8000D450F7 /* AppColor.swift in Sources */,
@@ -1148,6 +1201,7 @@
 				636571442AD6DF02008126C4 /* NSProviderExtension.swift in Sources */,
 				630947912AE2889B0095BFEA /* Setting+Speaker.swift in Sources */,
 				6357EA482ADBB9EF005ED852 /* ShowImageVC.swift in Sources */,
+				632F91F62AF93B18001784C0 /* ImageService+CacheManager.swift in Sources */,
 				6393520B2ACE42BC00F8B31B /* ModelStructures.swift in Sources */,
 				635C3BD72AE007DF00994BD8 /* SetCardListHeader.swift in Sources */,
 				63A9A3D52AF24B9E00F9A147 /* ImageSearchVC+Registration.swift in Sources */,
@@ -1177,6 +1231,7 @@
 				63730F642AD274F800BC8F35 /* DisclosureHeader.swift in Sources */,
 				6357EA4E2ADBBBDA005ED852 /* ShowImageVC+DSM.swift in Sources */,
 				63ABC0C02ADA8B1F00BDB44F /* CardVC+AttributeStringExtension.swift in Sources */,
+				632F91F22AF90E09001784C0 /* ImageService+Network.swift in Sources */,
 				63A0CFC72AE9674D0060B5F9 /* AddSetVC+DS.swift in Sources */,
 				636571342AD6DC69008126C4 /* SetCardListCell.swift in Sources */,
 				6357EA592ADBE2F4005ED852 /* SettingVC+Delegate.swift in Sources */,
@@ -1190,6 +1245,7 @@
 				630947932AE288AE0095BFEA /* Setting+Information.swift in Sources */,
 				63A0CFC22AE943AE0060B5F9 /* MoveBtn.swift in Sources */,
 				632A48652ACCED6A00413AF4 /* API_Key.swift in Sources */,
+				632F91E12AF86CE4001784C0 /* ImageViewerVM.swift in Sources */,
 				6373B2AB2AE3CBF0009A39FA /* SplashController.swift in Sources */,
 				6357EA4C2ADBBB6F005ED852 /* ShowImageVC+Registration.swift in Sources */,
 				633BB4672AD6EB04005E8E09 /* UINavigationControllerExtensions.swift in Sources */,

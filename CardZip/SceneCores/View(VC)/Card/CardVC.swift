@@ -104,11 +104,12 @@ final class CardVC: BaseVC{
             .receive(on: RunLoop.main)
             .sink {[weak self] cardItem, number in
 //            print("card iamge number \(number)")
+                guard let self else {return}
             let vc = ShowImageVC()
-            vc.cardItem = cardItem
-            vc.setName = self?.vm.setItem.title
+            let viewVM = ImageViewerVM(cardItem: cardItem, setName: vm.setItem.title)
+            vc.vm = viewVM
             vc.startNumber = number
-            self?.navigationController?.pushViewController(vc, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
         }.store(in: &subscription)
     }
     override func viewWillAppear(_ animated: Bool) {

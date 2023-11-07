@@ -17,10 +17,11 @@ final class TopHeaderReusableView: UICollectionReusableView{
                 guard let self else {return}
                 if let path = item?.imagePath{
                     Task{
-                        if let image = await UIImage.fetchBy(identifier: path,ofSize: .init(width: 600, height: 600)){
+                        do{ 
+                            let image = try await UIImage.fetchBy(identifier: path,ofSize: .init(width: 600, height: 600))
                             self.applyImage(image: image)
                             self.errorMessage = ""
-                        }else{
+                        }catch{
                             self.applyImage(image: .init(systemName: "questionmark.circle", ofSize: 88, weight: .medium))
                             self.errorMessage = "Image not found"
                         }

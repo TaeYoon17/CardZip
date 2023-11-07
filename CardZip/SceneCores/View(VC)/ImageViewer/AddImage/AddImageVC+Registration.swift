@@ -12,23 +12,35 @@ import Photos
 extension AddImageVC{
     var imageRegistration:UICollectionView.CellRegistration<DeletableImageCell,String>{
         UICollectionView.CellRegistration<DeletableImageCell,String> {cell, indexPath, itemIdentifier in
+            // 아이템 경로로 이미지를 초기화하고 가져온다.
             Task{
-                cell.image = try await ImageService.shared.fetchByCache(albumID: itemIdentifier)
+                do{
+                    if let image = try await ImageService.shared.fetchByCache(type: .file, name: itemIdentifier
+                                                                              ,maxSize: .init(width: 720, height: 1080)){
+                        cell.image = image
+                    }else{
+                        print("이미지 없음!!")
+                    }
+                }catch{
+                    print(error,"이게 문제다.")
+                }
             }
         }
     }
     var addRegistration: UICollectionView.CellRegistration<AddItemCell,String>{
         UICollectionView.CellRegistration{[weak self] cell, indexPath, itemIdentifier in
             cell.action = { [weak self] in
-                //MARK: -- 여기가 추가
+                
                 let actionSheet = CustomAlertController(actionList: [
+                //MARK: -- 앨범 이미지 추가
                     .init(title: "Photo album".localized,
                           systemName:  "folder.badge.plus",
                           completion: {[weak self] in
                               guard let self else {return}
-                              photoService.presentPicker(vc: self,multipleSelection: true,prevIdentifiers: getCurrentImageIds())
+//                              photoService.presentPicker(vc: self,multipleSelection: true,prevIdentifiers: getCurrentImageIds())
+                              vm.presentPicker(vc: self)
                           }),
-                    //MARK: -- 사진 첨부 기능 추가
+                //MARK: -- 검색 이미지 추가
                     .init(title: "Search", systemName: "magnifyingglass", completion: { [weak self] in
                         let vc = ImageSearchVC()
                         let nav = UINavigationController(rootViewController: vc)
@@ -43,12 +55,13 @@ extension AddImageVC{
         }
     }
 }
+// prefetch 할 필요가 없어진다..!
 extension AddImageVC: UICollectionViewDataSourcePrefetching{
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         indexPaths.forEach {
             guard let path = dataSource.itemIdentifier(for: $0) else {return}
             Task{
-                try await ImageService.shared.appendCache(albumID: path )
+                try await ImageService.shared.appendCache(type: .file,name: path,maxSize: .init(width: 720, height: 1080))
             }
         }
     }

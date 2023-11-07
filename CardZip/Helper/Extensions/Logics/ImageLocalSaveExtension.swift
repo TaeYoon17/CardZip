@@ -8,6 +8,7 @@
 import UIKit
 //MARK: -- Get Image By Path
 extension UIImage{
+    
     convenience init?(fileName: String) {
         guard let documentDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             self.init()
@@ -21,6 +22,10 @@ extension UIImage{
             self.init(systemName: "")
         }
     }
+    func bytesToMegabytes(bytes: Int) -> Double {
+        let megabyte = Double(bytes) / 1024 / 1024
+        return megabyte
+    }
     func saveToDocument(fileName: String){
         //1. 도큐먼트 경로 찾기
         guard let documentDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
@@ -28,6 +33,12 @@ extension UIImage{
         let fileURL = documentDir.appendingPathComponent("\(fileName).jpg")
         //3. 이미지 변환 -> 세부 경로 파일을 열어서 저장
         guard let data = self.jpegData(compressionQuality: 1) else {return}
+        let mbBytes = bytesToMegabytes(bytes: data.count)
+        let maxQuality = min(5 / mbBytes,1) // 모든 이미지 데이터를 5mb 이하로 맞추기
+        print("압축 비율: \(maxQuality) 원본 MB: \(mbBytes), 변환 MB: \(mbBytes * maxQuality) ")
+        guard let data = self.jpegData(compressionQuality: maxQuality) else {
+            return
+        }
         //4. 이미지 저장
         do{
             try data.write(to: fileURL)

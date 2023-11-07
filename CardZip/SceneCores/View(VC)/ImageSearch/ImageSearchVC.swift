@@ -14,6 +14,33 @@ final class ImageSearchVC: BaseVC{
     let searchController = UISearchController()
     var vm = ImageSearchVM(searchText: "아이패드", imageLimitCount: 10)
     var dataSource: ImageSearchDS!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        vm.searchText.sink {[weak self] text in
+            guard let self else {return}
+            searchController.searchBar.text = text
+        }.store(in: &subscription)
+        vm.$selectedCount.sink {[weak self] selectCnt in
+            Task{
+                self?.navigationItem.rightBarButtonItem?.isEnabled = selectCnt > 0
+            }
+        }.store(in: &subscription)
+        vm.loadingStatusPassthrough
+            .receive(on: RunLoop.main)
+            .sink {[weak self] isLoading in
+            if isLoading{
+                self?.activitiIndicator.startAnimating()
+                self?.collectionView.alpha = 0.66
+                self?.collectionView.isUserInteractionEnabled = false
+            }else{
+                self?.collectionView.alpha = 1
+                self?.activitiIndicator.stopAnimating()
+                self?.collectionView.isUserInteractionEnabled = true
+            }
+            }.store(in: &subscription)
+    }
+    
     override func configureLayout() {
         super.configureLayout()
         [collectionView].forEach{view.addSubview($0)}
@@ -46,33 +73,9 @@ final class ImageSearchVC: BaseVC{
         super.configureView()
         self.view.backgroundColor = .bgSecond
         configureCollectionView()
-        vm.searchText.sink {[weak self] text in
-            guard let self else {return}
-            searchController.searchBar.text = text
-        }.store(in: &subscription)
-        vm.$selectedCount.sink {[weak self] selectCnt in
-            Task{
-                self?.navigationItem.rightBarButtonItem?.isEnabled = selectCnt > 0
-            }
-        }.store(in: &subscription)
-        vm.loadingStatusPassthrough
-            .receive(on: RunLoop.main)
-            .sink {[weak self] isLoading in
-            if isLoading{
-                self?.activitiIndicator.startAnimating()
-                self?.collectionView.alpha = 0.66
-                self?.collectionView.isUserInteractionEnabled = false
-            }else{
-                self?.collectionView.alpha = 1
-                self?.activitiIndicator.stopAnimating()
-                self?.collectionView.isUserInteractionEnabled = true
-            }
-            }.store(in: &subscription)
-    }
-    override func viewDidLoad() {
-        super.viewDidLoad()
         
     }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: false)

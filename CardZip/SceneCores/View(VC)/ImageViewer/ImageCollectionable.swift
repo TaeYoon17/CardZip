@@ -6,10 +6,10 @@
 //
 
 import UIKit
-protocol ImageCollectionAble: Collectionable,UIViewController{
-    var imageCount:Int {get set}
-}
-extension ImageCollectionAble{
+//protocol ImageCollectionAble: Collectionable,UIViewController{
+//    var imageCount:Int {get set}
+//}
+extension ImageViewerVC{
     var layout: UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -22,10 +22,10 @@ extension ImageCollectionAble{
         section.visibleItemsInvalidationHandler = { [weak self] (items, offset, env) -> Void in
             guard let self = self else { return }
             let page = round(offset.x / self.view.bounds.width)
-            self.imageCount = Int(page)
+            self.imageCountlabel.imageCount.send(Int(page))
         }
         let layout = UICollectionViewCompositionalLayout(section: section)
-        var config = UICollectionViewCompositionalLayoutConfiguration()
+        let config = UICollectionViewCompositionalLayoutConfiguration()
         config.scrollDirection = .horizontal
         layout.configuration = config
         

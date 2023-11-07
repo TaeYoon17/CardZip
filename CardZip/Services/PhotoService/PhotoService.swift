@@ -89,7 +89,6 @@ extension PhotoService: PHPickerViewControllerDelegate{
         viewController?.dismiss(animated: true)
         let identifiers = results.map(\.assetIdentifier!) // 이미지에 존재하는 identifier만 가져온다.
         guard let viewController else {return}
-        print(#function, identifiers)
         passthroughIdentifiers.send((identifiers,viewController))
     }
     

@@ -78,9 +78,11 @@ final class AddSetVC: EditableVC{
             guard let self,let cardItem else {return}
             switch actionType{
             case .imageTapped:
+                let addVM = AddImageVM(cardItem: cardItem, setName: self.vm?.setItem?.title ?? "")
                 let vc = AddImageVC()
-                vc.cardItem = cardItem
-                vc.passthorughImgID.sink {[weak self] imagesID in
+                vc.vm = addVM
+//                vc.cardItem = cardItem
+                addVM.passthorughImgID.sink {[weak self] imagesID in
                     guard let self else {return}
                     var newCardItem = cardItem
                     newCardItem.imageID = imagesID

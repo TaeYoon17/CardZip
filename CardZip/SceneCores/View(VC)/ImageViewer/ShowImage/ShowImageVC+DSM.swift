@@ -11,11 +11,11 @@ extension ShowImageVC{
         print(#function, result)
         var snapshot = NSDiffableDataSourceSnapshot<Section,String>()
         snapshot.appendSections([.main])
-        self.imageCount = snapshot.itemIdentifiers.count + (result.isEmpty ? 0 : 1)
+        self.vm.imageCount.value = snapshot.itemIdentifiers.count + (result.isEmpty ? 0 : 1)
         snapshot.appendItems(result,toSection: .main)
         dataSource.apply(snapshot,animatingDifferences: true)
     }
-    func selectionUpdate(ids: [String]) async{
-        self.selection = ids
-    }
+//    func selectionUpdate(ids: [String]) async{
+//        
+//    }
 }

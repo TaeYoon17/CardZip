@@ -13,18 +13,18 @@ import PhotosUI
 
 final class ShowImageVC: ImageViewerVC{
     var startNumber: Int?
-    override var setName:String?{
-        didSet{
-            guard let setName else {return}
-            closeBtn.title = setName
-        }
-    }
-    override var cardItem: CardItem?{
-        didSet{
-            guard let cardItem else {return}
-        }
-    }
+    var vm: ImageViewerVM!
     deinit{ print("ShowImageVC가 사라짐!!") }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        vm.$setName.sink {[weak self] setName in
+            guard let self, let setName else {return}
+            closeBtn.title = setName
+        }.store(in: &subscription)
+        vm.$selection.sink { [weak self] selectionItems in
+            self?.updateSnapshot(result: selectionItems)
+        }.store(in: &subscription)
+    }
     override func configureCollectionView(){
         collectionView.backgroundColor = .bg
         collectionView.showsHorizontalScrollIndicator = false
@@ -34,10 +34,6 @@ final class ShowImageVC: ImageViewerVC{
         dataSource = UICollectionViewDiffableDataSource<Section,String>(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: itemIdentifier)
         })
-        guard let cardItem else {return}
-        let imageIds = cardItem.imageID
-        self.selection = imageIds
-        self.updateSnapshot(result: imageIds)
     }
     override func configureNavigation() {
         super.configureNavigation()

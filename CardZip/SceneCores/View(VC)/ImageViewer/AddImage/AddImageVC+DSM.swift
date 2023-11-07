@@ -9,17 +9,14 @@ import Foundation
 import UIKit
 extension AddImageVC{
     @MainActor func updateSnapshot(result: [String]){
-        print(#function, result)
         var snapshot = NSDiffableDataSourceSnapshot<Section,String>()
         snapshot.appendSections([.main])
-        self.imageCount = snapshot.itemIdentifiers.count + (result.isEmpty ? 0 : 1)
+//        self.imageCount = snapshot.itemIdentifiers.count + (result.isEmpty ? 0 : 1)
         snapshot.appendItems(result,toSection: .main)
         snapshot.appendItems(["addBtn"], toSection: .main)
         dataSource.apply(snapshot,animatingDifferences: true)
     }
-    func selectionUpdate(ids: [String]) async{
-        self.selection = ids
-    }
+    
     @MainActor func getCurrentImageIds()->[String]{
         let snapshot = dataSource.snapshot()
         var items = snapshot.itemIdentifiers(inSection: .main)
@@ -32,14 +29,15 @@ extension AddImageVC{
         let snapshot = self.dataSource.snapshot()
         var items:[String] = snapshot.itemIdentifiers(inSection: .main)
         items.removeLast() // add 버튼 없애기
-        self.passthorughImgID.send(Array(Set(items)))
+//        self.passthorughImgID.send(Array(Set(items)))
     }
     @MainActor func deleteCell(item:String){
         var snapshot = dataSource.snapshot()
 //        selection.removeValue(forKey: item)
-        selection.removeAll { $0 == item }
+//        selection.removeAll { $0 == item }
         snapshot.deleteItems([item])
-        imageCount -= 1
+//        imageCount -= 1
+        vm.imageCount.value -= 1 // 이게 publish 처럼 작동하는가?
         dataSource.apply(snapshot,animatingDifferences: true)
     }
 }
