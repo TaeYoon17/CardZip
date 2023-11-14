@@ -64,23 +64,19 @@ extension ImageService{
         case .search: await UIImage.fetchBy(identifier: name)
         }
         guard let image else {throw FetchError.fetch}
-        let ratio = min(1,min(maxSize.height / image.size.height, maxSize.width / image.size.width))
-        let size = CGSize(width: image.size.width * ratio, height: image.size.height * ratio)
+        let size = CGSize(original: image.size, max: maxSize)
         guard let img = await image.byPreparingThumbnail(ofSize: size) else { return}
         cacheTable[type]?.setObject(img, forKey: keyName as NSString)
     }
     @MainActor func fetchByCache(type:SourceType,name: String, maxSize:CGSize) async throws -> UIImage?{
         let keyName = "\(name)_max_\(Int(maxSize.width))_\(Int(maxSize.height))"
-        let image = cacheTable[type]?.object(forKey: keyName as NSString)
-        if let image{
+        if let image = cacheTable[type]?.object(forKey: keyName as NSString){
             return image
         }else{
             try await appendCache(type: type, name: name, maxSize: maxSize)
         }
-        do{
-            try await Task.sleep(nanoseconds: 1000)
-        }catch{
-            print(error)
+        do{ try await Task.sleep(nanoseconds: 1000)
+        }catch{ print(error)
         }
         return cacheTable[type]?.object(forKey: keyName as NSString)
     }

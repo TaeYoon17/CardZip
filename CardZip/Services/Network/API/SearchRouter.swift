@@ -54,7 +54,6 @@ extension NaverRouter{
             var request = URLRequest(url: urlComponents.url!)
             request.method = self.method
             request.headers = self.header
-            print(request)
             return request
             //            return try .init(url: URL(string: "asdf")!, method: .get)
         }

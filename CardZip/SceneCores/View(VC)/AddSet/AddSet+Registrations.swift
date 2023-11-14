@@ -14,7 +14,6 @@ extension AddSetVC{
             guard let cardItem = self?.dataSource.itemModel.fetchByID(itemIdentifier.id) else {return}
             // 초기화시 설정할 의미 및 뜻
             let cellVM = AddSetItemCellVM(addSetVM: self?.vm, cardItem: cardItem)
-            print(cardItem)
             cell.vm = cellVM
             cell.fieldAccessoryView = self?.appendItemView
         }

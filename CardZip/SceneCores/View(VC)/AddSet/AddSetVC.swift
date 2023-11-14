@@ -79,14 +79,15 @@ final class AddSetVC: EditableVC{
             switch actionType{
             case .imageTapped:
                 let addVM = AddImageVM(cardItem: cardItem, setName: self.vm?.setItem?.title ?? "")
+                addVM.ircSnapShot = self.vm?.IRC.snapshot
                 let vc = AddImageVC()
                 vc.vm = addVM
-//                vc.cardItem = cardItem
-                addVM.passthorughImgID.sink {[weak self] imagesID in
+                addVM.passthorughImgID.sink {[weak self] (imagesID,ircSnapShot) in
                     guard let self else {return}
                     var newCardItem = cardItem
                     newCardItem.imageID = imagesID
                     vm?.updatedCardItem.send((newCardItem,true))
+                    vm?.IRC.apply(ircSnapShot)
                 }.store(in: &subscription)
                 navigationController?.pushViewController(vc, animated: true)
             case .delete: dataSource.deleteItem(cardItem: cardItem)

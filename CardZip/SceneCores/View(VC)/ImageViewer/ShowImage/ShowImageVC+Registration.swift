@@ -14,8 +14,7 @@ extension ShowImageVC{
         UICollectionView.CellRegistration<ImageCell,String> { cell, indexPath, itemIdentifier in
             Task{ @MainActor in
                 do{
-                    
-                    if let image = try await ImageService.shared.fetchByCache(albumID: itemIdentifier){
+                    if let image = try await ImageService.shared.fetchByCache(type: .file, name: itemIdentifier,maxSize: .init(width: 720, height: 1080)) {
                         cell.image = image
                     }else{
                         print("이게 왜 안됨?")

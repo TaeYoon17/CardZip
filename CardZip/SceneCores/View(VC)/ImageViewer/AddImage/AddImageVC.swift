@@ -11,10 +11,9 @@ import Combine
 
 final class AddImageVC: ImageViewerVC{
     var vm: AddImageVM!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        vm.$selection.sink {[weak self] imagePathes in
+        vm.$selection.receive(on: RunLoop.main).sink {[weak self] imagePathes in
             self?.updateSnapshot(result: imagePathes)
         }.store(in: &subscription)
         vm.passthoroughLoading

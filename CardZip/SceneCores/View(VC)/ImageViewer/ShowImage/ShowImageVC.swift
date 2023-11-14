@@ -56,7 +56,8 @@ extension ShowImageVC: UICollectionViewDataSourcePrefetching{
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
             guard let imagePath = dataSource.itemIdentifier(for: indexPath) else {return}
-            Task{ try await ImageService.shared.appendCache(albumID: imagePath) }
+            Task{ try await ImageService.shared.appendCache(type: .file, name: imagePath, maxSize: .init(width: 720, height: 1080))
+            }
         }
     }
 }

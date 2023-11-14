@@ -6,3 +6,12 @@
 //
 
 import Foundation
+import RealmSwift
+protocol ReferenceCountable:Identifiable{
+    var id:String {get}
+    var name: String {get set}
+    var count: Int {get set}
+}
+extension ReferenceCountable{
+    var id:String{ name }
+}

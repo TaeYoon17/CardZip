@@ -27,7 +27,7 @@ final class CardFrontView: BaseView{
                 // 여기서 미리 다 캐싱한다.
                 item.imageID.forEach { imagePath in
                     Task{
-                        try await ImageService.shared.appendEmptyCache(albumID: imagePath,size: .init(width: 720, height: 720))
+                        try await ImageService.shared.appendCache(type:.file,name:imagePath,size:.init(width: 720, height: 720))
                     }
                 }
             }.store(in: &subscription)

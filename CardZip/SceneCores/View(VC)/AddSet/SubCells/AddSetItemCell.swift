@@ -34,6 +34,7 @@ extension AddSetVC{
                 termField.publisher(for: .editingDidEnd).sink { [weak self] _ in
                     self?.termField.placeholder = "Enter a term".localized
                 }.store(in: &subscription)
+                
                 addImageBtn.publisher(for: .touchUpInside).sink { [weak self] _ in
                     print("버튼이 입력됨!!")
                     self?.vm?.addImageTapped()
@@ -169,8 +170,6 @@ extension AddSetVC{
             definitionField.snp.makeConstraints { make in
                 make.width.equalTo(termField.snp.width)
             }
-            //            imageShowView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            //            imageShowView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         }
         override func configureView() {
             super.configureView()
@@ -179,7 +178,8 @@ extension AddSetVC{
             contentView.layer.cornerCurve = .circular
         }
         func getImage(path:String?) async throws {
-            if let path, let image = try await ImageService.shared.fetchByCache(albumID: path,size: .init(width: 360, height: 360)){
+            
+            if let path, let image = try await ImageService.shared.fetchByCache(type: .file, name: path,size: .init(width: 360, height: 360)){
                 self.addImageBtn.configuration?.image = image.preparingThumbnail(of: .init(width: 44, height: 44))
                 
                 self.addImageBtn.configuration?.attributedTitle = AttributedString("Edit".localized, attributes: .init([

@@ -43,8 +43,8 @@ extension CardVC{
                 cardItems.forEach { item in
                     guard let imagePath = item.imageID.first else {return }
                     Task.detached(operation: {
-                        try await ImageService.shared.appendCache(albumID: imagePath)
-                        try await ImageService.shared.appendCache(albumID:imagePath,size:.init(width: 720, height: 720))
+                        try await ImageService.shared.appendCache(type: .file,name: imagePath)
+                        try await ImageService.shared.appendCache(type: .file,name: imagePath,size:.init(width: 720, height: 720))
                     })
                 }
             }

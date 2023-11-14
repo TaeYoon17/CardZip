@@ -16,4 +16,8 @@ class ReferenceTable: Object,Identifiable,ReferenceCountable{
         self.init()
         self.name = fileName
     }
+    convenience init(fileName:String, count: Int) {
+        self.init(fileName: fileName)
+        self.count = count
+    }
 }

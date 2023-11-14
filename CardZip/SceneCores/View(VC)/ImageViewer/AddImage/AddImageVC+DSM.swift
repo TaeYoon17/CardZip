@@ -29,14 +29,11 @@ extension AddImageVC{
         let snapshot = self.dataSource.snapshot()
         var items:[String] = snapshot.itemIdentifiers(inSection: .main)
         items.removeLast() // add 버튼 없애기
-//        self.passthorughImgID.send(Array(Set(items)))
+        self.vm.passthorughImgID.send(((Array(Set(items))),vm.ircSnapShot!))
     }
     @MainActor func deleteCell(item:String){
         var snapshot = dataSource.snapshot()
-//        selection.removeValue(forKey: item)
-//        selection.removeAll { $0 == item }
         snapshot.deleteItems([item])
-//        imageCount -= 1
         vm.imageCount.value -= 1 // 이게 publish 처럼 작동하는가?
         dataSource.apply(snapshot,animatingDifferences: true)
     }

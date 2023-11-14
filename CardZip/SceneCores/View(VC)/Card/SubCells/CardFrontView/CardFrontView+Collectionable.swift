@@ -16,7 +16,7 @@ extension CardFrontView: UICollectionViewDelegate{
         collectionView.backgroundColor = .lightBg
         let cellRegistration = UICollectionView.CellRegistration<ImageCell,Item> {cell, indexPath, itemIdentifier in
             Task{
-                cell.image = try await ImageService.shared.fetchByCache(albumID: itemIdentifier.imagePath,size: .init(width: 720, height: 720))
+                cell.image = try await ImageService.shared.fetchByCache(type: .file, name: itemIdentifier.imagePath,size: .init(width: 720, height: 720))
             }
         }
         dataSource = UICollectionViewDiffableDataSource<Section,Item>(collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in

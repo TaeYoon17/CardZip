@@ -12,15 +12,14 @@ extension AddSetVM{
     enum SetActionType{ case imageTapped }
 }
 final class AddSetVM{
-    deinit{
-        print("AddSetVM DEINIT!")
-    }
+    deinit{ print("AddSetVM DEINIT!") }
     @MainActor private let repository = CardSetRepository()
     @MainActor private let cardRepository = CardRepository()
     weak var photoService:PhotoService! = PhotoService.shared
     @Published var dataProcess: DataProcessType
     @Published var nowItemsCount: Int = 0
     @DefaultsState(\.recentSet) var recentKey
+    var IRC: ImageRC = .init()
     var setItem: SetItem?
     // DataProcessTyppe Edit했을 때 변경 사항을 던져주는 passthrough
     var passthroughEditSet = PassthroughSubject<SetItem,Never>()
@@ -86,6 +85,9 @@ extension AddSetVM{
         setItem.cardList = cardItems
         passthroughEditSet.send(setItem)
         passthroughCloseAction.send()
+        Task{
+            await IRC.saveRepository()
+        }
     }
 }
  

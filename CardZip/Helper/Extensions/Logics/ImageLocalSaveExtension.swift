@@ -22,11 +22,11 @@ extension UIImage{
             self.init(systemName: "")
         }
     }
-    func bytesToMegabytes(bytes: Int) -> Double {
+    private func bytesToMegabytes(bytes: Int) -> CGFloat {
         let megabyte = Double(bytes) / 1024 / 1024
         return megabyte
     }
-    func saveToDocument(fileName: String){
+    func saveToDocument(fileName: String,maxMegaBytes:CGFloat = 5){
         //1. 도큐먼트 경로 찾기
         guard let documentDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         //2. 저장할 파일의 세부 경로 설정
@@ -34,10 +34,8 @@ extension UIImage{
         //3. 이미지 변환 -> 세부 경로 파일을 열어서 저장
         guard let data = self.jpegData(compressionQuality: 1) else {return}
         let mbBytes = bytesToMegabytes(bytes: data.count)
-        let maxQuality = min(5 / mbBytes,1) // 모든 이미지 데이터를 5mb 이하로 맞추기
-        guard let data = self.jpegData(compressionQuality: maxQuality) else {
-            return
-        }
+        let maxQuality = min(maxMegaBytes / mbBytes,1) // 모든 이미지 데이터를 5mb 이하로 맞추기
+        guard let data = self.jpegData(compressionQuality: maxQuality) else { return }
         //4. 이미지 저장
         do{
             try data.write(to: fileURL)
