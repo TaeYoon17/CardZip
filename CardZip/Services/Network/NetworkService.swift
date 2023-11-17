@@ -26,14 +26,14 @@ final class NetworkService{
             .publishDecodable(type: ResponseWrapper<ImageSearchResponse>.self,queue: .global())
             .value()
             .sink {[weak self] completion in
-                print(completion)
+//                print(completion)
 //                continuation.resume(throwing: ResponseError.codeError)
             } receiveValue: {[weak self] response in
                 let buildDate = response.lastBuildDate
                 do{
                     let encode = try JSONEncoder().encode(response.items)
                     let searchResults = try JSONDecoder().decode([ImageSearch].self, from: encode)
-                    print(searchResults)
+//                    print(searchResults)
                     continuation.resume(returning: searchResults)
                 }catch{
                     continuation.resume(throwing: error)

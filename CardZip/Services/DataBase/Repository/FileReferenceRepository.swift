@@ -20,11 +20,9 @@ import RealmSwift
         case jpg
     }
     
-    func update(item: any ReferenceCountable){
+    func insert(item: any ReferenceCountable){
         if let table = realm.object(ofType: T.self, forPrimaryKey: item.name){
-            try! realm.write({
-                table.count = item.count
-            })
+            try! realm.write({ table.count = item.count })
         }else{
             let newTable = T.init(fileName: item.name)
             self.create(item: newTable)

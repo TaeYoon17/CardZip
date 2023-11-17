@@ -6,3 +6,6 @@
 //
 
 import Foundation
+protocol ImageSearchDelegate:AnyObject{
+    func searchSelectionUpdate(ids:[String])
+}

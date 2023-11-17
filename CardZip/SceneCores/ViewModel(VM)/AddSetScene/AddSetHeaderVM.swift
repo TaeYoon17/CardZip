@@ -19,6 +19,7 @@ final class AddSetHeaderVM{
         self.setItem = setItem
         
         $setItem.sink {setItem in
+            addSetVM.setItem = setItem
             addSetVM.updatedSetItem.send((setItem,false))
         }.store(in: &subscription)
     }

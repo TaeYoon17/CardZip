@@ -12,7 +12,8 @@ extension ImageSearchVC:UICollectionViewDataSourcePrefetching{
         indexPaths.forEach { indexPath in
             guard let itemID = dataSource.itemIdentifier(for: indexPath), let item = dataSource.fetchItem(id: itemID) else {return}
             Task.detached{
-                try await ImageService.shared.appendCache(link: item.thumbnail,size: .init(width: 360, height: 360))
+//                try await ImageService.shared.appendCache(link: item.thumbnail,size: .init(width: 360, height: 360))
+                try await ImageService.shared.appendCache(type: .search,name: item.thumbnail,size: .init(width: 360, height: 360))
             }
             if vm.imageResults.count - 5 == indexPath.row{
                 vm.paginationImage()

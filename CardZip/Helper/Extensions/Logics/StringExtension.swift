@@ -31,11 +31,20 @@ extension String{
 extension String{
     enum SourceType{
         case photo
+        case search
     }
     func getLocalPathName(type: SourceType)->String{
         switch type{
         case .photo:
-            PhotoService.Key.getLocalFilename(id: self)
+            return PhotoService.Key.getLocalFilename(id: self)
+        case .search:
+            var list = self.split(separator: "/")
+            let last = list.popLast()!.split(separator: ".")[0]
+            if let lastprev = list.popLast(){
+                return "\(lastprev)_\(last)"
+            }else{
+                return "\(last)"
+            }
         }
     }
     func extractID(type: SourceType) ->String{
@@ -44,6 +53,7 @@ extension String{
     func checkFilepath(type: SourceType)->Bool{
         switch type{
         case .photo: PhotoService.Key.isAlbumFile(fileName: self)
+        case .search: false
         }
     }
 }

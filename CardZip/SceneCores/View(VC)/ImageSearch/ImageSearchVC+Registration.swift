@@ -10,7 +10,12 @@ import SnapKit
 extension ImageSearchVC{
     var searchImageCellRegistration: UICollectionView.CellRegistration<ImageSearchItemCell,ImageSearch.ID>{
         UICollectionView.CellRegistration {[weak self] cell, indexPath, itemIdentifier in
-            guard let self,let item = dataSource.fetchItem(id: itemIdentifier) else {return}
+            guard let self,let item:ImageSearch = dataSource.fetchItem(id: itemIdentifier) else {
+                print("데이터가 없다!!")
+                return
+            }
+//            print("regi \(item.isCheck!) \(item.id)")
+//            print(dataSource.itemModel.values())
             cell.model = item
             if item.isCheck{
                 cell.selectNumber = self.vm.getItemCount(item)

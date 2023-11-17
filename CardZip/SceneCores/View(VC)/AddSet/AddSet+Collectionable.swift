@@ -21,7 +21,7 @@ extension AddSetVC:Collectionable,UICollectionViewDelegate{
         dataSource = DataSource(vm:vm,collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             switch itemIdentifier.type{
             case .cards:
-                let cell:AddSetVC.AddSetItemCell =  collectionView.dequeueConfiguredReusableCell(using: editCellRegi, for: indexPath, item: itemIdentifier)
+                let cell:AddSetVC.AddSetItemCell = collectionView.dequeueConfiguredReusableCell(using: editCellRegi, for: indexPath, item: itemIdentifier)
                 return cell
             case .header:
                 let cell = collectionView.dequeueConfiguredReusableCell(using: headerCellRegi, for: indexPath, item: itemIdentifier)

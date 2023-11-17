@@ -10,7 +10,7 @@ import Photos
 import PhotosUI
 import Combine
 import RealmSwift
-final class AddImageVM: ImageViewerVM{
+final class AddImageVM: ImageViewerVM,ImageSearchDelegate{
     var ircSnapShot: ImageRC.SnapShot!
     var photoService = PhotoService.shared
     var passthorughImgID = PassthroughSubject<([String],ImageRC.SnapShot),Never>()
@@ -39,19 +39,41 @@ final class AddImageVM: ImageViewerVM{
             passthoroughLoading.send(false)
             self.selectedItems = selectedItems.subtracting(deleteFileNames).union(appendFileNames)
         }
-//        print("NewFileNames:",newFileNames)
-//        print("DeleteFileNames",deleteFileNames)
-//        print("appendFileNames",appendFileNames)
+        Task{ await updateValues(appends:appendFileNames,deletes:deleteFileNames) }
+    }
+    func searchSelectionUpdate(ids:[String]){
+        passthoroughLoading.send(true)
+        let newItems = ids.enumerated().map { ($1.getLocalPathName(type: .search),$0) }
+        let dict = newItems.reduce(into: [:]) { $0[$1.0] = $1.1 }
+        let newFileNames = newItems.map{$0.0}
+        // 여기에 존재하지 않았던 아이템들만 빼기 (중복되지 않은)
+        let appendFileNames = Array(Set(newFileNames).subtracting(selectedItems))
+        let downloadURLs = appendFileNames.compactMap { dict[$0] }.map{ids[$0]}
         Task{
-            await appendFileNames.asyncForEach {
-                await repository.update(item: ImageItem(name: $0, count: 0))
-                await ircSnapShot?.plusCount(id: $0)
-            }
-            Task.detached {[weak self] in
-                await deleteFileNames.asyncForEach { await self?.ircSnapShot?.minusCount(id: $0) }
-            }
+            await ImageService.shared.saveToDocumentBy(searchURLs: downloadURLs,fileNames: appendFileNames)
+            passthoroughLoading.send(false)
+            self.selectedItems = selectedItems.union(appendFileNames)
+        }
+        Task{ await updateValues(appends:appendFileNames,deletes:[]) } // 이 카드 세트에 중복되지 않은 파일들만 업데이트
+    }
+    func deleteSelection(id:String){
+        self.selectedItems.remove(id)
+        Task{
+            await ircSnapShot.minusCount(id: id)
         }
     }
+    func updateValues(appends: any Sequence<String>,deletes:any Sequence<String>) async {
+        await appends.asyncForEach {
+            if !ircSnapShot.existItem(id: $0){
+                await repository.insert(item: ImageItem(name: $0, count: 0))
+            }
+            await ircSnapShot?.plusCount(id: $0)
+        }
+        Task.detached {[weak self ] in
+            await deletes.asyncForEach { await self?.ircSnapShot?.minusCount(id: $0) }
+        }
+    }
+    
     func presentPicker(vc: UIViewController){
 //        현재 다운받은 이미지에서 앨범에 존재하는 이미지를 추출해야한다.
         self.vc = vc
@@ -61,8 +83,5 @@ final class AddImageVM: ImageViewerVM{
         photoService.presentPicker(vc: vc,
                                    multipleSelection: true,
                                    prevIdentifiers: albumImagePathes)
-    }
-    func saveRepository(){
-        
     }
 }

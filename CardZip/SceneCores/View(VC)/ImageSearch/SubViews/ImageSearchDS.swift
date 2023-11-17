@@ -25,6 +25,7 @@ extension ImageSearchVC{
                 resetItem()
                 prevSearch = newSearch
             }.store(in: &subscription)
+            
             vm.$imageResults.sink { [weak self] items in // 이미지 결과 추가하기
                 self?.appendImageResults(items)
                 Task{
@@ -35,30 +36,36 @@ extension ImageSearchVC{
                     self?.resetDataSource()
                 }
             }.store(in: &subscription)
+            
             vm.updateItemPassthrough
                 .receive(on: RunLoop.main)
-                .sink { completion in // 체크 후 값이 바뀌는 아이템
-                print("여긴 아무 변화 없음")
-            } receiveValue: {[weak self] imageSearch in
+                .sink {[weak self] imageSearch in
                 guard let self else {return}
+                itemModel.removeModel(imageSearch.id)
                 itemModel.insertModel(item: imageSearch)
                 updateDataSource(id: imageSearch.id)
             }.store(in: &subscription)
+            
             vm.reloadItemsPassthrough
                 .debounce(for: 0.2, scheduler: RunLoop.main)
                 .sink {[weak self] reloadItems in // 체크된 후 순서가 바뀌는 아이템
                 guard let self else {return}
+                print("이게 왜 불려?")
                 reconfigureDataSources(ids: reloadItems.map{$0.id})
             }.store(in: &subscription)
         }
-        func fetchItem(id: ImageSearch.ID)-> ImageSearch?{ self.itemModel.fetchByID(id) }
+        func fetchItem(id: ImageSearch.ID)-> ImageSearch?{
+            self.itemModel.fetchByID(id)
+        }
     }
 }
 fileprivate extension ImageSearchVC.ImageSearchDS{
     func appendImageResults(_ imageSearches:[ImageSearch]){
         for imageSearch in imageSearches {
-            itemModel.insertModel(item: imageSearch)
-            if !itemIDs.contains(imageSearch.id){ itemIDs.append(imageSearch.id) }
+            if !itemModel.isExist(id: imageSearch.id){
+                itemModel.insertEmptyModel(item: imageSearch)
+                itemIDs.append(imageSearch.id)
+            }
         }
     }
     func resetItem(){

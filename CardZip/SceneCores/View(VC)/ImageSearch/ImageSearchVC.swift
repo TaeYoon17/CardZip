@@ -12,9 +12,15 @@ final class ImageSearchVC: BaseVC{
     enum Section:Int{case main}
     @MainActor lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     let searchController = UISearchController()
-    var vm = ImageSearchVM(searchText: "아이패드", imageLimitCount: 10)
+    var vm:ImageSearchVM!{
+        didSet{
+            guard let vm else {return}
+            toolbarItem.vm = vm
+        }
+    }
     var dataSource: ImageSearchDS!
-    
+    var toolbarItem = SearchToolbarView()
+    private var toolbar = UIToolbar()
     override func viewDidLoad() {
         super.viewDidLoad()
         vm.searchText.sink {[weak self] text in
@@ -38,17 +44,21 @@ final class ImageSearchVC: BaseVC{
                 self?.activitiIndicator.stopAnimating()
                 self?.collectionView.isUserInteractionEnabled = true
             }
-            }.store(in: &subscription)
+        }.store(in: &subscription)
     }
     
     override func configureLayout() {
         super.configureLayout()
-        [collectionView].forEach{view.addSubview($0)}
+        [collectionView,toolbar].forEach{view.addSubview($0)}
     }
     override func configureConstraints() {
         super.configureConstraints()
         collectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        toolbar.snp.makeConstraints { make in
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     override func configureNavigation() {
@@ -60,7 +70,7 @@ final class ImageSearchVC: BaseVC{
         self.navigationItem.searchController = searchController
         self.navigationItem.leftBarButtonItem = .init(title: "Cancel", style: .plain, target: self, action: #selector(Self.cancelTapped))
         self.navigationItem.rightBarButtonItem = .init(title: "Add", style: .done, target: self, action: #selector(Self.doneTapped))
-        searchController.searchBar.placeholder = "검색 결과를 보여주자"
+        searchController.searchBar.placeholder = "검색어를 입력하세요."
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.automaticallyShowsCancelButton = false
         
@@ -73,7 +83,10 @@ final class ImageSearchVC: BaseVC{
         super.configureView()
         self.view.backgroundColor = .bgSecond
         configureCollectionView()
-        
+        self.toolbar.barStyle = .default
+        let barbuttonItem = UIBarButtonItem(customView: self.toolbarItem)
+        barbuttonItem.style = .done
+        toolbar.items = [barbuttonItem]
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -88,6 +101,7 @@ final class ImageSearchVC: BaseVC{
         self.dismiss(animated: true)
     }
     @objc func doneTapped(){
+        self.vm.saveDatas()
         self.dismiss(animated: true)
     }
 }

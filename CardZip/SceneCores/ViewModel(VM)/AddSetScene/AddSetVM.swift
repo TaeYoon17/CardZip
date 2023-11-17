@@ -6,21 +6,32 @@
 //
 
 import Foundation
+import Photos
+import PhotosUI
 import Combine
 extension AddSetVM{
     enum CardActionType{ case imageTapped, delete }
     enum SetActionType{ case imageTapped }
 }
-final class AddSetVM{
-    deinit{ print("AddSetVM DEINIT!") }
-    @MainActor private let repository = CardSetRepository()
-    @MainActor private let cardRepository = CardRepository()
+final class AddSetVM:ImageSearchDelegate{
+    deinit{
+        Task.detached{
+            ImageService.shared.resetCache(type: .search)
+            ImageService.shared.resetCache(type: .album)
+        }
+        print("AddSetVM DEINIT!")
+    }
+    @MainActor let repository = CardSetRepository()
+    @MainActor let cardRepository = CardRepository()
     weak var photoService:PhotoService! = PhotoService.shared
     @Published var dataProcess: DataProcessType
     @Published var nowItemsCount: Int = 0
     @DefaultsState(\.recentSet) var recentKey
-    var IRC: ImageRC = .init()
+    var ircSnapshot: ImageRC.SnapShot = ImageRC.shared.snapshot
     var setItem: SetItem?
+    var subscription = Set<AnyCancellable>()
+    
+    weak var vc: UIViewController!
     // DataProcessTyppe Edit했을 때 변경 사항을 던져주는 passthrough
     var passthroughEditSet = PassthroughSubject<SetItem,Never>()
     var passthroughCloseAction = PassthroughSubject<Void,Never>() // 닫을 때
@@ -38,56 +49,56 @@ final class AddSetVM{
         case .edit:
             self.setItem = setItem
         }
-    }
-}
-//MARK: -- REALM 테이블에 대하여
-extension AddSetVM{
-    @MainActor var setTable:CardSetTable?{
-        if let dbKey = setItem?.dbKey,
-           let table = repository?.getTableBy(tableID: dbKey){
-            return table
-        }
-        return nil
+        bindPhPicker()
     }
     
-    @MainActor func deleteTable(cardItem: CardItem){
-        do{
-            try repository?.cardRespository?.deleteTableBy(tableID: cardItem.dbKey)
-            print("데베에 있어서 삭제하는 데이터")
-        }catch{
-            print("데베에 없어서 삭제 못하는 데이터")
+    func bindPhPicker() {
+        photoService.passthroughIdentifiers.sink {[weak self] val,vc in
+            guard let self,self.vc == vc,let newAlbumID = val.first else {return}
+            let newFileName = newAlbumID.getLocalPathName(type: .photo)
+            let prevFileName = self.setItem?.imagePath
+            self.setItem?.imagePath = newFileName
+            Task{@MainActor [weak self] in
+                guard let self else {return}
+                if !self.ircSnapshot.existItem(id: newFileName){
+                    await ImageService.shared.saveToDocumentBy(photoIDs:[newAlbumID])
+//                    await IRC.shared.insertRepository(item: ImageItem(name: newFileName, count: 0))
+                }
+                if let setItem{ updatedSetItem.send((setItem,true)) }
+                Task.detached {
+                    await self.ircSnapshotUpdate(new: newFileName, prev: prevFileName)
+                }
+            }
+        }.store(in: &subscription)
+    }
+    func searchSelectionUpdate(ids: [String]) {
+        guard let newFileName = ids.first?.getLocalPathName(type: .search) else {
+            passthroughErrorMessage.send("Don't accessible image")
+            return
+        }
+        let prevFileName = self.setItem?.imagePath
+        self.setItem?.imagePath = newFileName
+        Task{@MainActor [weak self] in
+            guard let self else {return}
+            if !self.ircSnapshot.existItem(id: newFileName){
+                await ImageService.shared.saveToDocumentBy(searchURLs: ids,fileNames: [newFileName])
+                await IRC.shared.insertRepository(item: ImageItem(name: newFileName, count: 0))
+            }
+            if let setItem{ updatedSetItem.send((setItem,true)) }
+            Task.detached {
+                await self.ircSnapshotUpdate(new: newFileName, prev: prevFileName)
+            }
         }
     }
-    @MainActor func saveRepository(setItem: SetItem,cardItems:[CardItem]){
-        var setItem = setItem
-        let cardSetTable:CardSetTable
-        if let setTable{
-            cardSetTable = setTable// 데베에 존재함
-        }else{
-            cardSetTable = CardSetTable()// 데베에 존재하지 않음 (새로 추가함)
+    private func ircSnapshotUpdate(new:String,prev:String?) async {
+        await ircSnapshot.plusCount(id: new)
+        if let prev{
+            await ircSnapshot.minusCount(id:prev)
         }
-        let prevCardTables = Set(cardSetTable.cardList)
-        let results:[CardTable] = cardItems.map {
-            let cardTable:CardTable
-            if let dbKey = $0.dbKey,let table = cardRepository?.getTableBy(tableID:dbKey){
-                cardTable =  table
-            }else{
-                cardTable = CardTable()
-            }
-            cardRepository?.update(card: cardTable, item: $0)
-            return cardTable
-        }
-        repository?.create(set: cardSetTable, setItem: setItem)
-        prevCardTables.subtracting(results).forEach { cardRepository?.delete(item: $0) } // 이전에 존재한 카드 테이블들을 삭제한다.
-        repository?.removeAllCards(set: cardSetTable)
-        repository?.replaceAllCards(set: cardSetTable, cards: results)
-        setItem.dbKey = cardSetTable._id
-        setItem.cardList = cardItems
-        passthroughEditSet.send(setItem)
-        passthroughCloseAction.send()
-        Task{
-            await IRC.saveRepository()
-        }
+    }
+    func presentPicker(vc: UIViewController){
+//        현재 다운받은 이미지에서 앨범에 존재하는 이미지를 추출해야한다.
+        self.vc = vc
+        photoService.presentPicker(vc: vc,multipleSelection: false)
     }
 }
- 

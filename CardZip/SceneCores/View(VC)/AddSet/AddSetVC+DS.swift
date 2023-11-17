@@ -26,21 +26,24 @@ extension AddSetVC{
                 if reloadDS{ self?.reconfigureDataSource(cardItem: item) }
             }.store(in: &subscription)
             
-            vm.updatedSetItem.sink { [weak self] (item,reloadDS) in
+            vm.updatedSetItem
+                .receive(on: RunLoop.main)
+                .sink { [weak self] (item,reloadDS) in
+                    
                 self?.headerModel.insertModel(item: item)
                 if reloadDS {self?.reconfigureDataSource(setItem: item)}
             }.store(in: &subscription)
             
-            vm.photoService.passthroughIdentifiers
-                .sink {[weak self] (val,vc) in
-                guard let self,let str = val.first else {return}
-                guard vc is AddSetVC else {return}
-                guard let item: Item = snapshot().itemIdentifiers(inSection: .header).first,
-                      var cardSetItem = headerModel.fetchByID(item.id) else {return}
-                cardSetItem.imagePath = str
-                headerModel.insertModel(item: cardSetItem)
-                reconfigureDataSource(item: item)
-            }.store(in: &subscription)
+//            vm.photoService.passthroughIdentifiers
+//                .sink {[weak self] (val,vc) in
+//                guard let self,let str = val.first else {return}
+//                guard vc is AddSetVC else {return}
+//                guard let item: Item = snapshot().itemIdentifiers(inSection: .header).first,
+//                      var cardSetItem = headerModel.fetchByID(item.id) else {return}
+//                cardSetItem.imagePath = str
+//                headerModel.insertModel(item: cardSetItem)
+//                reconfigureDataSource(item: item)
+//            }.store(in: &subscription)
         }
         func createItem(){
             let cardItem = CardItem()
@@ -129,7 +132,7 @@ fileprivate extension AddSetVC.DataSource{
         reconfigureDataSource(item: item)
     }
     @MainActor func reconfigureDataSource(setItem: SetItem){
-        var snapshot = snapshot()
+        let snapshot = snapshot()
         guard let item = snapshot.itemIdentifiers(inSection: .header).first(where: { $0.id == setItem.id}) else {return}
         reconfigureDataSource(item: item)
     }

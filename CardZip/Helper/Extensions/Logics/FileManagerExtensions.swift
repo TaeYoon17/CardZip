@@ -13,6 +13,7 @@ extension FileManager{
         case jpg
         case png
     }
+
     static func checkExistDocument(fileName:String,type:FileType)->Bool{
         guard let documentDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {return false}
         let fileURL = documentDir.appendingPathComponent("\(fileName).\(type)")

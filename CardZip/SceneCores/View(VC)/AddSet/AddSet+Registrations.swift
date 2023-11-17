@@ -18,24 +18,19 @@ extension AddSetVC{
             cell.fieldAccessoryView = self?.appendItemView
         }
     }
-    var setHeaderRegistration: UICollectionView.CellRegistration< AddSetCell,Item>{
+    var setHeaderRegistration: UICollectionView.CellRegistration<AddSetCell,Item>{
         UICollectionView.CellRegistration {[weak self] cell, indexPath, itemIdentifier in
             guard let headerItem = self?.dataSource.headerModel.fetchByID(itemIdentifier.id) else {return}
             let vm = AddSetHeaderVM(addSetVM: self?.vm, setItem: headerItem)
             cell.vm = vm
-//            guard let imagePath = headerItem.imagePath else { return }
-//            Task{
-//
-//                if let image = await UIImage.fetchBy(identifier: imagePath){
-//                    cell.image = image
-//                }else {
-//                    cell.image = .init(systemName: App.Logo.emptyImage)
-//                }
-//            }
+            guard let imagePath = headerItem.imagePath else { return }
+            Task{
+                try await ImageService.shared.appendCache(type:.file,name:imagePath,size:.init(width: 720, height: 720))
+            }
         }
     }
     private var appendItemView: UIView {
-        let view = NavBarView(frame:.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48))
+        let view = NavBarView(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48))
         view.alpha = 1
         let btn = BottomImageBtn(systemName: "plus")
         let doneBtn = UIButton(configuration: .plain())

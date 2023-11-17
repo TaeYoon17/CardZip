@@ -30,6 +30,14 @@ class AnyModelStore<Model: Identifiable>: ModelStoreAble {
     func removeModel(_ id:Model.ID){
         models.removeValue(forKey: id)
     }
+    func insertEmptyModel(item:Model){
+        if models[item.id] == nil{
+            models[item.id] = item
+        }
+    }
+    func isExist(id:Model.ID)->Bool{
+        models[id] != nil
+    }
 }
 // 배열 익스텐션 -> 원소들이 Identifiable을 준수하는 것들에 적용되는 함수
 extension Sequence where Element: Identifiable {

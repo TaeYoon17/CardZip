@@ -20,6 +20,12 @@ extension AddSetVC{
                     self?.definitionField.text = cardItem.definition
                     Task{ try await self?.getImage(path:cardItem.imageID.first) }
                 }.store(in: &subscription)
+                vm.$isAvailable.receive(on: RunLoop.main).sink {[weak self] avail in
+                    self?.contentView.isUserInteractionEnabled = avail
+                    UIView.animate(withDuration: 0.3) {[weak self] in
+                        self?.contentView.alpha = avail ? 1 : 0.33
+                    }
+                }.store(in: &subscription)
                 termField.textPublisher.assign(to: \.cardItem.title, on: vm).store(in: &subscription)
                 definitionField.textPublisher.assign(to: \.cardItem.definition, on: vm).store(in: &subscription)
                 termField.publisher(for: .editingDidBegin).sink { [weak self] _ in

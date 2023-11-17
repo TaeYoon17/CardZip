@@ -26,9 +26,9 @@ extension ImageService{
         }
         do{
             let image = switch type{
-            case .album: try await UIImage.fetchBy(link: name, ofSize: size)
+            case .album: try await UIImage.fetchBy(identifier: name, ofSize: size)
             case .file: try await UIImage.fetchBy(fileName: name,ofSize: size)
-            case .search: try await UIImage.fetchBy(identifier: name, ofSize: size)
+            case .search: try await UIImage.fetchBy(link: name, ofSize: size)
             }
             cacheTable[type]?.setObject(image, forKey: keyName as NSString)
         }catch{

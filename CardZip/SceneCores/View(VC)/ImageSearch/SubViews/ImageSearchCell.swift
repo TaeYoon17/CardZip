@@ -19,7 +19,7 @@ final class ImageSearchItemCell:BaseCell{
             self.imageView.image = nil
             Task{
                 do{
-                    let image = try await ImageService.shared.fetchByCache(link: model.thumbnail, size: .init(width: 360, height: 360))
+                    let image = try await ImageService.shared.fetchByCache(type: .search, name: model.thumbnail,size: .init(width: 360, height: 360))
                     UIView.imageAppear(view: imageView) {
                         self.imageView.image = image
                     }

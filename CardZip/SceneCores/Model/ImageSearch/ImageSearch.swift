@@ -15,7 +15,7 @@ struct ImageSearch:Identifiable,Hashable,ImageSearchable,Codable{
     var height: Int{ Int(sizeheight) ?? -1}
     var width: Int{  Int(sizewidth) ?? -1 }
     var isCheck: Bool! = false
-    
+     
     enum CodingKeys:String, CodingKey {
         case thumbnail
         case sizeheight

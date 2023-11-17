@@ -73,13 +73,14 @@ final class AddSetVC: EditableVC{
         vm?.passthroughErrorMessage.sink {[weak self] errorMessage in
             self?.alertLackDatas(title: errorMessage)
         }.store(in: &subscription)
+        
         vm?.cardAction.receive(on: RunLoop.main)
             .sink {[weak self] actionType,cardItem in
             guard let self,let cardItem else {return}
             switch actionType{
             case .imageTapped:
                 let addVM = AddImageVM(cardItem: cardItem, setName: self.vm?.setItem?.title ?? "")
-                addVM.ircSnapShot = self.vm?.IRC.snapshot
+                addVM.ircSnapShot = self.vm?.ircSnapshot
                 let vc = AddImageVC()
                 vc.vm = addVM
                 addVM.passthorughImgID.sink {[weak self] (imagesID,ircSnapShot) in
@@ -87,17 +88,30 @@ final class AddSetVC: EditableVC{
                     var newCardItem = cardItem
                     newCardItem.imageID = imagesID
                     vm?.updatedCardItem.send((newCardItem,true))
-                    vm?.IRC.apply(ircSnapShot)
+                    vm?.ircSnapshot = ircSnapShot
                 }.store(in: &subscription)
                 navigationController?.pushViewController(vc, animated: true)
             case .delete: dataSource.deleteItem(cardItem: cardItem)
             }
         }.store(in: &subscription)
+        
         vm?.setAction.sink { [weak self] actionType, setItem in
             guard let self else {return}
             switch actionType{
             case .imageTapped:
-                vm?.photoService.presentPicker(vc: self,multipleSelection: false)
+                let actionVC = CustomAlertController.images {[weak self] in
+                    guard let self else {return}
+                    vm?.presentPicker(vc: self)
+                } search: {[weak self] in
+                    guard let self else {return}
+                    let imageSearchVM = ImageSearchVM(searchText: setItem?.title ?? "", imageLimitCount: 1)
+                    imageSearchVM.delegate = self.vm
+                    let vc = ImageSearchVC()
+                    vc.vm = imageSearchVM
+                    let nav = UINavigationController(rootViewController: vc)
+                    self.present(nav, animated: true)
+                }
+                self.present(actionVC,animated: true)
             }
         }.store(in: &subscription)
         

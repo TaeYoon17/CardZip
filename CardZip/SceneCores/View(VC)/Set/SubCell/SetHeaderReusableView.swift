@@ -18,7 +18,7 @@ final class TopHeaderReusableView: UICollectionReusableView{
                 if let path = item?.imagePath{
                     Task{
                         do{ 
-                            let image = try await UIImage.fetchBy(identifier: path,ofSize: .init(width: 600, height: 600))
+                            let image = try await ImageService.shared.fetchByCache(type: .file, name: path,size: .init(width: 600, height: 600))
                             self.applyImage(image: image)
                             self.errorMessage = ""
                         }catch{

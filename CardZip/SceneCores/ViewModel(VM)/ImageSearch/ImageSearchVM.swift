@@ -10,13 +10,15 @@ import Combine
 import OrderedCollections
 
 final class ImageSearchVM{
+    deinit{ print("ImageSearchVM Deinit completed") }
     let limitedCount: Int
+    weak var delegate: ImageSearchDelegate?
     @Published private(set) var selectedImage: OrderedDictionary<ImageSearch.ID, ImageSearch>  = [:]
     @Published private(set) var imageResults: [ImageSearch] = []
     @Published private(set) var selectedCount:Int = 0
     var searchText: CurrentValueSubject<String,Never>
     
-    var updateItemPassthrough = PassthroughSubject<ImageSearch,ImageSearchError>()
+    var updateItemPassthrough = PassthroughSubject<ImageSearch,Never>()
     var reloadItemsPassthrough = PassthroughSubject<[ImageSearch],Never>()
 
     var loadingStatusPassthrough = PassthroughSubject<Bool,Never>()
@@ -54,27 +56,30 @@ final class ImageSearchVM{
         imageResults = []
         requestNumber = 1
     }
-    
+    func saveDatas(){
+        // selectedImage에 데이터를 저장하면 된다!!
+        delegate?.searchSelectionUpdate(ids: selectedImage.values.map{$0.imagePath})
+    }
 }
-
 extension ImageSearchVM{
     func paginationImage(){
         Task{
             do{
-                let images = try await NetworkService.shared
-                    .searchNaverImage(keyword: self.searchText.value,
+                let images = try await NetworkService.shared.searchNaverImage(keyword: self.searchText.value,
                                       startIndex: self.requestNumber)
                 self.imageResults.append(contentsOf: images)
                 self.requestNumber += 1
+            }catch{
+                self.requestNumber += 1
             }
         }
-        self.requestNumber += 1
+        
     }
         
     func toggleCheckItem(_ item:ImageSearch){
         var item = item
-        if item.isCheck == false && selectedCount > limitedCount{
-            updateItemPassthrough.send(completion: .failure(.overCount))
+        if item.isCheck == false && selectedCount >= limitedCount{
+//            updateItemPassthrough.send(completion: .failure(.overCount))
             return
         }
         item.isCheck.toggle()

@@ -12,6 +12,8 @@
 		630248AD2AF51C7500D76D33 /* ImageSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630248AC2AF51C7500D76D33 /* ImageSearchResponse.swift */; };
 		630248AF2AF51E6100D76D33 /* ImageSearchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630248AE2AF51E6100D76D33 /* ImageSearchable.swift */; };
 		630248B12AF54A6600D76D33 /* ImageSearchVC+Prefetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630248B02AF54A6600D76D33 /* ImageSearchVC+Prefetch.swift */; };
+		6307F0AD2B05C1C900002220 /* AddSetVM+Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6307F0AC2B05C1C900002220 /* AddSetVM+Table.swift */; };
+		6307F0AF2B05FD1400002220 /* ImageSearchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6307F0AE2B05FD1400002220 /* ImageSearchDelegate.swift */; };
 		630947892AE259A90095BFEA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6309478B2AE259A90095BFEA /* InfoPlist.strings */; };
 		6309478F2AE288690095BFEA /* Setting+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6309478E2AE288690095BFEA /* Setting+Image.swift */; };
 		630947912AE2889B0095BFEA /* Setting+Speaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630947902AE2889B0095BFEA /* Setting+Speaker.swift */; };
@@ -65,6 +67,7 @@
 		633BD4B92AD7FCC9006D6955 /* CardVC+Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633BD4B82AD7FCC9006D6955 /* CardVC+Delegate.swift */; };
 		633DA7392AE3C06D0047C138 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 633DA7382AE3C06D0047C138 /* Lottie */; };
 		634CF0182AF0D7CE00BEF819 /* ImageSearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634CF0172AF0D7CE00BEF819 /* ImageSearchVC.swift */; };
+		634ECA4D2B04CECA00F637FD /* SearchViewToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634ECA4C2B04CECA00F637FD /* SearchViewToolbarView.swift */; };
 		63548F5F2AF0AA0900C16CCA /* NaverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63548F5E2AF0AA0900C16CCA /* NaverRouter.swift */; };
 		63548F612AF0AAAE00C16CCA /* SearchRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63548F602AF0AAAE00C16CCA /* SearchRouter.swift */; };
 		63552A3B2AD4DCAB00A7063A /* CardItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63552A3A2AD4DCAB00A7063A /* CardItem.swift */; };
@@ -200,6 +203,8 @@
 		630248AC2AF51C7500D76D33 /* ImageSearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearchResponse.swift; sourceTree = "<group>"; };
 		630248AE2AF51E6100D76D33 /* ImageSearchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearchable.swift; sourceTree = "<group>"; };
 		630248B02AF54A6600D76D33 /* ImageSearchVC+Prefetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageSearchVC+Prefetch.swift"; sourceTree = "<group>"; };
+		6307F0AC2B05C1C900002220 /* AddSetVM+Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddSetVM+Table.swift"; sourceTree = "<group>"; };
+		6307F0AE2B05FD1400002220 /* ImageSearchDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearchDelegate.swift; sourceTree = "<group>"; };
 		6309478E2AE288690095BFEA /* Setting+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Setting+Image.swift"; sourceTree = "<group>"; };
 		630947902AE2889B0095BFEA /* Setting+Speaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Setting+Speaker.swift"; sourceTree = "<group>"; };
 		630947922AE288AE0095BFEA /* Setting+Information.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Setting+Information.swift"; sourceTree = "<group>"; };
@@ -250,6 +255,7 @@
 		633BD4B62AD7F1E1006D6955 /* CardFrontView+Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardFrontView+Cell.swift"; sourceTree = "<group>"; };
 		633BD4B82AD7FCC9006D6955 /* CardVC+Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CardVC+Delegate.swift"; sourceTree = "<group>"; };
 		634CF0172AF0D7CE00BEF819 /* ImageSearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSearchVC.swift; sourceTree = "<group>"; };
+		634ECA4C2B04CECA00F637FD /* SearchViewToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewToolbarView.swift; sourceTree = "<group>"; };
 		63548F5E2AF0AA0900C16CCA /* NaverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverRouter.swift; sourceTree = "<group>"; };
 		63548F602AF0AAAE00C16CCA /* SearchRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRouter.swift; sourceTree = "<group>"; };
 		63552A3A2AD4DCAB00A7063A /* CardItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardItem.swift; sourceTree = "<group>"; };
@@ -795,6 +801,7 @@
 			children = (
 				639976BE2AEA0D7600561439 /* AddSetItemCellVM.swift */,
 				631331772AD3F56F00459515 /* AddSetVM.swift */,
+				6307F0AC2B05C1C900002220 /* AddSetVM+Table.swift */,
 				639976C42AEA792A00561439 /* AddSetHeaderVM.swift */,
 			);
 			path = AddSetScene;
@@ -869,12 +876,12 @@
 				63A3D4372ACE3CC000E6B10E /* SceneComponents */,
 				63A3D42D2ACE3C3900E6B10E /* Model */,
 				63A3D42C2ACE3C1E00E6B10E /* View(VC) */,
-				63A3D42B2ACE3C1700E6B10E /* ViewModel */,
+				63A3D42B2ACE3C1700E6B10E /* ViewModel(VM) */,
 			);
 			path = SceneCores;
 			sourceTree = "<group>";
 		};
-		63A3D42B2ACE3C1700E6B10E /* ViewModel */ = {
+		63A3D42B2ACE3C1700E6B10E /* ViewModel(VM) */ = {
 			isa = PBXGroup;
 			children = (
 				632F91ED2AF8E698001784C0 /* ImageViewer */,
@@ -885,7 +892,7 @@
 				63F27D3C2AE600ED007A11A0 /* MainVM.swift */,
 				63ADFE992AE6483400C03B5E /* SetListVM.swift */,
 			);
-			path = ViewModel;
+			path = "ViewModel(VM)";
 			sourceTree = "<group>";
 		};
 		63A3D42C2ACE3C1E00E6B10E /* View(VC) */ = {
@@ -1014,6 +1021,7 @@
 			isa = PBXGroup;
 			children = (
 				63A9A3D02AF1FFCA00F9A147 /* ImageSearchVM.swift */,
+				6307F0AE2B05FD1400002220 /* ImageSearchDelegate.swift */,
 			);
 			path = ImageSearch;
 			sourceTree = "<group>";
@@ -1024,6 +1032,7 @@
 				63A9A3CB2AF1FC3A00F9A147 /* ImageSearchDS.swift */,
 				63C3EC362AF1F8F700A426EC /* ImagePreviewVC.swift */,
 				63A9A3D22AF2425400F9A147 /* ImageSearchCell.swift */,
+				634ECA4C2B04CECA00F637FD /* SearchViewToolbarView.swift */,
 			);
 			path = SubViews;
 			sourceTree = "<group>";
@@ -1161,6 +1170,7 @@
 				636C51E62ADCC5770087A1A4 /* ViewControllerExtensions.swift in Sources */,
 				63A0E35D2AE4471D00E6DAAB /* CardVM.swift in Sources */,
 				631331712AD3F3B000459515 /* AddItemCell.swift in Sources */,
+				6307F0AD2B05C1C900002220 /* AddSetVM+Table.swift in Sources */,
 				63ADFE9C2AE6485900C03B5E /* SetListDataSource.swift in Sources */,
 				6365712A2AD6D6BB008126C4 /* SetListVC+Collectionable.swift in Sources */,
 				633BD4B32AD7DF2A006D6955 /* CardVC+Registration.swift in Sources */,
@@ -1202,6 +1212,7 @@
 				63730F6F2AD28F3900BC8F35 /* TableRepository.swift in Sources */,
 				632A484E2ACCE81B00413AF4 /* ViewController.swift in Sources */,
 				639976C52AEA792A00561439 /* AddSetHeaderVM.swift in Sources */,
+				6307F0AF2B05FD1400002220 /* ImageSearchDelegate.swift in Sources */,
 				630248B12AF54A6600D76D33 /* ImageSearchVC+Prefetch.swift in Sources */,
 				6313317A2AD3FA7A00459515 /* AddSet+Collectionable.swift in Sources */,
 				63A3D43F2ACE3EDD00E6B10E /* NavBarButton.swift in Sources */,
@@ -1245,6 +1256,7 @@
 				63F27D3F2AE6019E007A11A0 /* MainDataSource.swift in Sources */,
 				63A9A3D32AF2425400F9A147 /* ImageSearchCell.swift in Sources */,
 				630248A92AF519C500D76D33 /* ResponseWrapper.swift in Sources */,
+				634ECA4D2B04CECA00F637FD /* SearchViewToolbarView.swift in Sources */,
 				63A2F8EC2AEBD1D8000A2C89 /* SetVC+DS.swift in Sources */,
 				6365712E2AD6DAA6008126C4 /* SetListVC+Delegate.swift in Sources */,
 				635C3BD12ADFFB0500994BD8 /* NavTitleView.swift in Sources */,

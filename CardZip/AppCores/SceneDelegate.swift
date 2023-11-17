@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UINavigationBar.appearance().barTintColor = .bg.withAlphaComponent(0.1)
         UINavigationBar.appearance().tintColor = .cardPrimary
         UITextField.appearance().tintColor = .cardPrimary
-        
+        _ = IRC.shared
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
 //        if #available(iOS 13.0, *) {

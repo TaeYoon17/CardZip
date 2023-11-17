@@ -26,6 +26,7 @@ final class AddImageVC: ImageViewerVC{
                 self?.activitiIndicator.stopAnimating()
             }
         }.store(in: &subscription)
+        self.closeBtn.title = self.vm.cardItem?.title ?? ""
     }
     
     lazy var navDoneBtn = {
@@ -52,9 +53,7 @@ final class AddImageVC: ImageViewerVC{
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     deinit{ print("AddImageVC가 사라짐!!") }
-    override func configureCollectionView(){
-        collectionViewConfig()
-    }
+    override func configureCollectionView(){ collectionViewConfig() }
     override func closeBtnAction() {
         if !vm.selection.isEmpty{
             let alert = UIAlertController(title: "Do you want to save?".localized, message: "Save the image".localized, preferredStyle: .alert)

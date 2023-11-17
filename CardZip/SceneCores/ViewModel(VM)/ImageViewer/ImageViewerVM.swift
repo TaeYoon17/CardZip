@@ -24,7 +24,7 @@ class ImageViewerVM{
     }
     @Published @MainActor private(set) var selection: [ String] = []
     
-    var imageCount = CurrentValueSubject<Int, Never>(-1)
+    var imageCount = CurrentValueSubject<Int, Never>(0)
     var subscription = Set<AnyCancellable>()
     init(cardItem: CardItem,setName:String){
         self.cardItem = cardItem

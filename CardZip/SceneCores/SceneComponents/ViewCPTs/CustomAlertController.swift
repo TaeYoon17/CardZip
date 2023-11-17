@@ -23,6 +23,26 @@ final class CustomAlertController: UIAlertController{
         self.addAction(.init(title: "취소", style: .cancel))
     }
 }
+extension CustomAlertController{
+    static func images(album:@escaping ()->(),search:@escaping ()->(),camera:(()->())? = nil)-> CustomAlertController{
+        if let camera{
+            CustomAlertController(actionList: [
+                //MARK: -- 앨범 이미지 추가
+                .init(title: "Photo album".localized,systemName:  "folder.badge.plus",completion: album),
+                //MARK: -- 검색 이미지 추가
+                .init(title: "Search", systemName: "magnifyingglass", completion: search),
+                .init(title: "Camera", systemName: "camera", completion: camera)
+            ])
+        }else{
+            CustomAlertController(actionList: [
+                //MARK: -- 앨범 이미지 추가
+                .init(title: "Photo album".localized,systemName:  "folder.badge.plus",completion: album),
+                //MARK: -- 검색 이미지 추가
+                    .init(title: "Search", systemName: "magnifyingglass", completion: search)
+            ])
+        }
+    }
+}
 extension UIAlertAction{
     convenience init(title:String,systemName: String?,completion:@escaping ()->()) {
         self.init(title: title, style: .default) { _ in
@@ -34,6 +54,7 @@ extension UIAlertAction{
     }
 }
 
+
 final class BackAlertController: UIAlertController{
     required init?(coder: NSCoder) {
         fatalError("Don't use storyboard")
@@ -43,7 +64,7 @@ final class BackAlertController: UIAlertController{
     }
     convenience init(title: String,vc: UIViewController!) {
         self.init(nibName: nil, bundle: nil)
-    
+        
         view.tintColor = .cardPrimary
         view.backgroundColor = .bg.withAlphaComponent(0.33)
         view.alpha = 0.95

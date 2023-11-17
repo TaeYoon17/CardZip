@@ -18,10 +18,10 @@ extension AddImageVC{
                 return collectionView.dequeueConfiguredReusableCell(using: addRegistration, for: indexPath, item: itemIdentifier)
             }else{
                 let cell = collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: itemIdentifier)
-                
                 cell.deleteAction = { [weak self] in
                     let actionSheet = CustomAlertController(actionList: [
                         .init(title: "Delete".localized, systemName: "trash", completion: {[weak self] in
+                            self?.vm.deleteSelection(id: itemIdentifier)
                             self?.deleteCell(item: itemIdentifier)
                         })])
                     self?.present(actionSheet, animated: true)

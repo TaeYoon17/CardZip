@@ -30,26 +30,17 @@ extension AddImageVC{
     var addRegistration: UICollectionView.CellRegistration<AddItemCell,String>{
         UICollectionView.CellRegistration{[weak self] cell, indexPath, itemIdentifier in
             cell.action = { [weak self] in
-                
-                let actionSheet = CustomAlertController(actionList: [
-                //MARK: -- 앨범 이미지 추가
-                    .init(title: "Photo album".localized,
-                          systemName:  "folder.badge.plus",
-                          completion: {[weak self] in
-                              guard let self else {return}
-//                              photoService.presentPicker(vc: self,multipleSelection: true,prevIdentifiers: getCurrentImageIds())
-                              vm.presentPicker(vc: self)
-                          }),
-                //MARK: -- 검색 이미지 추가
-                    .init(title: "Search", systemName: "magnifyingglass", completion: { [weak self] in
-                        let vc = ImageSearchVC()
-                        let nav = UINavigationController(rootViewController: vc)
-                        self?.present(nav, animated: true)
-                    }),
-//                    .init(title: "Camera", systemName: "camera", completion: { [weak self] in
-//                        print("카메라")
-//                    })
-                ])
+                let actionSheet = CustomAlertController.images {[weak self] in
+                    guard let self else {return}
+                    vm.presentPicker(vc: self)
+                } search: { [weak self] in
+                    let imageVM = ImageSearchVM(searchText: self?.vm.cardItem.title ?? "", imageLimitCount: 10 - (self?.vm.imageCount.value ?? 0))
+                    imageVM.delegate = self?.vm
+                    let vc = ImageSearchVC()
+                    vc.vm = imageVM
+                    let nav = UINavigationController(rootViewController: vc)
+                    self?.present(nav, animated: true)
+                }
                 self?.present(actionSheet, animated: true)
             }
         }

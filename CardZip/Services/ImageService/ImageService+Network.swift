@@ -22,7 +22,6 @@ extension ImageService{
             "\(link)_\(Int(size.width))_\(Int(size.height))"
         }else { "\(link)" }
         guard nil == searchCache.object(forKey: keyStr as NSString) else {
-            print("이미 존재하는 아이템")
             return
         }
         do{

@@ -53,6 +53,21 @@ final class ImageService{
             }
         }
     }
+    func saveToDocumentBy(searchURL: String,fileName:String) async{
+        let image = try? await UIImage.fetchBy(link: searchURL)
+        if !FileManager.checkExistDocument(fileName: fileName, type: .jpg){
+            image?.saveToDocument(fileName: searchURL.getLocalPathName(type: .search))
+        }
+    }
+    func saveToDocumentBy(searchURLs:[String],fileNames:[String]) async{
+        await withThrowingTaskGroup(of: Void.self) {[weak self] group in
+            for (searchURL,fileName) in zip(searchURLs,fileNames) {
+                group.addTask{[weak self] in
+                    await self?.saveToDocumentBy(searchURL: searchURL,fileName: fileName)
+                }
+            }
+        }
+    }
     //    func saveToDocument(fileName: String) async {
     //        let name = if fileName.contains("albumImage"){
     //            fileName.replacingOccurrences(of: "albumImage", with: "")

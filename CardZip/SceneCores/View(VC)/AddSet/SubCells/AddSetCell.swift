@@ -20,7 +20,7 @@ extension AddSetVC{
                     titleField.text = setItem.title
                     descriptionField.text = setItem.setDescription
                     Task{
-                        if let imagePath = setItem.imagePath,let image = try await ImageService.shared.fetchByCache(albumID: imagePath){
+                        if let imagePath = setItem.imagePath,let image = try await ImageService.shared.fetchByCache(type: .file, name: imagePath, size: .init(width: 720, height: 720)){
                             self.emptyBtn.alpha = 0
                             self.editBtn.alpha = 1
                             UIView.imageAppear(view: self.editBtn) {
@@ -132,15 +132,14 @@ extension AddSetVC{
         override func configureView() {
             super.configureView()
             contentView.backgroundColor = .lightBg
-            
             titleField.attributedPlaceholder = NSAttributedString(
                 string: "Enter a set title".localized,
-                attributes: [NSAttributedString.Key.foregroundColor: UIColor.cardPrimary,
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray,
                              NSAttributedString.Key.font : UIFont.systemFont(ofSize: 21, weight: .medium)]
             )
             descriptionField.attributedPlaceholder = NSAttributedString(
                 string: "Enter a description".localized,
-                attributes: [NSAttributedString.Key.foregroundColor: UIColor.cardPrimary,
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray,
                              NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17, weight: .medium)]
             )
             editBtn.alpha = 0
