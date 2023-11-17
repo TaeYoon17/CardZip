@@ -69,6 +69,7 @@ final class SetVM{
             print("DBKey가 없음!!")
         }
         self.recentSetId = nil
+        Task{ await SetItem.removeAllIRC(item: setItem) }
     }
     
     @MainActor func updateCardTable(item: CardItem){

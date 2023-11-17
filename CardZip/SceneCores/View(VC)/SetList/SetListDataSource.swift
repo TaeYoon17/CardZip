@@ -65,6 +65,7 @@ extension SetListVC{
         }
         func deleteSetItem(_ id: SetItem.ID){
             guard let item:SetItem = setModel.fetchByID(id),let dbKey = item.dbKey else {return}
+            Task{ await SetItem.removeAllIRC(item: item) }
             var subItems = sectionModel.fetchByID(.main).subItems
             subItems.removeAll(where: { $0 == id })
             setModel.removeModel(id)

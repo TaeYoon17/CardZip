@@ -21,7 +21,7 @@ extension SetListVC:UITableViewDataSourcePrefetching{
             Task{
                 let image: UIImage?
                 if let path = item.imagePath{
-                    image = try await ImageService.shared.fetchByCache(albumID: path,size: .init(width: 360, height: 360))?.byPreparingThumbnail(ofSize: .init(width: 360, height: 360))
+                    image = try await ImageService.shared.fetchByCache(type: .file, name: path, size: .init(width: 360, height: 360))
                 }else {
                     image = UIImage(systemName: "questionmark.circle", ofSize: 32, weight: .medium)!
                 }
@@ -36,7 +36,8 @@ extension SetListVC:UITableViewDataSourcePrefetching{
                let item = dataSource.setModel.fetchByID(itemID),
                let imagePath = item.imagePath{                
                 Task{
-                    try await ImageService.shared.appendCache(albumID:imagePath, size:.init(width: 360, height: 360))
+                    try await ImageService.shared.appendCache(type:.file,name: imagePath,size:.init(width: 360, height: 360))
+//                    (albumID:imagePath, size:.init(width: 360, height: 360))
                 }
             }
         }

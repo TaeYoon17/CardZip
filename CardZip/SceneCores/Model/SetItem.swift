@@ -52,3 +52,16 @@ extension SetItem{
         return SetItem(table: item)
     }
 }
+extension SetItem{
+    //MARK: -- 세트 삭제 시 세트 헤더 + 카드 셀 이미지들 IRC Minus
+    static func removeAllIRC(item: SetItem)async{
+        var ircSnapshot = IRC.shared.snapshot
+        if let setImageFileName = item.imagePath{
+            await ircSnapshot.minusCount(id: setImageFileName)
+        }
+        let fileNames = item.cardList.flatMap({ $0.imageID })
+        await fileNames.asyncForEach{await ircSnapshot.minusCount(id: $0)}
+        IRC.shared.apply(ircSnapshot)
+        await IRC.shared.saveRepository()
+    }
+}

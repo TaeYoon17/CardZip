@@ -50,6 +50,7 @@ final class AddSetVM:ImageSearchDelegate{
             self.setItem = setItem
         }
         bindPhPicker()
+        bindCardAction()
     }
     
     func bindPhPicker() {
@@ -96,9 +97,29 @@ final class AddSetVM:ImageSearchDelegate{
             await ircSnapshot.minusCount(id:prev)
         }
     }
+    func ircSnapshotDelete(fileName:String) async {
+        await ircSnapshot.minusCount(id: fileName)
+    }
     func presentPicker(vc: UIViewController){
 //        현재 다운받은 이미지에서 앨범에 존재하는 이미지를 추출해야한다.
         self.vc = vc
         photoService.presentPicker(vc: vc,multipleSelection: false)
+    }
+}
+extension AddSetVM{
+    func bindCardAction(){
+        cardAction.sink {[weak self] (actionType,cardItem) in
+            switch actionType{
+            case .delete:
+                guard let cardItem else {return}
+                // 현재 수정 및 추가인 IRC Snapshot에 맞게 바뀌어야한다.
+                Task{[weak self] in
+                    await cardItem.imageID.asyncForEach { fileName in
+                        await self?.ircSnapshot.minusCount(id: fileName)
+                    }
+                }
+            case .imageTapped:break
+            }
+        }.store(in: &subscription)
     }
 }
