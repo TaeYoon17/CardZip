@@ -51,7 +51,5 @@ extension UICollectionView {
         let lastRow = numberOfItems(inSection: lastSection)
         let indexPath = IndexPath(row: lastRow - 1, section: lastSection)
         scrollToItem(at: indexPath, at: .bottom, animated: true)
-
-//        moveToFrame(contentOffset: self.contentSize.height - 100, axis: .y)
     }
 }

@@ -34,9 +34,9 @@ final class SetVC: BaseVC{
                 let alertVC = CustomAlertController(actionList: [
                     .init(title: "Edit".localized, systemName: "pencil", completion: { [weak self] in
                         guard let self else {return}
-                        self.addSetVM = AddSetVM(dataProcess: .edit, setItem: vm.setItem)
-                        let vc = AddSetVC()
-                        vc.vm = addSetVM
+//                        self.addSetVM =
+                        let vc = AddSetVC(vm:AddSetVM(dataProcess: .edit, setItem: vm.setItem))
+//                        vc.vm = addSetVM
                         vc.modalPresentationStyle = .pageSheet
                         self.addSetVM?.passthroughEditSet.sink {[weak self] item in
                             guard let self else {return}

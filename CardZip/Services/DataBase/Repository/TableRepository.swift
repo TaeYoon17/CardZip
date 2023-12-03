@@ -90,31 +90,69 @@ enum RepositoryError: Error{
         delete(item: obj)
         print("Repository 데이터 삭제 완료")
     }
-    static func getVersion(){
-        do{
-            
-            let config = Realm.Configuration(schemaVersion: 1){ migration, oldSchemaVersion in // 현재 사용하자 사용하는 스키마
-                /// 스키마 추가 삭제는 별도의 내용이 추가 될 필요 없음
-                if oldSchemaVersion < 1 {
-                    migration.enumerateObjects(ofType: CardTable.className()) { oldObject, newObject in
-                        guard let new = newObject else {return}
-                        guard let old = oldObject else {return}
-                        new["imagePathes"] = "요약하기"
+    
+}
+extension AppDelegate{
+    static var nowVersion:UInt64{ 1 }
+    func migration(){
+        var config = Realm.Configuration(schemaVersion: Self.nowVersion){ migration, oldSchemaVersion in // 현재 사용하자 사용하는 스키마
+            /// 스키마 추가 삭제는 별도의 내용이 추가 될 필요 없음
+            if oldSchemaVersion < 1 {
+                migration.enumerateObjects(ofType: CardSetTable.className()) { oldObject, newObject in
+                    guard let new = newObject else {return}
+                    guard let old = oldObject else {return}
+                    print("MigrationGo")
+                    guard let albumID = old["imagePath"] as? String? else {
+                        fatalError("Error Occured!!")
                     }
+                    guard let albumID else {
+                        new["imagePath"] = nil
+                        return
+                    }
+                    let albumFileName = albumID.getLocalPathName(type: .photo)
+                    App.MigrationHelper.shared.appendImageMigration(fileNames: [albumFileName])
+                    new["imagePath"] = albumFileName
+//                    print("--------- new cardsettable")
+//                    print(new)
                 }
-                //                if oldSchemaVersion < 2 {
-                //
-                //                }
-                //            if oldSchemaVersion < 3 {
-                //                migration.renameProperty(onType: DiaryTable.className(), from: "diaryPhoto", to: "photo")
-                //            }
-                //                if oldSchemaVersion < 4 { }
-                //                if oldSchemaVersion < 5{
-                //                    // diarySummary 컬럼 추가, title + contents 합쳐서 넣기
-                
-                //                }
+                migration.enumerateObjects(ofType: CardTable.className()) { oldObject, newObject in
+                    guard let new = newObject else {return}
+                    guard let old = oldObject else {return}
+//                    let albumDynamicList = old.dynamicList("imagePathes")
+                    guard let albumIdList = old["imagePathes"] as? List<String> else {return}
+//                    albumIdList.append(objectsIn: albumDynamicList.map{ $0.description })
+                    let albumIDs = Array(albumIdList)
+                    let albumFileNames = albumIDs.map { $0.getLocalPathName(type: .photo) }
+//                    Task{
+//                        await self.imageMigration(albumFileNames)
+//                    }
+                    App.MigrationHelper.shared.appendImageMigration(fileNames: albumFileNames)
+                    new["imagePathes"] = albumFileNames
+                    print("--------- new setTable")
+                    print(new)
+                }
             }
-            //            Realm.Configuration.defaultConfiguration = config
         }
+        config.schemaVersion = Self.nowVersion
+        Realm.Configuration.defaultConfiguration = config
+                do {
+                    let realm = try Realm()
+                    let version = try schemaVersionAtURL(realm.configuration.fileURL!)
+                    print("Schema version: \(version)")
+                }catch{
+                    print(error)
+                }
     }
+//    private func imageMigration(_ albumFileNames:[String]) async{
+//        _ = ImageRC.shared
+//        var rcSnapshot = ImageRC.shared.snapshot
+//        let saveDocItems = albumFileNames.filter { !rcSnapshot.existItem(id: $0) }
+////        print(saveDocItems)
+//        await ImageService.shared.saveToDocumentBy(photoIDs: saveDocItems)
+//        await albumFileNames.asyncForEach { fileName in
+//            await rcSnapshot.plusCount(id: fileName)
+//        }
+//        ImageRC.shared.apply(rcSnapshot)
+//        await ImageRC.shared.saveRepository()
+//    }
 }

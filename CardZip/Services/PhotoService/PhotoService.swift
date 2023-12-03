@@ -12,26 +12,20 @@ import Combine
 import UIKit
 final class PhotoService{
     static let shared = PhotoService()
-    
     var passthroughIdentifiers = PassthroughSubject<([String],UIViewController),Never>()
+    // RxSwift 사용 시...
+    //  var passthroughIdentifiers:PublishSubject<([String],UIViewController)> = .init()
     private weak var viewController: UIViewController?
-    
-    private init(){
-        
-    }
+    static let limitedNumber = 10
+    private init(){}
     func presentPicker(vc: UIViewController,multipleSelection: Bool = false,prevIdentifiers:[String]? = nil) {
         self.viewController = vc
         let filter = PHPickerFilter.images
         var configuration = PHPickerConfiguration(photoLibrary: .shared())
-        
         configuration.filter = filter
-        
         configuration.preferredAssetRepresentationMode = .automatic
-        
         configuration.selection = .ordered
-        
-        configuration.selectionLimit = multipleSelection ? 10 : 1
-        
+        configuration.selectionLimit = multipleSelection ? Self.limitedNumber : 1
         if let prevIdentifiers{
             configuration.preselectedAssetIdentifiers = prevIdentifiers
         }
@@ -70,7 +64,6 @@ final class PhotoService{
 //            }
 //        }
 //    }
-//
     func checkAuthorization() async{
         
     }
@@ -91,16 +84,19 @@ extension PhotoService: PHPickerViewControllerDelegate{
         let identifiers = results.map(\.assetIdentifier!) // 이미지에 존재하는 identifier만 가져온다.
         guard let viewController else {return}
         passthroughIdentifiers.send((identifiers,viewController))
+        // rx 사용시...
+//                passthroughIdentifiers.onNext((identifiers,viewController))
     }
     
     func displayImage(identifier assetIdentifier:String) async -> UIImage? {
-        
         if let asset: PHAsset = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: nil).firstObject{
             let manager = PHImageManager.default()
             do{
-                let data = try await manager.fetchAssets(asset: asset)
-                let image = UIImage(data: data)
-                return await image?.byPreparingForDisplay()
+//                let data = try await manager.fetchAssets(asset: asset)
+//                let image = UIImage(data: data)
+                let image = try await manager.fetchAssets(asset: asset)
+//                await image?.byPreparingForDisplay()
+                return image
             }catch{
                 return nil
             }

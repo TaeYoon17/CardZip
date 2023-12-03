@@ -56,7 +56,6 @@ extension MainVC{
             guard let sectionType = SectionType(rawValue: indexPath.section) else {return}
             switch sectionType{
             case .setList:
-                print("setListHeaderRegistration","Ssets".localized,"MainSets".localized,"MainFolders".localized)
                 supplementaryView.title = sectionType.title
                 supplementaryView.tapAction = {[weak self] in
                     let vc = SetListVC()

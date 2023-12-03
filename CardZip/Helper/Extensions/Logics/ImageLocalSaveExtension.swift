@@ -33,6 +33,7 @@ extension UIImage{
         let fileURL = documentDir.appendingPathComponent("\(fileName).jpg")
         //3. 이미지 변환 -> 세부 경로 파일을 열어서 저장
         guard let data = self.jpegData(compressionQuality: 1) else {return}
+        print("-------image data",data)
         let mbBytes = bytesToMegabytes(bytes: data.count)
         let maxQuality = min(maxMegaBytes / mbBytes,1) // 모든 이미지 데이터를 5mb 이하로 맞추기
         guard let data = self.jpegData(compressionQuality: maxQuality) else { return }

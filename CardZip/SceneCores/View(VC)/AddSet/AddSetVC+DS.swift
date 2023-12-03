@@ -17,7 +17,7 @@ extension AddSetVC{
         var headerModel : AnyModelStore<SetItem>!
         var sectionModel: AnyModelStore<Section>!
         var subscription = Set<AnyCancellable>()
-        init(vm: AddSetVM,collectionView: UICollectionView, cellProvider: @escaping UICollectionViewDiffableDataSource<AddSetVC.Section.ID, AddSetVC.Item>.CellProvider) {
+        init(vm: AddSetVM!,collectionView: UICollectionView, cellProvider: @escaping UICollectionViewDiffableDataSource<AddSetVC.Section.ID, AddSetVC.Item>.CellProvider) {
             super.init(collectionView: collectionView, cellProvider: cellProvider)
             self.vm = vm
             initModels()
@@ -25,25 +25,12 @@ extension AddSetVC{
                 self?.itemModel.insertModel(item: item)
                 if reloadDS{ self?.reconfigureDataSource(cardItem: item) }
             }.store(in: &subscription)
-            
             vm.updatedSetItem
                 .receive(on: RunLoop.main)
                 .sink { [weak self] (item,reloadDS) in
-                    
                 self?.headerModel.insertModel(item: item)
                 if reloadDS {self?.reconfigureDataSource(setItem: item)}
             }.store(in: &subscription)
-            
-//            vm.photoService.passthroughIdentifiers
-//                .sink {[weak self] (val,vc) in
-//                guard let self,let str = val.first else {return}
-//                guard vc is AddSetVC else {return}
-//                guard let item: Item = snapshot().itemIdentifiers(inSection: .header).first,
-//                      var cardSetItem = headerModel.fetchByID(item.id) else {return}
-//                cardSetItem.imagePath = str
-//                headerModel.insertModel(item: cardSetItem)
-//                reconfigureDataSource(item: item)
-//            }.store(in: &subscription)
         }
         func createItem(){
             let cardItem = CardItem()
@@ -127,7 +114,7 @@ fileprivate extension AddSetVC.DataSource{
     }
     //MARK: -- RECONFIGURE DATASOURCE
     @MainActor func reconfigureDataSource(cardItem: CardItem){
-        var snapshot = snapshot()
+        let snapshot = snapshot()
         guard let item = snapshot.itemIdentifiers(inSection: .cards).first(where: { $0.id == cardItem.id }) else {return}
         reconfigureDataSource(item: item)
     }
@@ -158,10 +145,10 @@ fileprivate extension AddSetVC.DataSource{
         snapshot.appendItems([item], toSection: toSection)
         apply(snapshot,animatingDifferences: false)
         vm.nowItemsCount = getItemsCount
-        snapshot.reloadSections([.cards])
-        Task{
-            await apply(snapshot,animatingDifferences: false)
-        }
+//        snapshot.reloadSections([.cards])
+//        Task{
+//            await apply(snapshot,animatingDifferences: false)
+//        }
     }
     //MARK: -- INIT DATASOURCE
     @MainActor func initDataSource(){

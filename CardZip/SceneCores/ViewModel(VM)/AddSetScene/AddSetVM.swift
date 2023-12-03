@@ -15,23 +15,26 @@ extension AddSetVM{
 }
 final class AddSetVM:ImageSearchDelegate{
     deinit{
+        print("AddSetVM DEINIT!")
+        // 태스크 분리로 ARC 카운트 감소가 늦춰지는데 인스턴스 해제가 일어나는듯..?
         Task.detached{
             ImageService.shared.resetCache(type: .search)
             ImageService.shared.resetCache(type: .album)
         }
-        print("AddSetVM DEINIT!")
     }
     @MainActor let repository = CardSetRepository()
     @MainActor let cardRepository = CardRepository()
-    weak var photoService:PhotoService! = PhotoService.shared
+    
     @Published var dataProcess: DataProcessType
     @Published var nowItemsCount: Int = 0
     @DefaultsState(\.recentSet) var recentKey
     var ircSnapshot: ImageRC.SnapShot = ImageRC.shared.snapshot
+    var firstAddSnapshot: Set<ImageRC.SnapShot.Item.ID> = .init()
     var setItem: SetItem?
     var subscription = Set<AnyCancellable>()
     
     weak var vc: UIViewController!
+    weak var photoService:PhotoService! = PhotoService.shared
     // DataProcessTyppe Edit했을 때 변경 사항을 던져주는 passthrough
     var passthroughEditSet = PassthroughSubject<SetItem,Never>()
     var passthroughCloseAction = PassthroughSubject<Void,Never>() // 닫을 때
@@ -42,6 +45,7 @@ final class AddSetVM:ImageSearchDelegate{
     var cardAction = PassthroughSubject<(CardActionType,CardItem?),Never>()
     var setAction = PassthroughSubject<(SetActionType,SetItem?),Never>()
     init(dataProcess: DataProcessType,setItem: SetItem?){
+        print("AddSetVM Init!!")
         self.dataProcess = dataProcess
         switch dataProcess{
         case.add:
@@ -51,8 +55,17 @@ final class AddSetVM:ImageSearchDelegate{
         }
         bindPhPicker()
         bindCardAction()
+        
     }
-    
+    func notSaveClose(){
+        
+        let newSnapshots = ircSnapshot.instance.values.map{$0.id}
+        let prevSnapshots = ImageRC.shared.instance.values.map{$0.id}
+        print(newSnapshots)
+        print(prevSnapshots)
+        Set(newSnapshots).subtracting(prevSnapshots).forEach { UIImage.removeFromDocument(fileName: $0) }
+        
+    }
     func bindPhPicker() {
         photoService.passthroughIdentifiers.sink {[weak self] val,vc in
             guard let self,self.vc == vc,let newAlbumID = val.first else {return}
@@ -63,7 +76,7 @@ final class AddSetVM:ImageSearchDelegate{
                 guard let self else {return}
                 if !self.ircSnapshot.existItem(id: newFileName){
                     await ImageService.shared.saveToDocumentBy(photoIDs:[newAlbumID])
-//                    await IRC.shared.insertRepository(item: ImageItem(name: newFileName, count: 0))
+                    self.firstAddSnapshot.insert(newFileName)
                 }
                 if let setItem{ updatedSetItem.send((setItem,true)) }
                 Task.detached {
@@ -86,8 +99,8 @@ final class AddSetVM:ImageSearchDelegate{
                 await IRC.shared.insertRepository(item: ImageItem(name: newFileName, count: 0))
             }
             if let setItem{ updatedSetItem.send((setItem,true)) }
-            Task.detached {
-                await self.ircSnapshotUpdate(new: newFileName, prev: prevFileName)
+            Task.detached {[weak self] in
+                await self?.ircSnapshotUpdate(new: newFileName, prev: prevFileName)
             }
         }
     }
@@ -101,7 +114,7 @@ final class AddSetVM:ImageSearchDelegate{
         await ircSnapshot.minusCount(id: fileName)
     }
     func presentPicker(vc: UIViewController){
-//        현재 다운받은 이미지에서 앨범에 존재하는 이미지를 추출해야한다.
+        //        현재 다운받은 이미지에서 앨범에 존재하는 이미지를 추출해야한다.
         self.vc = vc
         photoService.presentPicker(vc: vc,multipleSelection: false)
     }

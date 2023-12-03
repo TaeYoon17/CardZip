@@ -12,4 +12,3 @@ extension CGSize{
         self.init(width: original.width * ratio, height: original.height * ratio)
     }
 }
-

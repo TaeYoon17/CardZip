@@ -28,10 +28,16 @@ extension UIImage{
         if let asset: PHAsset = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: options).firstObject{
             let manager = PHImageManager.default()
             do{
-                let data = try await manager.fetchAssets(asset: asset)
-                let image = UIImage(data: data)
-                return await image?.byPreparingForDisplay()
-            }catch{ return nil }
+//                print("-----------",asset)
+//                let data = try await manager.fetchAssets(asset: asset)
+//                let image = UIImage(data: data)
+                let image = try await manager.fetchAssets(asset: asset)
+//                return await image?.byPreparingForDisplay()
+                return image
+            }catch{
+                print("여기가 문제였어",error)
+                return nil
+            }
         }
         return nil
     }
@@ -41,8 +47,9 @@ extension UIImage{
         if let asset: PHAsset = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: options).firstObject{
             let manager = PHImageManager.default()
             do{
-                let data = try await manager.fetchAssets(asset: asset)
-                let image = UIImage(data: data)
+//                let data = try await manager.fetchAssets(asset: asset)
+//                let image = UIImage(data: data)
+                let image = try await manager.fetchAssets(asset: asset)
                 let img = if let ofSize{
                     await image?.byPreparingThumbnail(ofSize: ofSize)
                 }else{

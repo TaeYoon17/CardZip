@@ -67,8 +67,9 @@ extension AddSetVC{
     }
     
     var cellItemHeaderRegistration: UICollectionView.SupplementaryRegistration<AddSetItemHeader>{
-        UICollectionView.SupplementaryRegistration(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView,elementKind,indexPath in
+        UICollectionView.SupplementaryRegistration(elementKind: UICollectionView.elementKindSectionHeader) {[weak self] supplementaryView,elementKind,indexPath in
             supplementaryView.title = "Cards"
+            supplementaryView.vm = self?.vm
         }
     }
 }

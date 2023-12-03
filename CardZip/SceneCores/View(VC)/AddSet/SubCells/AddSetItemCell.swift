@@ -143,7 +143,6 @@ extension AddSetVC{
             btn.configuration = config
             return btn
         }()
-        //        var detailTapped: (()->Void)?
         override func configureLayout() {
             super.configureLayout()
             [stView,detailBtn,imageShowView,deleteBtn].forEach { contentView.addSubview($0)}

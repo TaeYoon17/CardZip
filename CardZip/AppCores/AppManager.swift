@@ -10,9 +10,7 @@ import SnapKit
 extension App{
     final class Manager{
         static let shared = Manager()
-        
         @DefaultsState(\.likedSet) var liked
-//        @DefaultsState(\.termLanguageCode) var rawTermCode
         @DefaultsState(\.descriptionLanguageCode) var descriptionLanguageCode
         @DefaultsState(\.termLanguageCode) var termLanguageCode
         private init(){ }
@@ -57,6 +55,28 @@ extension App{
                 setItem.title = "Pin Memorize Intensively".localized
                 setRepository?.updateHead(set: setTable, setItem: setItem)
             }
+        }
+        
+    }
+    final class MigrationHelper{
+        static let shared = MigrationHelper()
+        private init(){}
+        private var migraionImages:[String] = []
+        func appendImageMigration(fileNames:[String]){
+            migraionImages.append(contentsOf: fileNames)
+        }
+        @MainActor func imageMigration() async {
+//            _ = ImageRC.shared
+//            var rcSnapshot = ImageRC.shared.snapshot
+//            let saveDocItems = migraionImages.filter { !rcSnapshot.existItem(id: $0) }
+            print(migraionImages)
+            await ImageService.shared.saveToDocumentBy(photoIDs: migraionImages)
+//            await migraionImages.asyncForEach { fileName in
+//                await rcSnapshot.plusCount(id: fileName)
+//            }
+//            ImageRC.shared.apply(rcSnapshot)
+//            print(ImageRC.shared.instance)
+//            await ImageRC.shared.saveRepository()
         }
     }
 }

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -20,9 +19,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UINavigationBar.appearance().barTintColor = .bg.withAlphaComponent(0.1)
         UINavigationBar.appearance().tintColor = .cardPrimary
         UITextField.appearance().tintColor = .cardPrimary
-        _ = IRC.shared
+        
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
+        
 //        if #available(iOS 13.0, *) {
 //            // ✅ iOS 13 부터는 다크모드로만 제한.
 //            window?.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark

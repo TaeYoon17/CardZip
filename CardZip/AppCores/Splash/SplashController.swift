@@ -38,6 +38,9 @@ final class SplashController: BaseVC{
                 try? await self?.pushVC()
             }
         }
+        Task{@MainActor in
+                await App.MigrationHelper.shared.imageMigration()
+        }
     }
     @MainActor func pushVC() async throws{
         let vc = MainVC()

@@ -68,18 +68,4 @@ final class ImageService{
             }
         }
     }
-    //    func saveToDocument(fileName: String) async {
-    //        let name = if fileName.contains("albumImage"){
-    //            fileName.replacingOccurrences(of: "albumImage", with: "")
-    //        }else{fileName}
-    //    }
-    //    func saveToDocument(fileNames: [String]) async{
-    //        await withThrowingTaskGroup(of: Void.self) {[weak self] group in
-    //            for fileName in fileNames {
-    //                group.addTask{[weak self] in
-    //                    await self?.saveToDocument(fileName: fileName)
-    //                }
-    //            }
-    //        }
-    //    }
 }

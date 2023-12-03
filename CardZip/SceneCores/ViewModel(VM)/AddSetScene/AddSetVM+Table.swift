@@ -22,7 +22,7 @@ extension AddSetVM{
             try repository?.cardRespository?.deleteTableBy(tableID: cardItem.dbKey)
             print("데베에 있어서 삭제하는 데이터")
         }catch{
-            print("데베에 없어서 삭제 못하는 데이터")
+//            print("데베에 없어서 삭제 못하는 데이터")
         }
     }
     @MainActor func saveRepository(setItem: SetItem,cardItems:[CardItem]){

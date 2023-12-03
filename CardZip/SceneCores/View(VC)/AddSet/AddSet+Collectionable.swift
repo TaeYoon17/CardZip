@@ -17,8 +17,8 @@ extension AddSetVC:Collectionable,UICollectionViewDelegate{
         let editCellRegi = setCardRegistration
         let headerCellRegi = setHeaderRegistration
         let itemHeaderReigi = cellItemHeaderRegistration
-        guard let vm else {return}
-        dataSource = DataSource(vm:vm,collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+//        guard let vm else {return}
+        dataSource = DataSource(vm:vm,collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
             switch itemIdentifier.type{
             case .cards:
                 let cell:AddSetVC.AddSetItemCell = collectionView.dequeueConfiguredReusableCell(using: editCellRegi, for: indexPath, item: itemIdentifier)
@@ -28,7 +28,8 @@ extension AddSetVC:Collectionable,UICollectionViewDelegate{
                 return cell
             }
        })
-        dataSource.supplementaryViewProvider = {collectionView, kind, indexPath in
+        dataSource.supplementaryViewProvider = {[weak self]collectionView, kind, indexPath in
+            guard let self else {return nil}
             switch kind{
             case "LayoutHeader":
                 return collectionView.dequeueConfiguredReusableSupplementary(using: layoutHeaderRegi, for: indexPath)

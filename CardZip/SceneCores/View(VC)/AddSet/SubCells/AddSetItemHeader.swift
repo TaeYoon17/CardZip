@@ -7,8 +7,18 @@
 
 import SnapKit
 import UIKit
-
+import Combine
 final class AddSetItemHeader: UICollectionReusableView{
+    weak var vm: AddSetVM!{
+        didSet{
+            guard let vm else {return}
+            subscription.removeAll()
+            vm.$nowItemsCount.sink { [weak self] cnt in
+                self?.count = cnt
+            }.store(in: &subscription)
+        }
+    }
+    private var subscription = Set<AnyCancellable>()
     var title:String?{
         didSet{
             label.text = title

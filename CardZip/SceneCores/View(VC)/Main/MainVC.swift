@@ -62,22 +62,20 @@ final class MainVC: BaseVC {
         let btn = NewCardSetBtn()
         btn.addAction(.init(handler: {[weak self] _ in
             guard let self else {return}
-            let vm = AddSetVM(dataProcess: .add, setItem: nil)
-            let vc = AddSetVC()
-            vc.vm = vm
-            vm.passthroughEditSet
-                .receive(on: RunLoop.main)
-                .sink(receiveValue: { [weak self ] setItem in
-                    guard let self else {return}
-                    vm.recentKey = setItem.dbKey
-                    print("이거 가져온다")
-                    let setvc = SetVC()
-                    let setVM = SetVM(setItem: setItem)
-                    setvc.vm = setVM
-                    Task{
-                        self.navigationController?.pushViewController(setvc, animated: true)
-                    }
-                }).store(in: &subscription)
+            let vc = AddSetVC(vm:.init(dataProcess: .add, setItem: nil))
+//            vm.passthroughEditSet
+//                .receive(on: RunLoop.main)
+//                .sink(receiveValue: { [weak self ] setItem in
+//                    guard let self else {return}
+//                    vm.recentKey = setItem.dbKey
+//                    print("이거 가져온다")
+//                    let setvc = SetVC()
+//                    let setVM = SetVM(setItem: setItem)
+//                    setvc.vm = setVM
+//                    Task{@MainActor [weak self] in
+//                        self?.navigationController?.pushViewController(setvc, animated: true)
+//                    }
+//                }).store(in: &subscription)
             let nav = UINavigationController(rootViewController: vc)
             self.present(nav, animated: true)
         }), for: .touchUpInside)
