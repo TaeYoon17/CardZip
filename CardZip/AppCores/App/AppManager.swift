@@ -59,24 +59,31 @@ extension App{
         
     }
     final class MigrationHelper{
-        static let shared = MigrationHelper()
+        static var shared:MigrationHelper? = MigrationHelper()
         private init(){}
+        deinit{
+            print("사라진다...")
+        }
         private var migraionImages:[String] = []
         func appendImageMigration(fileNames:[String]){
             migraionImages.append(contentsOf: fileNames)
         }
-        @MainActor func imageMigration() async {
-//            _ = ImageRC.shared
-//            var rcSnapshot = ImageRC.shared.snapshot
-//            let saveDocItems = migraionImages.filter { !rcSnapshot.existItem(id: $0) }
-            print(migraionImages)
-            await ImageService.shared.saveToDocumentBy(photoIDs: migraionImages)
-//            await migraionImages.asyncForEach { fileName in
-//                await rcSnapshot.plusCount(id: fileName)
-//            }
-//            ImageRC.shared.apply(rcSnapshot)
-//            print(ImageRC.shared.instance)
-//            await ImageRC.shared.saveRepository()
+        func imageMigration() async {
+            // 이미지 참조 목록 생성하기, 마이그레이션 시 아무것도 없어야한다.
+            var rcSnapshot = ImageRC.shared.snapshot
+            guard rcSnapshot.instance.isEmpty else{
+                fatalError("It's not first migration")
+            }
+            // 위의 이미지 중 중복되지 않게 저장
+            await ImageService.shared.saveToDocumentBy(photoIDs: Set(migraionImages).map{$0.extractID(type: .photo)})
+            // 각각 이미지 참조 개수 증가
+            await migraionImages.asyncForEach {
+                await rcSnapshot.plusCount(id: $0)
+            }
+            // 새 참조 개수 적용
+            ImageRC.shared.apply(rcSnapshot)
+            // DB에 저장
+            await ImageRC.shared.saveRepository()
         }
     }
 }
