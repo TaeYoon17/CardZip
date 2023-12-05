@@ -17,9 +17,9 @@ final class ShowImageVC: ImageViewerVC{
     deinit{ print("ShowImageVC가 사라짐!!") }
     override func viewDidLoad() {
         super.viewDidLoad()
-        vm.$setName.sink {[weak self] setName in
-            guard let self, let setName else {return}
-            closeBtn.title = setName
+        vm.$cardItem.sink { [weak self] cardItem in
+            guard let self, let cardItem else {return}
+            closeBtn.title = cardItem.title
         }.store(in: &subscription)
         vm.$selection.sink { [weak self] selectionItems in
             self?.updateSnapshot(result: selectionItems)
