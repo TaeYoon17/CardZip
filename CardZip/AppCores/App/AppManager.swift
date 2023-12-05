@@ -58,32 +58,5 @@ extension App{
         }
         
     }
-    final class MigrationHelper{
-        static var shared:MigrationHelper? = MigrationHelper()
-        private init(){}
-        deinit{
-            print("사라진다...")
-        }
-        private var migraionImages:[String] = []
-        func appendImageMigration(fileNames:[String]){
-            migraionImages.append(contentsOf: fileNames)
-        }
-        func imageMigration() async {
-            // 이미지 참조 목록 생성하기, 마이그레이션 시 아무것도 없어야한다.
-            var rcSnapshot = ImageRC.shared.snapshot
-            guard rcSnapshot.instance.isEmpty else{
-                fatalError("It's not first migration")
-            }
-            // 위의 이미지 중 중복되지 않게 저장
-            await ImageService.shared.saveToDocumentBy(photoIDs: Set(migraionImages).map{$0.extractID(type: .photo)})
-            // 각각 이미지 참조 개수 증가
-            await migraionImages.asyncForEach {
-                await rcSnapshot.plusCount(id: $0)
-            }
-            // 새 참조 개수 적용
-            ImageRC.shared.apply(rcSnapshot)
-            // DB에 저장
-            await ImageRC.shared.saveRepository()
-        }
-    }
+    
 }

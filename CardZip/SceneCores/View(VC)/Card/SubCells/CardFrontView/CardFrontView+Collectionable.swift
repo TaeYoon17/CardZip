@@ -16,7 +16,12 @@ extension CardFrontView: UICollectionViewDelegate{
         collectionView.backgroundColor = .lightBg
         let cellRegistration = UICollectionView.CellRegistration<ImageCell,Item> {cell, indexPath, itemIdentifier in
             Task{
-                cell.image = try await ImageService.shared.fetchByCache(type: .file, name: itemIdentifier.imagePath,size: .init(width: 720, height: 720))
+                print("fetch Item",itemIdentifier.imagePath)
+                do{
+                    cell.image = try await ImageService.shared.fetchByCache(type: .file, name: itemIdentifier.imagePath,size: .init(width: 720, height: 720))
+                }catch{
+                    print(error)
+                }
             }
         }
         dataSource = UICollectionViewDiffableDataSource<Section,Item>(collectionView: collectionView, cellProvider: {[weak self] collectionView, indexPath, itemIdentifier in
@@ -58,14 +63,3 @@ extension CardFrontView: UICollectionViewDelegate{
         dataSource.apply(snapshot,animatingDifferences: true)
     }
 }
-//extension CardFrontView:UICollectionViewDataSourcePrefetching{
-//    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-//        indexPaths.forEach { indexPath in
-//            guard let itemID = dataSource.itemIdentifier(for: indexPath) else {return}
-//            let imagePath = itemID.imagePath
-//            Task{
-//                try await ImageService.shared.appendEmptyCache(albumID: imagePath,size: .init(width: 720, height: 720))
-//            }
-//        }
-//    }
-//}

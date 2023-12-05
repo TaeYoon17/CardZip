@@ -44,7 +44,8 @@ extension CardFrontView{
             return btn
         }()
         override func configureView() {
-            
+            imageView.image = UIImage(systemName: "questionmark.circle")
+            imageView.tintColor = .cardPrimary
         }
         override func configureLayout() {
             contentView.addSubview(imageView)

@@ -11,7 +11,7 @@ import Combine
 import Photos
 enum DataProcessType{case add, edit}
 final class AddSetVC: EditableVC{
-    var vm :AddSetVM // 여기 수정해야함!
+    var vm :AddSetVM! // 여기 수정해야함!
     init(vm: AddSetVM){
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
@@ -33,7 +33,6 @@ final class AddSetVC: EditableVC{
         fatalError("Don't use storyboard")
     }
     deinit{
-        subscription.removeAll()
         print("AddSet DEINIT")
     }
     enum SectionType:Int{ case header,cards }
@@ -143,11 +142,6 @@ final class AddSetVC: EditableVC{
                 }
             }
         }.store(in: &subscription)
-        vm.$nowItemsCount.sink {[weak self] count in
-//            self?.navLabel.text = "\(count) / 100"
-//            self?.navigationItem.title = "\(count) / 100"
-//            "\(count) / 100"
-        }.store(in: &subscription)
         vm.$dataProcess.sink {[weak self] type in
             switch type {
             case .add:
@@ -201,6 +195,7 @@ extension AddSetVC{
                 alert.addAction(.init(title: "Close".localized , style: .default,handler: { [weak self] _ in
                     self?.vm.notSaveClose()
                     self?.closeAction()
+                    self?.vm = nil
                 }))
                 alert.addAction(.init(title: "Keep Adding".localized, style: .cancel))
                 alert.setAppearance()
@@ -210,6 +205,7 @@ extension AddSetVC{
         }
         self.vm.notSaveClose()
         self.closeAction()
+        self.vm = nil
     }
     func emptyCheck(){
         guard (vm.setItem) != nil else {return}

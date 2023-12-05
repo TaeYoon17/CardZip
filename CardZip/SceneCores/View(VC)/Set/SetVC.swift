@@ -24,7 +24,6 @@ final class SetVC: BaseVC{
     enum HeaderType {case full,small}
     lazy var collectionView = UICollectionView(frame: .zero,collectionViewLayout: layout)
     var dataSource : DataSource!
-    var addSetVM: AddSetVM?
     var vm:SetVM!{
         didSet{
             guard let vm else { fatalError("SETVM DON'T HAVE IT") }
@@ -34,13 +33,13 @@ final class SetVC: BaseVC{
                 let alertVC = CustomAlertController(actionList: [
                     .init(title: "Edit".localized, systemName: "pencil", completion: { [weak self] in
                         guard let self else {return}
-//                        self.addSetVM =
-                        let vc = AddSetVC(vm:AddSetVM(dataProcess: .edit, setItem: vm.setItem))
-//                        vc.vm = addSetVM
+                        let addSetVM = AddSetVM(dataProcess: .edit, setItem: vm.setItem)
+                        let vc = AddSetVC(vm:addSetVM)
                         vc.modalPresentationStyle = .pageSheet
-                        self.addSetVM?.passthroughEditSet.sink {[weak self] item in
+                        addSetVM.passthroughEditSet.sink {[weak self] item in
                             guard let self else {return}
                             self.vm.setItem = item
+                            self.vm.recentSetId = item.dbKey
                             collectionView.reloadData()
                             self.vm.initModel()
                         }.store(in: &subscription)

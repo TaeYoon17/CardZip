@@ -22,10 +22,18 @@ extension AddSetVM{
             try repository?.cardRespository?.deleteTableBy(tableID: cardItem.dbKey)
             print("데베에 있어서 삭제하는 데이터")
         }catch{
-//            print("데베에 없어서 삭제 못하는 데이터")
+            print("데베에 없어서 삭제 못하는 데이터")
         }
     }
-    @MainActor func saveRepository(setItem: SetItem,cardItems:[CardItem]){
+    @MainActor private func removeCardItemIRC(items:[CardItem]) async {
+            for cardItem in items{
+                await cardItem.imageID.asyncForEach{
+                    await self.ircSnapshot.minusCount(id: $0)
+                }
+            }
+    }
+    @MainActor func saveRepository(setItem: SetItem,cardItems:[CardItem],deleteItems:[CardItem]) async {
+        await removeCardItemIRC(items: deleteItems)
         var setItem = setItem
         let cardSetTable:CardSetTable
         if let setTable{
@@ -52,9 +60,8 @@ extension AddSetVM{
         setItem.cardList = cardItems
         passthroughEditSet.send(setItem)
         passthroughCloseAction.send()
-        Task{
-            ImageRC.shared.apply(ircSnapshot)
-            await ImageRC.shared.saveRepository()
-        }
+        
+        ImageRC.shared.apply(ircSnapshot)
+        await ImageRC.shared.saveRepository()
     }
 }

@@ -45,7 +45,6 @@ final class AddSetVM:ImageSearchDelegate{
     var cardAction = PassthroughSubject<(CardActionType,CardItem?),Never>()
     var setAction = PassthroughSubject<(SetActionType,SetItem?),Never>()
     init(dataProcess: DataProcessType,setItem: SetItem?){
-        print("AddSetVM Init!!")
         self.dataProcess = dataProcess
         switch dataProcess{
         case.add:
@@ -55,16 +54,18 @@ final class AddSetVM:ImageSearchDelegate{
         }
         bindPhPicker()
         bindCardAction()
-        
     }
     func notSaveClose(){
-        
         let newSnapshots = ircSnapshot.instance.values.map{$0.id}
         let prevSnapshots = ImageRC.shared.instance.values.map{$0.id}
-        print(newSnapshots)
-        print(prevSnapshots)
         Set(newSnapshots).subtracting(prevSnapshots).forEach { UIImage.removeFromDocument(fileName: $0) }
-        
+        self.subscription.removeAll()
+    }
+    struct Output{
+        var passthroughEditSet : PassthroughSubject<SetItem,Never>
+    }
+    func output()->Output{
+        Output(passthroughEditSet: self.passthroughEditSet)
     }
     func bindPhPicker() {
         photoService.passthroughIdentifiers.sink {[weak self] val,vc in
@@ -75,7 +76,6 @@ final class AddSetVM:ImageSearchDelegate{
             Task{@MainActor [weak self] in
                 guard let self else {return}
                 if !self.ircSnapshot.existItem(id: newFileName){
-                    await ImageService.shared.saveToDocumentBy(photoIDs:[newAlbumID])
                     self.firstAddSnapshot.insert(newFileName)
                 }
                 if let setItem{ updatedSetItem.send((setItem,true)) }
@@ -95,7 +95,7 @@ final class AddSetVM:ImageSearchDelegate{
         Task{@MainActor [weak self] in
             guard let self else {return}
             if !self.ircSnapshot.existItem(id: newFileName){
-                await ImageService.shared.saveToDocumentBy(searchURLs: ids,fileNames: [newFileName])
+                try await ImageService.shared.saveToDocumentBy(searchURLs: ids,fileNames: [newFileName])
                 await IRC.shared.insertRepository(item: ImageItem(name: newFileName, count: 0))
             }
             if let setItem{ updatedSetItem.send((setItem,true)) }

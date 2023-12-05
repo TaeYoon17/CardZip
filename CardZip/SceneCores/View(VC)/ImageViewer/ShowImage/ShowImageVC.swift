@@ -24,6 +24,7 @@ final class ShowImageVC: ImageViewerVC{
         vm.$selection.sink { [weak self] selectionItems in
             self?.updateSnapshot(result: selectionItems)
         }.store(in: &subscription)
+        imageCountlabel.totalCount.send(vm.cardItem.imageID.count)
     }
     override func configureCollectionView(){
         collectionView.backgroundColor = .bg

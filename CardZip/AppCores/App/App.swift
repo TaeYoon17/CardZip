@@ -7,6 +7,7 @@
 
 import Foundation
 enum App{
+    static var dbVersion:UInt64{ 1 }
     enum Logo{
         static let like: String = "star"
         static let check: String = "bookmark"

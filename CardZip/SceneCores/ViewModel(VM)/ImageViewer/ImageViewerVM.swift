@@ -19,6 +19,7 @@ class ImageViewerVM{
         didSet{
             Task{@MainActor in
                 self.selection = Array(selectedItems)
+                imageCount.send(self.selection.count)
             }
         }
     }
@@ -30,6 +31,7 @@ class ImageViewerVM{
         self.cardItem = cardItem
         self.setName = setName
         selectedItems = .init(cardItem.imageID)
+        imageCount.send(cardItem.imageID.count)
         Task{@MainActor in
             self.selection = Array(selectedItems)
         }

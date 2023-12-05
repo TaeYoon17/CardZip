@@ -14,12 +14,13 @@ extension AddSetVC{
         typealias SectionType = AddSetVC.SectionType
         weak var vm: AddSetVM!
         var itemModel : AnyModelStore<CardItem>!
+        var deleteItemModel : [CardItem.ID:CardItem] = [:]
         var headerModel : AnyModelStore<SetItem>!
         var sectionModel: AnyModelStore<Section>!
         var subscription = Set<AnyCancellable>()
         init(vm: AddSetVM!,collectionView: UICollectionView, cellProvider: @escaping UICollectionViewDiffableDataSource<AddSetVC.Section.ID, AddSetVC.Item>.CellProvider) {
-            super.init(collectionView: collectionView, cellProvider: cellProvider)
             self.vm = vm
+            super.init(collectionView: collectionView, cellProvider: cellProvider)
             initModels()
             vm.updatedCardItem.sink {[weak self] (item,reloadDS) in
                 self?.itemModel.insertModel(item: item)
@@ -69,7 +70,8 @@ extension AddSetVC.DataSource{
     }
     func deleteItem(item: Item){
         if let data:CardItem = self.itemModel.fetchByID(item.id){
-            vm.deleteTable(cardItem: data)
+//            vm.deleteTable(cardItem: data)
+            deleteItemModel[data.id] = data
         }else{
             print("아이템 모델에도 없는 데이터")
         }
@@ -101,7 +103,9 @@ extension AddSetVC.DataSource{
             return
         }
         // 3. 이 카드 세트가 이미 데베에 존재하는 경우 (수정하는 경우)
-        vm.saveRepository(setItem: setData, cardItems: items)
+        Task{
+            await vm.saveRepository(setItem: setData, cardItems: items,deleteItems: deleteItemModel.values.map{$0})
+        }
     }
 }
 

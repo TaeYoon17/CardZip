@@ -27,6 +27,8 @@ final class AddImageVC: ImageViewerVC{
             }
         }.store(in: &subscription)
         self.closeBtn.title = self.vm.cardItem?.title ?? ""
+        imageCountlabel.totalCount.send(vm.cardItem.imageID.count)
+        vm.imageCount.assign(to: \.value, on: imageCountlabel.totalCount).store(in: &subscription)
     }
     
     lazy var navDoneBtn = {

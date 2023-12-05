@@ -22,40 +22,23 @@ extension UIImage.Configuration{
 }
 //MARK: -- 엘범 이미지 고유 아이디로 UIImage 가져오기
 extension UIImage{
-    static func fetchBy(identifier assetIdentifier:String) async -> UIImage?{
-        let options = PHFetchOptions()
-        options.wantsIncrementalChangeDetails = false
-        if let asset: PHAsset = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: options).firstObject{
-            let manager = PHImageManager.default()
-            do{
-//                print("-----------",asset)
-//                let data = try await manager.fetchAssets(asset: asset)
-//                let image = UIImage(data: data)
-                let image = try await manager.fetchAssets(asset: asset)
-//                return await image?.byPreparingForDisplay()
-                return image
-            }catch{
-                print("여기가 문제였어",error)
-                return nil
-            }
-        }
-        return nil
-    }
+
     static func fetchBy(identifier assetIdentifier:String,ofSize: CGSize? = nil) async throws -> UIImage{
         let options = PHFetchOptions()
         options.wantsIncrementalChangeDetails = false
         if let asset: PHAsset = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: options).firstObject{
             let manager = PHImageManager.default()
             do{
-//                let data = try await manager.fetchAssets(asset: asset)
-//                let image = UIImage(data: data)
                 let image = try await manager.fetchAssets(asset: asset)
                 let img = if let ofSize{
                     await image?.byPreparingThumbnail(ofSize: ofSize)
                 }else{
                     await image?.byPreparingForDisplay()
                 }
-                guard let img else{ throw FetchError.fetch}
+                guard let img else{
+                    print("뭐하냐")
+                    return .init()
+                }
                 return img
             }catch{
                 throw error

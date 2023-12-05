@@ -14,6 +14,15 @@ final class SplashController: BaseVC{
     let repository = CardSetRepository()
     let animationView = LottieAnimationView()
     weak var window: UIWindow?
+    override func viewDidLoad() {
+        super.viewDidLoad()
+//        DispatchQueue.main.async {
+//            Task{@MainActor in
+//                await App.MigrationHelper.shared?.imageMigration()
+//                print(ImageRC.shared.instance)
+//            }
+//        }
+    }
     override func configureLayout() {
         super.configureLayout()
         view.addSubview(animationView)
@@ -38,9 +47,7 @@ final class SplashController: BaseVC{
                 try? await self?.pushVC()
             }
         }
-        Task{@MainActor in
-                await App.MigrationHelper.shared.imageMigration()
-        }
+        
     }
     @MainActor func pushVC() async throws{
         let vc = MainVC()

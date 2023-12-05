@@ -28,21 +28,15 @@ final class AddImageVM: ImageViewerVM,ImageSearchDelegate{
         ImageService.shared.resetCache(type: .file)
     }
     func albumSelectionUpdate(ids: [String]){
-        passthoroughLoading.send(true)
-        let newFileNames = ids.map{$0.getLocalPathName(type: .photo)}
-        let deleteFileNames = self.selectedItems.subtracting(newFileNames).filter{$0.checkFilepath(type: .photo)}
-        let appendFileNames = Set(newFileNames).subtracting(selectedItems)
-        Task{ // 앨범 이미지 전부 앱 샌드박스에 저장
-            await ImageService.shared.saveToDocumentBy(photoIDs:appendFileNames.map{
-                $0.extractID(type: .photo)
-            })
+        let newPhotoFileNames = ids.map { $0.getLocalPathName(type: .photo) }
+        let appendFileNames = Array(Set(newPhotoFileNames).subtracting(selectedItems))
+        Task{
             passthoroughLoading.send(false)
-            self.selectedItems = selectedItems.subtracting(deleteFileNames).union(appendFileNames)
+            self.selectedItems = selectedItems.union(newPhotoFileNames)
+            await updateImageRC(appends:appendFileNames,deletes:[])
         }
-        Task{ await updateValues(appends:appendFileNames,deletes:deleteFileNames) }
     }
     func searchSelectionUpdate(ids:[String]){
-        passthoroughLoading.send(true)
         let newItems = ids.enumerated().map { ($1.getLocalPathName(type: .search),$0) }
         let dict = newItems.reduce(into: [:]) { $0[$1.0] = $1.1 }
         let newFileNames = newItems.map{$0.0}
@@ -50,11 +44,11 @@ final class AddImageVM: ImageViewerVM,ImageSearchDelegate{
         let appendFileNames = Array(Set(newFileNames).subtracting(selectedItems))
         let downloadURLs = appendFileNames.compactMap { dict[$0] }.map{ids[$0]}
         Task{
-            await ImageService.shared.saveToDocumentBy(searchURLs: downloadURLs,fileNames: appendFileNames)
+            try await ImageService.shared.saveToDocumentBy(searchURLs: downloadURLs,fileNames: appendFileNames)
             passthoroughLoading.send(false)
             self.selectedItems = selectedItems.union(appendFileNames)
+            await updateImageRC(appends:appendFileNames,deletes:[])
         }
-        Task{ await updateValues(appends:appendFileNames,deletes:[]) } // 이 카드 세트에 중복되지 않은 파일들만 업데이트
     }
     func deleteSelection(id:String){
         self.selectedItems.remove(id)
@@ -62,7 +56,7 @@ final class AddImageVM: ImageViewerVM,ImageSearchDelegate{
             await ircSnapShot.minusCount(id: id)
         }
     }
-    func updateValues(appends: any Sequence<String>,deletes:any Sequence<String>) async {
+    func updateImageRC(appends: any Sequence<String>,deletes:any Sequence<String>) async {
         await appends.asyncForEach {
             if !ircSnapShot.existItem(id: $0){
                 await repository.insert(item: ImageItem(name: $0, count: 0))
@@ -77,11 +71,7 @@ final class AddImageVM: ImageViewerVM,ImageSearchDelegate{
     func presentPicker(vc: UIViewController){
 //        현재 다운받은 이미지에서 앨범에 존재하는 이미지를 추출해야한다.
         self.vc = vc
-        let albumImagePathes = self.selectedItems
-            .filter { $0.checkFilepath(type: .photo)}
-            .map{$0.extractID(type: .photo)}
-        photoService.presentPicker(vc: vc,
-                                   multipleSelection: true,
-                                   prevIdentifiers: albumImagePathes)
+        photoService.presentPicker(vc: vc,maxSelection: 10 - self.selectedItems.count)
+        passthoroughLoading.send(true)
     }
 }

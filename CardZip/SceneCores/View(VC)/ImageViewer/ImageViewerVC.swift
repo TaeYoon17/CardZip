@@ -33,7 +33,7 @@ class ImageViewerVC: BaseVC{
         }), for: .touchUpInside)
         return btn
     }()
-    final lazy var imageCountlabel = ImageCountLabel()
+    final var imageCountlabel = ImageCountLabel()
     override func configureLayout() {
         super.configureLayout()
         view.addSubview(collectionView)
@@ -68,9 +68,18 @@ class ImageViewerVC: BaseVC{
     }
 }
 final class ImageCountLabel: UIButton{
-    var imageCount = CurrentValueSubject<Int,Never>(0)
-    var totalCount = CurrentValueSubject<Int,Never>(0)
+    let imageCount = CurrentValueSubject<Int,Never>(0)
+    let totalCount = CurrentValueSubject<Int,Never>(0)
     var subscription = Set<AnyCancellable>()
+    private var text = "0 / 0"{
+        didSet{
+            if let configuration{
+            }else{
+                print("error")
+            }
+            configuration?.attributedTitle = AttributedString(text ,attributes: .init([NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium)]))
+        }
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
@@ -85,9 +94,11 @@ final class ImageCountLabel: UIButton{
         layer.shadowOffset = .zero
         layer.shadowOpacity = 0.5
         layer.shadowRadius = 4
-        imageCount.combineLatest(totalCount).sink {[weak self] imageCnt, totalCnt in
+        imageCount.combineLatest(totalCount)
+            .debounce(for: .seconds(0.1), scheduler: RunLoop.main)
+            .sink {[weak self] imageCnt, totalCnt in
             guard let self else {return}
-            configuration?.attributedTitle = AttributedString("\(min(imageCnt + 1,totalCnt)) / \(totalCnt)" ,attributes: .init([NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium)]))
+                self.text = "\(min(imageCnt + 1,totalCnt)) / \(totalCnt)"
         }.store(in: &subscription)
 
     }

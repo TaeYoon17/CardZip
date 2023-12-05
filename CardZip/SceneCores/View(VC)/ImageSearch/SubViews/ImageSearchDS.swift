@@ -30,8 +30,7 @@ extension ImageSearchVC{
                 self?.appendImageResults(items)
                 Task{
                     self?.vm.loadingStatusPassthrough.send(true)
-                    try await ImageService.shared.appendCache(links: items.map{$0.thumbnail},
-                                                              size: .init(width: 360, height: 360))
+                    try await ImageService.shared.appendCache(type: .search, names: items.map{$0.thumbnail},size: .init(width: 360, height: 360))
                     self?.vm.loadingStatusPassthrough.send(false)
                     self?.resetDataSource()
                 }

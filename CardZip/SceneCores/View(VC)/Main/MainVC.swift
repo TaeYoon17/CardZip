@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-
+import Combine
 struct PinnedItem: Identifiable{
     let id = UUID()
     var type: PinType
@@ -60,25 +60,6 @@ final class MainVC: BaseVC {
     }()
     lazy var addCardSetBtn = {
         let btn = NewCardSetBtn()
-        btn.addAction(.init(handler: {[weak self] _ in
-            guard let self else {return}
-            let vc = AddSetVC(vm:.init(dataProcess: .add, setItem: nil))
-//            vm.passthroughEditSet
-//                .receive(on: RunLoop.main)
-//                .sink(receiveValue: { [weak self ] setItem in
-//                    guard let self else {return}
-//                    vm.recentKey = setItem.dbKey
-//                    print("이거 가져온다")
-//                    let setvc = SetVC()
-//                    let setVM = SetVM(setItem: setItem)
-//                    setvc.vm = setVM
-//                    Task{@MainActor [weak self] in
-//                        self?.navigationController?.pushViewController(setvc, animated: true)
-//                    }
-//                }).store(in: &subscription)
-            let nav = UINavigationController(rootViewController: vc)
-            self.present(nav, animated: true)
-        }), for: .touchUpInside)
         return btn
     }()
     lazy var addFolderBtn = AddFolderBtn()
@@ -99,14 +80,32 @@ final class MainVC: BaseVC {
                 self.collectionView.collectionViewLayout = self.layout
             }
         }.store(in: &subscription)
+        addCardSetBtn.publisher(for: .touchUpInside).sink { [weak self] _ in
+            guard let self else {return}
+            let vm:AddSetVM = .init(dataProcess: .add, setItem: nil)
+            let vc = AddSetVC(vm:vm)
+            vm.passthroughEditSet.receive(on: RunLoop.main)
+                .sink(receiveValue: { [weak self ] setItem in
+                    guard let self else {return}
+                    doneAction(setItem: setItem)
+                }).store(in: &subscription)
+            let nav = UINavigationController(rootViewController: vc)
+            self.present(nav, animated: true)
+        }.store(in: &subscription)
+    }
+    func doneAction(setItem: SetItem){
+        self.vm.recentSetTableId = setItem.dbKey
+        let setvc = SetVC()
+        let setVM = SetVM(setItem: setItem)
+        setvc.vm = setVM
+        Task{@MainActor [weak self] in
+            self?.navigationController?.pushViewController(setvc, animated: true)
+        }
     }
     override func configureLayout() {
         super.configureLayout()
-        //        initStores()
-        //        .addFolderBtn
-        [collectionView,settingBtn,
-         //         navStack,
-         addCardSetBtn].forEach({view.addSubview($0)})
+        
+        [collectionView,settingBtn, addCardSetBtn].forEach({view.addSubview($0)})
     }
     override func configureConstraints() {
         super.configureConstraints()

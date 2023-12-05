@@ -16,18 +16,5 @@ protocol ReferenceCounter:AnyObject{
     func minusCount(id: Item.ID) async
     
     func saveRepository() async
-//    func plusCount(item: Item) async
-//    func minusCount(item: Item) async
 }
-//extension ReferenceCounter{
-//    func plusCount(item: Item){
-//        var item = item
-//        item.count += 1
-//        instance[item.id] = item
-//    }
-//    func minusCount(item: Item){
-//        var item = item
-//        item.count += 1
-//        instance[item.id] = item
-//    }
-//}
+

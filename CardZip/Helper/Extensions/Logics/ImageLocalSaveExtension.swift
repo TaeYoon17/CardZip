@@ -9,6 +9,7 @@ import UIKit
 //MARK: -- Get Image By Path
 extension UIImage{
     
+    // MARK: -- 파일 이름으로 이미지 가져오기
     convenience init?(fileName: String) {
         guard let documentDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             self.init()
@@ -33,7 +34,6 @@ extension UIImage{
         let fileURL = documentDir.appendingPathComponent("\(fileName).jpg")
         //3. 이미지 변환 -> 세부 경로 파일을 열어서 저장
         guard let data = self.jpegData(compressionQuality: 1) else {return}
-        print("-------image data",data)
         let mbBytes = bytesToMegabytes(bytes: data.count)
         let maxQuality = min(maxMegaBytes / mbBytes,1) // 모든 이미지 데이터를 5mb 이하로 맞추기
         guard let data = self.jpegData(compressionQuality: maxQuality) else { return }

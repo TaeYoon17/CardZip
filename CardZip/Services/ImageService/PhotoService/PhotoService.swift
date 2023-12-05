@@ -16,8 +16,12 @@ final class PhotoService{
     // RxSwift 사용 시...
     //  var passthroughIdentifiers:PublishSubject<([String],UIViewController)> = .init()
     private weak var viewController: UIViewController?
+    private let cachingManager = PHCachingImageManager()
     static let limitedNumber = 10
-    private init(){}
+    @Published var progressCnt = 0
+    @Published var targetCnt = 0
+    var subscription = Set<AnyCancellable>()
+    private init(){ }
     func presentPicker(vc: UIViewController,multipleSelection: Bool = false,prevIdentifiers:[String]? = nil) {
         self.viewController = vc
         let filter = PHPickerFilter.images
@@ -29,6 +33,18 @@ final class PhotoService{
         if let prevIdentifiers{
             configuration.preselectedAssetIdentifiers = prevIdentifiers
         }
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        viewController?.present(picker, animated: true)
+    }
+    func presentPicker(vc: UIViewController,maxSelection:Int = 1) {
+        self.viewController = vc
+        let filter = PHPickerFilter.images
+        var configuration = PHPickerConfiguration(photoLibrary: .shared())
+        configuration.filter = filter
+        configuration.preferredAssetRepresentationMode = .automatic
+        configuration.selection = .default
+        configuration.selectionLimit = maxSelection
         let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self
         viewController?.present(picker, animated: true)
@@ -51,22 +67,6 @@ final class PhotoService{
         })
     }
 
-//    func fetchAssets(asset: PHAsset,deliveryMode:PHImageRequestOptionsDeliveryMode = .opportunistic ) async throws -> Data{
-//        try await withCheckedThrowingContinuation{ continueation in
-//            let option = PHImageRequestOptions()
-//            option.deliveryMode = deliveryMode
-//            requestImageDataAndOrientation(for: asset, options: option) { imageData, _, _, _ in
-//                if let imageData{
-//                    continueation.resume(returning: imageData)
-//                }else{
-//                    continueation.resume(throwing: FetchError.fetch)
-//                }
-//            }
-//        }
-//    }
-    func checkAuthorization() async{
-        
-    }
     
     func presentToLibrary(vc: UIViewController){
         PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: vc)
@@ -74,47 +74,41 @@ final class PhotoService{
     func deinitToLibrary(vc: PHPhotoLibraryChangeObserver){
         PHPhotoLibrary.shared().unregisterChangeObserver(vc)
     }
-    var authorizationStatus:PHAuthorizationStatus{ PHPhotoLibrary.authorizationStatus(for: .readWrite)
+    var authorizationStatus:PHAuthorizationStatus{ 
+        PHPhotoLibrary.authorizationStatus(for: .readWrite)
     }
 }
 extension PhotoService: PHPickerViewControllerDelegate{
     // 델리게이트 구현 사항
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         viewController?.dismiss(animated: true)
-        let identifiers = results.map(\.assetIdentifier!) // 이미지에 존재하는 identifier만 가져온다.
-        guard let viewController else {return}
-        passthroughIdentifiers.send((identifiers,viewController))
-        // rx 사용시...
-//                passthroughIdentifiers.onNext((identifiers,viewController))
-    }
-    
-    func displayImage(identifier assetIdentifier:String) async -> UIImage? {
-        if let asset: PHAsset = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: nil).firstObject{
-            let manager = PHImageManager.default()
+        Task{
             do{
-//                let data = try await manager.fetchAssets(asset: asset)
-//                let image = UIImage(data: data)
-                let image = try await manager.fetchAssets(asset: asset)
-//                await image?.byPreparingForDisplay()
-                return image
+                try await downloadToDocument(results: results)
             }catch{
-                return nil
+                print(error)
             }
         }
-        return nil
     }
-}
-extension PHAuthorizationStatus{
-    var name:String{
-        let str:String
-        switch self{
-        case .authorized: str = "authorized"
-        case .denied: str = "denied"
-        case .limited: str = "limited"
-        case .notDetermined: str = "notDetermined"
-        case .restricted: str = "restricted"
-        @unknown default: str = "unknown default"
+    func downloadToDocument(results:[PHPickerResult])async throws{
+        guard let viewController else {return}
+        try await saveToDocumentBy(results: results)
+        let identifiers = results.map(\.assetIdentifier!) // 이미지에 존재하는 identifier만 가져온다.
+        self.passthroughIdentifiers.send((identifiers,viewController))
+        self.progressCnt = 0
+    }
+    func saveToDocumentBy(results: [PHPickerResult]) async throws{
+        let imageResults = ImageService.shared.getDownloadTarget(results: results)
+        self.progressCnt = imageResults.count
+        try await withThrowingTaskGroup(of: Void.self) { [weak self] group in
+            for result in imageResults{
+                group.addTask {[weak self ] in
+                    try await ImageService.shared.saveToDocumentBy(result: result)
+                }
+            }
+            try await group.waitForAll()
         }
-        return str.localized.localizedCapitalized
     }
 }
+
+

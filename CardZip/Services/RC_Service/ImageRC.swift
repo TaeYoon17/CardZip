@@ -21,12 +21,11 @@ final class ImageRC:ReferenceCounter{
     private init(){
         Task{ 
             await resetInstance()
-            print(instance)
         }
     }
     @MainActor private func resetInstance() async {
         let res = repository.getAllTable().reduce(into: [:]) {
-                $0[$1.id] = ImageItem(name: $1.name, count: $1.count)
+            $0[$1.id] = ImageItem(name: $1.name, count: $1.count)
         }
         self.instance = res
     }
@@ -65,7 +64,6 @@ extension ImageRC{
         var instance: [Item.ID : ImageItem] = [:]
         init(irc: ImageRC){ 
             instance = irc.instance
-            print(instance)
         }
         func existItem(id: Item.ID) -> Bool{
             instance[id] != nil   
