@@ -29,26 +29,10 @@ final class ImageSearchVM{
     init(searchText: String,imageLimitCount:Int){
         self.searchText = CurrentValueSubject(searchText)
         self.limitedCount = imageLimitCount
-        self.searchText
-            .debounce(for: 0.5, scheduler: DispatchQueue.global(qos: .utility))
-            .sink {[weak self]text in
-            guard let self else {return}
-            resetDatas()
-            Task{
-                do{
-                    let images =  try await NetworkService
-                        .shared
-                        .searchNaverImage(keyword: text, startIndex: self.requestNumber)
-                    self.imageResults = images
-                    self.requestNumber += 1
-                }catch{
-                    print(error)
-                }
-            }
-        }.store(in: &subscription)
         $selectedImage.sink {[weak self] pathes in
             self?.selectedCount = pathes.count
         }.store(in: &subscription)
+        self.searchAction()
     }
     private func resetDatas(){
         selectedImage = [:]
@@ -60,8 +44,22 @@ final class ImageSearchVM{
         // selectedImage에 데이터를 저장하면 된다!!
         delegate?.searchSelectionUpdate(ids: selectedImage.values.map{$0.imagePath})
     }
+    
 }
+//MARK: -- 검색 관련
 extension ImageSearchVM{
+    func searchAction(){
+        resetDatas()
+        Task{
+            do{
+                let images =  try await NetworkService.shared.searchNaverImage(keyword: searchText.value, startIndex: self.requestNumber)
+                self.imageResults = images
+                self.requestNumber += 1
+            }catch{
+                print(error)
+            }
+        }
+    }
     func paginationImage(){
         Task{
             do{
@@ -70,6 +68,7 @@ extension ImageSearchVM{
                 self.imageResults.append(contentsOf: images)
                 self.requestNumber += 1
             }catch{
+                print(error)
                 self.requestNumber += 1
             }
         }

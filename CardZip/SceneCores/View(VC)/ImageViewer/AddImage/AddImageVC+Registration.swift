@@ -34,7 +34,7 @@ extension AddImageVC{
                     guard let self else {return}
                     vm.presentPicker(vc: self)
                 } search: { [weak self] in
-                    let imageVM = ImageSearchVM(searchText: self?.vm.cardItem.title ?? "", imageLimitCount: 10 - (self?.vm.imageCount.value ?? 0))
+                    let imageVM = ImageSearchVM(searchText: "\(self?.vm.setName ?? "") \(self?.vm.cardItem.title ?? "")", imageLimitCount: 10 - (self?.vm.imageCount.value ?? 0))
                     imageVM.delegate = self?.vm
                     let vc = ImageSearchVC()
                     vc.vm = imageVM

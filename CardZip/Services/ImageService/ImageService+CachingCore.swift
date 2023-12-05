@@ -47,7 +47,8 @@ extension ImageService{
                     try await self?.appendCache(type: type,name: name, size: size)
                 }
             }
-            try await group.waitForAll()
+            // 기다려 주지 않아야한다...!
+//            try await group.waitForAll()
         }
     }
     @MainActor func fetchByCache(type:SourceType,name: String,size:CGSize? = nil) async throws -> UIImage?{

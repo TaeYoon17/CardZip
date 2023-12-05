@@ -18,25 +18,42 @@ final class NetworkService{
     
     func searchNaverImage(keyword:String,startIndex:Int,display:Int = 42) async throws -> [ImageSearch]{
         let start = (startIndex - 1) * display + 1
+        
         return try await withCheckedThrowingContinuation {[weak self] continuation in
             guard let self else {return}
+            var flag = true
+            let loadingSpinnerTask = Task {
+                try await Task.sleep(for: .seconds(5))
+                continuation.resume(returning: [])
+                return
+            }
             AF.request(NaverRouter.Search.image(
                 query: keyword, display: display, start: start, sort: .sim, filter: .all)
             ).validate(statusCode: (200..<300))
             .publishDecodable(type: ResponseWrapper<ImageSearchResponse>.self,queue: .global())
             .value()
-            .sink {[weak self] completion in
-//                print(completion)
-//                continuation.resume(throwing: ResponseError.codeError)
-            } receiveValue: {[weak self] response in
+            .sink {completion in
+                if flag{
+                    continuation.resume(throwing: ResponseError.codeError)
+                    loadingSpinnerTask.cancel()
+                    flag.toggle()
+                }
+            } receiveValue: { response in
                 let buildDate = response.lastBuildDate
                 do{
                     let encode = try JSONEncoder().encode(response.items)
                     let searchResults = try JSONDecoder().decode([ImageSearch].self, from: encode)
-//                    print(searchResults)
-                    continuation.resume(returning: searchResults)
+                    if flag{
+                        continuation.resume(returning: searchResults)
+                        loadingSpinnerTask.cancel()
+                        flag.toggle()
+                    }
                 }catch{
-                    continuation.resume(throwing: error)
+                    if flag{
+                        continuation.resume(throwing: error)
+                        loadingSpinnerTask.cancel()
+                        flag.toggle()
+                    }
                 }
             }.store(in: &subscription)
         }

@@ -14,8 +14,6 @@ extension ImageSearchVC{
                 print("데이터가 없다!!")
                 return
             }
-//            print("regi \(item.isCheck!) \(item.id)")
-//            print(dataSource.itemModel.values())
             cell.model = item
             if item.isCheck{
                 cell.selectNumber = self.vm.getItemCount(item)

@@ -12,4 +12,7 @@ extension ImageSearchVC:UISearchBarDelegate,UISearchControllerDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.vm.searchText.send(searchText)
     }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.vm.searchAction()
+    }
 }

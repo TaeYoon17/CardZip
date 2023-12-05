@@ -24,13 +24,10 @@ extension ImageSearchVC:UICollectionViewDelegate{
             try await ImageService.shared.appendCache(type: .search,name: item.imagePath)
         }
         return UIContextMenuConfiguration(identifier: NSString(string: itemID), previewProvider: {
-            
-//            let previewController = ImagePreviewVC(thumbnailURL: item.imagePath,width: Int(item.sizewidth),height: Int(item.sizeheight))
             let previewController = ImagePreviewVC(searchItem: item)
             return previewController
         }, actionProvider: {[weak self] suggestedActions in
             guard let self else {return UIMenu(title: "", children: [])}
-            // Use the IndexPathContextMenu protocol to produce the UIActions.
             let openAction = UIAction(title: "Select",
                                       image: UIImage(systemName: "checkmark.circle"),
                                       identifier: nil,
