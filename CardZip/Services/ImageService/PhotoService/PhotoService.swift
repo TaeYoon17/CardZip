@@ -18,10 +18,9 @@ final class PhotoService{
     private weak var viewController: UIViewController?
     private let cachingManager = PHCachingImageManager()
     static let limitedNumber = 10
-    @Published var progressCnt = 0
-    @Published var targetCnt = 0
+    var counter = TaskCounter(max: 0)
     var subscription = Set<AnyCancellable>()
-    private init(){ }
+    private init(){ bindingCounter()}
     func presentPicker(vc: UIViewController,multipleSelection: Bool = false,prevIdentifiers:[String]? = nil) {
         self.viewController = vc
         let filter = PHPickerFilter.images
@@ -53,20 +52,20 @@ final class PhotoService{
     func isValidAuthorization() async -> Bool{
         // Observe photo library changes
         await withCheckedContinuation({ continuation in
-                switch authorizationStatus{
-                case .notDetermined:
-                    let requiredAccessLevel: PHAccessLevel = .readWrite
-                    PHPhotoLibrary.requestAuthorization(for: requiredAccessLevel) { authorizationStatus in
-                        switch authorizationStatus {
-                        case .limited, .authorized: continuation.resume(returning: true)
-                        default: continuation.resume(returning: false)
-                        }
+            switch authorizationStatus{
+            case .notDetermined:
+                let requiredAccessLevel: PHAccessLevel = .readWrite
+                PHPhotoLibrary.requestAuthorization(for: requiredAccessLevel) { authorizationStatus in
+                    switch authorizationStatus {
+                    case .limited, .authorized: continuation.resume(returning: true)
+                    default: continuation.resume(returning: false)
                     }
-                default: continuation.resume(returning: true)
                 }
+            default: continuation.resume(returning: true)
+            }
         })
     }
-
+    
     
     func presentToLibrary(vc: UIViewController){
         PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: vc)
@@ -74,7 +73,7 @@ final class PhotoService{
     func deinitToLibrary(vc: PHPhotoLibraryChangeObserver){
         PHPhotoLibrary.shared().unregisterChangeObserver(vc)
     }
-    var authorizationStatus:PHAuthorizationStatus{ 
+    var authorizationStatus:PHAuthorizationStatus{
         PHPhotoLibrary.authorizationStatus(for: .readWrite)
     }
 }
@@ -92,23 +91,25 @@ extension PhotoService: PHPickerViewControllerDelegate{
     }
     func downloadToDocument(results:[PHPickerResult])async throws{
         guard let viewController else {return}
-        try await saveToDocumentBy(results: results)
+        let imageResults = ImageService.shared.getDownloadTarget(results: results)
+        try await counter.run(imageResults) { result in
+            try await ImageService.shared.saveToDocumentBy(result: result)
+        }
         let identifiers = results.map(\.assetIdentifier!) // 이미지에 존재하는 identifier만 가져온다.
         self.passthroughIdentifiers.send((identifiers,viewController))
-        self.progressCnt = 0
     }
-    func saveToDocumentBy(results: [PHPickerResult]) async throws{
-        let imageResults = ImageService.shared.getDownloadTarget(results: results)
-        self.progressCnt = imageResults.count
-        try await withThrowingTaskGroup(of: Void.self) { [weak self] group in
-            for result in imageResults{
-                group.addTask {[weak self ] in
-                    try await ImageService.shared.saveToDocumentBy(result: result)
-                }
-            }
-            try await group.waitForAll()
+    
+    func bindingCounter(){
+        Task{
+            await counter.$count.sink{val in
+                print("fetginc \(val)")
+            }.store(in: &subscription)
+            await counter.sink { val in
+                print(val)
+            }.store(in: &subscription)
         }
     }
 }
+
 
 

@@ -52,6 +52,5 @@ final class TTS{
             try await Task.sleep(for:.seconds(2))
             self.synthesizer = AVSpeechSynthesizer()
         }
-        
     }
 }

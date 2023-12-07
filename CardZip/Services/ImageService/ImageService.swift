@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 extension ImageService{
     enum SourceType:CaseIterable{
         case album
@@ -19,6 +20,8 @@ final class ImageService{
     let cacheTable = SourceType.allCases.reduce(into: [:]) {
         $0[$1] = NSCache<NSString,UIImage>()    }
     private init(){}
+    var subscription = Set<AnyCancellable>()
+    
     func getKeyname(albumID: String,size:CGSize? = nil)-> String{
         guard let size else {return albumID}
         return "\(albumID)_\(size.width)_\(size.height)"
