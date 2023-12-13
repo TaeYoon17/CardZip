@@ -9,15 +9,10 @@ import UIKit
 import Combine
 actor TaskCounter{
     @Published private(set) var count = 0
-    private(set) var maxCount: Int
-    private var completed = PassthroughSubject<Bool,Never>()
+    @Published private(set) var maxCount: Int = 0
+    private(set) var completed = PassthroughSubject<Bool,Never>()
     private var subscription = Set<AnyCancellable>()
-    init(max:Int = 0) {
-        self.maxCount = max
-    }
-    func changeMax(_ max:Int){
-        self.maxCount = max
-    }
+    func changeMax(_ max:Int){ self.maxCount = max }
     private func increment(){
         count += 1
         if maxCount == count{
@@ -27,12 +22,8 @@ actor TaskCounter{
     }
     private func reset(){ count = 0 }
     private func failed(){ completed.send(false) }
-    func sink(receiveValue:@escaping (Bool)->Void)-> Subscribers.Sink<Bool,Never>{
-        let sinker = Subscribers.Sink<Bool,Never>.init { _ in } receiveValue: { val in
-            receiveValue(val)
-        }
-        completed.subscribe(sinker)
-        return sinker
+    var progress: AnyPublisher<(Int,Int),Never>{
+        $count.combineLatest($maxCount).eraseToAnyPublisher()
     }
 }
 extension TaskCounter{
@@ -51,7 +42,7 @@ extension TaskCounter{
                     }
                 }
             }
-            self.sink(receiveValue: {[group] val in
+            self.completed.sink(receiveValue: {[group] val in
                 if !val{ group.cancelAll() }
             }).store(in: &subscription)
             try await group.waitForAll()

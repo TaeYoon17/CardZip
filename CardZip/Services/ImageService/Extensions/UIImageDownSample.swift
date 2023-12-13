@@ -14,7 +14,7 @@ extension UIImage{
         
         let imageSourceOption = [kCGImageSourceShouldCache: false] as CFDictionary
         let imageSource = CGImageSourceCreateWithURL(url, imageSourceOption)!
-        let maxPixel = max(size.width, size.height) * scale
+        let maxPixel = min(max(size.width, size.height ) * scale,2080)
         let downSampleOptions = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceShouldCacheImmediately: true,

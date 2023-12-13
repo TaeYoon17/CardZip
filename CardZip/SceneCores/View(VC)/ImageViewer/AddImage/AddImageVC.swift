@@ -20,11 +20,17 @@ final class AddImageVC: ImageViewerVC{
             .receive(on: RunLoop.main)
             .sink{[weak self] isLoading in
             self?.collectionView.isHidden = isLoading
+            self?.progress.isHidden = !isLoading
             if isLoading{
                 self?.activitiIndicator.startAnimating()
+                
             }else{
                 self?.activitiIndicator.stopAnimating()
             }
+        }.store(in: &subscription)
+        vm.passthroughProgress.receive(on: RunLoop.main)
+            .sink{[weak self] number in
+            self?.progress.setProgress(number, animated: true)
         }.store(in: &subscription)
         self.closeBtn.title = self.vm.cardItem?.title ?? ""
         imageCountlabel.totalCount.send(vm.cardItem.imageID.count)

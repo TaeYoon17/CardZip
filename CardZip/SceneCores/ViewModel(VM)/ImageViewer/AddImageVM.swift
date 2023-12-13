@@ -15,6 +15,7 @@ final class AddImageVM: ImageViewerVM,ImageSearchDelegate{
     var photoService = PhotoService.shared
     var passthorughImgID = PassthroughSubject<([String],ImageRC.SnapShot),Never>()
     var passthoroughLoading = PassthroughSubject<Bool,Never>()
+    var passthroughProgress = PassthroughSubject<Float,Never>()
     var updatedIRC = PassthroughSubject<[FileModel],Never>()
     weak var vc: UIViewController!
     override init(cardItem: CardItem, setName: String){
@@ -23,6 +24,12 @@ final class AddImageVM: ImageViewerVM,ImageSearchDelegate{
             guard let self,vc == self.vc else {return}
             self.albumSelectionUpdate(ids:collections)
         }.store(in: &subscription)
+        Task{
+            await photoService.counter.progress.sink {[weak self] (count,max) in
+                let max = max == 0 ? 1 : max
+                self?.passthroughProgress.send(Float(count) / Float(max))
+            }.store(in: &subscription)
+        }
     }
     deinit{
         ImageService.shared.resetCache(type: .file)

@@ -18,7 +18,7 @@ final class PhotoService{
     private weak var viewController: UIViewController?
     private let cachingManager = PHCachingImageManager()
     static let limitedNumber = 10
-    var counter = TaskCounter(max: 0)
+    var counter = TaskCounter()
     var subscription = Set<AnyCancellable>()
     private init(){ bindingCounter()}
     
@@ -104,10 +104,7 @@ extension PhotoService: PHPickerViewControllerDelegate{
     func bindingCounter(){
         Task{
             await counter.$count.sink{val in
-                print("fetginc \(val)")
-            }.store(in: &subscription)
-            await counter.sink { val in
-                print(val)
+                print("Task Counting \(val)")
             }.store(in: &subscription)
         }
     }

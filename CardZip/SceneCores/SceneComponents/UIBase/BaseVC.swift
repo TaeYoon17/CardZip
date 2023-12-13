@@ -19,6 +19,15 @@ class BaseVC: UIViewController{
         activityIndicator.stopAnimating()
         return activityIndicator
     }()
+    @MainActor lazy var progress = {
+        let p = UIProgressView(progressViewStyle: .bar)
+        p.progressTintColor = .cardPrimary
+        p.trackTintColor = .bgSecond
+        p.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
+        p.center = self.view.center
+        p.center.y = p.center.y + 30
+        return p
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         configureLayout()
@@ -26,6 +35,8 @@ class BaseVC: UIViewController{
         configureConstraints()
         configureView()
         view.addSubview(activitiIndicator)
+        view.addSubview(progress)
+        progress.isHidden = true
     }
     func configureLayout(){
         
