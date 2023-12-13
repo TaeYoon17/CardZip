@@ -19,6 +19,7 @@ extension CardFrontView: UICollectionViewDelegate{
                 print("fetch Item",itemIdentifier.imagePath)
                 do{
                     cell.image = try await ImageService.shared.fetchByCache(type: .file, name: itemIdentifier.imagePath,size: .init(width: 720, height: 720))
+                    
                 }catch{
                     print(error)
                 }

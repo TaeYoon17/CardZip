@@ -11,7 +11,6 @@ extension AddImageVC{
     @MainActor func updateSnapshot(result: [String]){
         var snapshot = NSDiffableDataSourceSnapshot<Section,String>()
         snapshot.appendSections([.main])
-//        self.imageCount = snapshot.itemIdentifiers.count + (result.isEmpty ? 0 : 1)
         snapshot.appendItems(result,toSection: .main)
         snapshot.appendItems(["addBtn"], toSection: .main)
         dataSource.apply(snapshot,animatingDifferences: true)

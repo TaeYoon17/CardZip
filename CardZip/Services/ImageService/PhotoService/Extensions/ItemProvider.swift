@@ -7,6 +7,7 @@
 
 import UIKit
 import Photos
+import PhotosUI
 extension NSItemProvider{
     func loadimage() async throws ->UIImage?{
         let type: NSItemProviderReading.Type = UIImage.self
@@ -19,4 +20,18 @@ extension NSItemProvider{
             }
         }
     }
+}
+extension UIImage{
+    static func fetchBy(phResult: PHPickerResult) async throws -> UIImage{
+        let item = phResult.itemProvider 
+        guard let image = try await item.loadimage() else {
+            throw ImageServiceError.PHAssetFetchError
+        }
+        return image
+    }
+}
+
+enum ImageServiceError:Error{
+    case fetchError
+    case PHAssetFetchError
 }

@@ -23,7 +23,7 @@ extension ImageService{
             throw FetchError.load
         }
     }
-    func _appendCache(type: SourceType,image:UIImage,keyName:String)async{
+    func _appendCache(type: SourceType,image:UIImage,keyName:String) async {
         cacheTable[type]?.setObject(image, forKey: keyName as NSString)
     }
     func getKeyName(name:String,size:CGSize? = nil) -> String{
@@ -41,14 +41,12 @@ extension ImageService{
         await _appendCache(type: type, image: image, keyName: keyName)
     }
     func appendCache(type: SourceType,names:[String],size:CGSize? = nil) async throws{
-        try await withThrowingTaskGroup(of: Void.self) {[weak self] group in
+        await withThrowingTaskGroup(of: Void.self) {[weak self] group in
             for name in names {
                 group.addTask{[weak self] in
                     try await self?.appendCache(type: type,name: name, size: size)
                 }
             }
-            // 기다려 주지 않아야한다...!
-//            try await group.waitForAll()
         }
     }
     @MainActor func fetchByCache(type:SourceType,name: String,size:CGSize? = nil) async throws -> UIImage?{

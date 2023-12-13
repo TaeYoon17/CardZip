@@ -12,17 +12,8 @@ class ImageViewerVC: BaseVC{
     enum Section{ case main }
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     var dataSource: UICollectionViewDiffableDataSource<Section,String>!
-//    weak var vm: ImageViewerVM!
     override func viewDidLoad() {
         super.viewDidLoad()
-//        vm.imageCount.sink { [weak self] cnt in
-//            guard let self else {return}
-//            let totalCnt = vm.selection.count
-//            imageCountlabel.configuration?.attributedTitle = AttributedString("\(min(cnt + 1,totalCnt)) / \(totalCnt)" ,attributes: .init([NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15, weight: .medium)]))
-//        }.store(in: &subscription)
-//        vm.imageCount
-//            .assign(to: \.value, on: imageCountlabel.imageCount)
-//            .store(in: &subscription)
     }
     
     final lazy var closeBtn = {

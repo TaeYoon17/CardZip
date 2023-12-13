@@ -20,29 +20,6 @@ extension ImageService{
         let fileName = result.assetIdentifier!.getLocalPathName(type: .photo)
         image?.saveToDocument(fileName: fileName)
     }
-//    func saveToDocumentBy(results: [PHPickerResult],counter: TaskCounter? = nil) async throws{
-//        subscription.removeAll()
-//        let imageResults = ImageService.shared.getDownloadTarget(results: results)
-//        await counter?.changeMax(imageResults.count)
-//        await counter?.reset()
-//        try await withThrowingTaskGroup(of: Void.self) { [weak self] group in
-//            guard let self else {return}
-//            for result in imageResults{
-//                group.addTask {
-//                    do{
-//                        try await self.saveToDocumentBy(result: result)
-//                        await counter?.increment()
-//                    }catch{
-//                        await counter?.failed()
-//                    }
-//                }
-//            }
-//            await counter?.sink(receiveValue: {[group] val in
-//                if !val{ group.cancelAll() }
-//            }).store(in: &subscription)
-//            try await group.waitForAll()
-//        }
-//    }
     
 }
 

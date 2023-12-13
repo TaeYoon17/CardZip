@@ -28,6 +28,7 @@ extension SettingVC{
     typealias InfoType = SettingType.Info
 }
 final class SettingVC: BaseVC{
+    
     var dataSource: UICollectionViewDiffableDataSource<SettingType,Item.ID>!
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     var sectionModel: AnyModelStore<Section>!
@@ -45,6 +46,7 @@ final class SettingVC: BaseVC{
             guard let self else {return}
             PhotoService.shared.presentToLibrary(vc: self)
         }))
+        
         let languageItems:[Item] = SettingType.Speaker.allCases.map{ speaker in
             Item(parent: .speaker, rawValue: speaker.rawValue,action: { [weak self] in
             guard let self else {return}

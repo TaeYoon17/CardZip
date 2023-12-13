@@ -29,10 +29,5 @@ extension AddImageVC{
                 return cell
             }
         })
-//        Task{
-//            let imageIds = cardItem?.imageID ?? []
-//            await selectionUpdate(ids: imageIds)
-//            updateSnapshot(result: imageIds)
-//        }
     }
 }

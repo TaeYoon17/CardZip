@@ -21,6 +21,7 @@ final class PhotoService{
     var counter = TaskCounter(max: 0)
     var subscription = Set<AnyCancellable>()
     private init(){ bindingCounter()}
+    
     func presentPicker(vc: UIViewController,multipleSelection: Bool = false,prevIdentifiers:[String]? = nil) {
         self.viewController = vc
         let filter = PHPickerFilter.images
@@ -36,6 +37,7 @@ final class PhotoService{
         picker.delegate = self
         viewController?.present(picker, animated: true)
     }
+    
     func presentPicker(vc: UIViewController,maxSelection:Int = 1) {
         self.viewController = vc
         let filter = PHPickerFilter.images
