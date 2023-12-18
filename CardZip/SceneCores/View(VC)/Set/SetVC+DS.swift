@@ -26,15 +26,11 @@ extension SetVC{
                 print("vm.$setItem.sink")
                 self?.initCardModel(cardItems: setItem.cardList)
             }.store(in: &subscription)
-            
             vm.$studyType
                 .debounce(for: 0.2, scheduler: RunLoop.main)
                 .sink{[weak self] type in
-                    print("studyType")
                     guard let self else {return}
-                    Task{
-                        await self.searchAction(text: self.vm.searchText,type: type)
-                    }
+                    Task{ await self.searchAction(text: self.vm.searchText,type: type) }
                 }.store(in: &subscription)
             vm.passthroughUpdateCard
 //                .debounce(for: 0.2, scheduler: RunLoop.main)

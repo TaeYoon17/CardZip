@@ -43,7 +43,8 @@ final class SetVM{
             recentSetId = dbKey
             self.setItem = SetItem(table: setTable)
         }
-        else{ // 별표 세트
+        else{
+            // MARK: -- 별표 세트
             if setTable.cardList.isEmpty{
                 setItem.imagePath = nil
                 passthroughError.send(.likeSetCardEmpty)

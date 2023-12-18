@@ -7,14 +7,18 @@
 
 import WidgetKit
 import SwiftUI
-
+struct SimpleEntry: TimelineEntry {
+    let date: Date
+    let emoji: String
+    let background:String
+}
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), emoji: "😀")
+        SimpleEntry(date: Date(), emoji: "😀",background: "")
     }
     
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), emoji: "😀")
+        let entry = SimpleEntry(date: Date(), emoji: "😀",background: "")
         completion(entry)
     }
     
@@ -25,7 +29,7 @@ struct Provider: TimelineProvider {
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, emoji: "😀")
+            let entry = SimpleEntry(date: entryDate, emoji: "😀",background: "ARKit")
             entries.append(entry)
         }
         
@@ -34,12 +38,10 @@ struct Provider: TimelineProvider {
     }
 }
 
-struct SimpleEntry: TimelineEntry {
-    let date: Date
-    let emoji: String
-}
+
 
 struct IntensivelyWidget: Widget {
+    
     let kind: String = "IntensivelyWidget"
     
     var body: some WidgetConfiguration {
@@ -47,7 +49,7 @@ struct IntensivelyWidget: Widget {
             if #available(iOS 17.0, *) {
                 IntensivelyWidgetEntryView(entry: entry)
                     .containerBackground(for: .widget, alignment: .center, content: {
-                        Image("ARKit")
+                        Image(entry.background)
                             .resizable()
                             .scaledToFill()
                             .overlay(.ultraThinMaterial.opacity(0.95))
@@ -55,22 +57,22 @@ struct IntensivelyWidget: Widget {
                     })
             } else {
                 IntensivelyWidgetEntryView(entry: entry)
-                //                    .padding()
                     .background {
-                        Image("ARKit").resizable().scaledToFill().overlay(.ultraThinMaterial)
+                        Image(entry.background).resizable().scaledToFill().overlay(.ultraThinMaterial)
                     }.ignoresSafeArea(.all,edges:.all)
                     .frame(width: .infinity,height: .infinity)
                     .background(.red)
             }
         }
+        
         .configurationDisplayName("My Widget")
         .description("This is an example widget.")
     }
 }
 
-#Preview(as: .systemSmall) {
-    IntensivelyWidget()
-} timeline: {
-    SimpleEntry(date: .now, emoji: "😀")
-    SimpleEntry(date: .now, emoji: "🤩")
-}
+//#Preview(as: .systemSmall) {
+//    IntensivelyWidget()
+//} timeline: {
+//    SimpleEntry(date: .now, emoji: "😀", background: "ARKit")
+//    SimpleEntry(date: .now, emoji: "🤩",background: "SwiftUI")
+//}

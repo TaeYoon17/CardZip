@@ -12,13 +12,28 @@ struct IntensivelyWidgetEntryView : View {
     var body: some View {
         VStack {
             HStack{
-                Text("집중 단어")
                 Spacer()
-                Text("\(0) 개")
+                Text("집중 단어").font(.title3.bold())
+                Text("\(0)개").font(.system(.title3,weight: .heavy))
             }
-            VStack{
+            if entry.background.isEmpty{
                 ForEach(0..<3,id:\.self){idx in
-                    Text("\(idx) 단어")
+                    HStack{
+                        Text("Term: ")
+                        Text("Milk")
+                        Text("Description: ")
+                        Text("")
+                    }
+                }
+            }else{
+                VStack(spacing:0){
+                    Image("SwiftUI")
+                        .resizable().scaledToFill()
+                        .frame(width: 66,height:66)
+                    HStack{
+                        Text("SwiftUI")
+                        Text("스위프트 UI")
+                    }
                 }
             }
             Spacer()
@@ -27,10 +42,10 @@ struct IntensivelyWidgetEntryView : View {
 }
 //                Text(entry.date, style: .time)
 //                Text(entry.emoji)
-#Preview(as: .systemSmall) {
-    IntensivelyWidget()
-} timeline: {
-    SimpleEntry(date: .now, emoji: "😀")
-    SimpleEntry(date: .now, emoji: "🤩")
-}
+//#Preview(as: .systemSmall) {
+//    IntensivelyWidget()
+//} timeline: {
+//    SimpleEntry(date: .now, emoji: "😀", background: "Metal")
+//     SimpleEntry(date: .now, emoji: "🤩",background: "ARKit")
+//}
 

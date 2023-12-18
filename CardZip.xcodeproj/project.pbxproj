@@ -112,7 +112,7 @@
 		63730F642AD274F800BC8F35 /* DisclosureHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F632AD274F800BC8F35 /* DisclosureHeader.swift */; };
 		63730F662AD2768000BC8F35 /* DisclosureItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F652AD2768000BC8F35 /* DisclosureItemCell.swift */; };
 		63730F6B2AD27BC300BC8F35 /* SectionBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F6A2AD27BC300BC8F35 /* SectionBackground.swift */; };
-		63730F6D2AD28D3100BC8F35 /* UserDefults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F6C2AD28D3100BC8F35 /* UserDefults.swift */; };
+		63730F6D2AD28D3100BC8F35 /* DefaultsState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F6C2AD28D3100BC8F35 /* DefaultsState.swift */; };
 		63730F6F2AD28F3900BC8F35 /* TableRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F6E2AD28F3900BC8F35 /* TableRepository.swift */; };
 		63730F712AD2901800BC8F35 /* CardSetRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F702AD2901800BC8F35 /* CardSetRepository.swift */; };
 		63730F742AD290B000BC8F35 /* CardSetTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63730F732AD290B000BC8F35 /* CardSetTable.swift */; };
@@ -195,6 +195,8 @@
 		63AE9B3A2B25ABE400D12C38 /* IntensivelyWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE9B392B25ABE400D12C38 /* IntensivelyWidget.swift */; };
 		63AE9B3C2B25ABE500D12C38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63AE9B3B2B25ABE500D12C38 /* Assets.xcassets */; };
 		63AE9B402B25ABE500D12C38 /* IntensivelyWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 63AE9B302B25ABE400D12C38 /* IntensivelyWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		63B2EAB22B30AD8700F15392 /* IntensivelyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B2EAB12B30AD8700F15392 /* IntensivelyType.swift */; };
+		63B2EAB52B30B1AB00F15392 /* IntensivelyEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B2EAB42B30B1AB00F15392 /* IntensivelyEntry.swift */; };
 		63B3F9502B2985880096ABA9 /* UIImageFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B3F94F2B2985880096ABA9 /* UIImageFetch.swift */; };
 		63B3F9522B2985BC0096ABA9 /* UIImageDownSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B3F9512B2985BC0096ABA9 /* UIImageDownSample.swift */; };
 		63C3EC322AF1F50600A426EC /* ImageSearchVC+Collectionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C3EC312AF1F50600A426EC /* ImageSearchVC+Collectionable.swift */; };
@@ -336,7 +338,7 @@
 		63730F632AD274F800BC8F35 /* DisclosureHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureHeader.swift; sourceTree = "<group>"; };
 		63730F652AD2768000BC8F35 /* DisclosureItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureItemCell.swift; sourceTree = "<group>"; };
 		63730F6A2AD27BC300BC8F35 /* SectionBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionBackground.swift; sourceTree = "<group>"; };
-		63730F6C2AD28D3100BC8F35 /* UserDefults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefults.swift; sourceTree = "<group>"; };
+		63730F6C2AD28D3100BC8F35 /* DefaultsState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsState.swift; sourceTree = "<group>"; };
 		63730F6E2AD28F3900BC8F35 /* TableRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableRepository.swift; sourceTree = "<group>"; };
 		63730F702AD2901800BC8F35 /* CardSetRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSetRepository.swift; sourceTree = "<group>"; };
 		63730F732AD290B000BC8F35 /* CardSetTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSetTable.swift; sourceTree = "<group>"; };
@@ -418,6 +420,8 @@
 		63AE9B392B25ABE400D12C38 /* IntensivelyWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensivelyWidget.swift; sourceTree = "<group>"; };
 		63AE9B3B2B25ABE500D12C38 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63AE9B3D2B25ABE500D12C38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63B2EAB12B30AD8700F15392 /* IntensivelyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensivelyType.swift; sourceTree = "<group>"; };
+		63B2EAB42B30B1AB00F15392 /* IntensivelyEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensivelyEntry.swift; sourceTree = "<group>"; };
 		63B3F94F2B2985880096ABA9 /* UIImageFetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageFetch.swift; sourceTree = "<group>"; };
 		63B3F9512B2985BC0096ABA9 /* UIImageDownSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageDownSample.swift; sourceTree = "<group>"; };
 		63C3EC312AF1F50600A426EC /* ImageSearchVC+Collectionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageSearchVC+Collectionable.swift"; sourceTree = "<group>"; };
@@ -427,6 +431,8 @@
 		63D04ACC2B2773A900D10520 /* IntensivelyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensivelyView.swift; sourceTree = "<group>"; };
 		63D35CCE2AFA938600B23894 /* ImageReferenceCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageReferenceCount.swift; sourceTree = "<group>"; };
 		63E50EF52AD9820A003E0800 /* ErrorPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPolicy.swift; sourceTree = "<group>"; };
+		63E68A7D2B30A857004F359C /* CardZip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CardZip.entitlements; sourceTree = "<group>"; };
+		63E68A7E2B30A8A4004F359C /* IntensivelyWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = IntensivelyWidgetExtension.entitlements; sourceTree = "<group>"; };
 		63EAED4D2ADD05EA00046C44 /* EditableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableVC.swift; sourceTree = "<group>"; };
 		63F27D3C2AE600ED007A11A0 /* MainVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVM.swift; sourceTree = "<group>"; };
 		63F27D3E2AE6019E007A11A0 /* MainDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDataSource.swift; sourceTree = "<group>"; };
@@ -538,6 +544,7 @@
 		632A483D2ACCE81B00413AF4 = {
 			isa = PBXGroup;
 			children = (
+				63E68A7E2B30A8A4004F359C /* IntensivelyWidgetExtension.entitlements */,
 				632A48482ACCE81B00413AF4 /* CardZip */,
 				63AE9B362B25ABE400D12C38 /* IntensivelyWidget */,
 				63AE9B312B25ABE400D12C38 /* Frameworks */,
@@ -557,6 +564,7 @@
 		632A48482ACCE81B00413AF4 /* CardZip */ = {
 			isa = PBXGroup;
 			children = (
+				63E68A7D2B30A857004F359C /* CardZip.entitlements */,
 				63A3D4292ACE3BF200E6B10E /* Services */,
 				63A3D43A2ACE3CF400E6B10E /* AppCores */,
 				63A3D4362ACE3CB700E6B10E /* Helper */,
@@ -1057,6 +1065,7 @@
 		63A3D43A2ACE3CF400E6B10E /* AppCores */ = {
 			isa = PBXGroup;
 			children = (
+				63B2EAB32B30AEB900F15392 /* UserDefaults */,
 				636121632B1DD22E0053C5CC /* App */,
 				632A48642ACCED6A00413AF4 /* API_Key.swift */,
 				6386E0C32AE5781A0044F7DF /* Splash */,
@@ -1065,7 +1074,6 @@
 				632A48542ACCE81C00413AF4 /* LaunchScreen.storyboard */,
 				632A48492ACCE81B00413AF4 /* AppDelegate.swift */,
 				632A484B2ACCE81B00413AF4 /* SceneDelegate.swift */,
-				63730F6C2AD28D3100BC8F35 /* UserDefults.swift */,
 			);
 			path = AppCores;
 			sourceTree = "<group>";
@@ -1139,12 +1147,22 @@
 			isa = PBXGroup;
 			children = (
 				63D04ACC2B2773A900D10520 /* IntensivelyView.swift */,
+				63B2EAB42B30B1AB00F15392 /* IntensivelyEntry.swift */,
 				63AE9B372B25ABE400D12C38 /* IntensivelyWidgetBundle.swift */,
 				63AE9B392B25ABE400D12C38 /* IntensivelyWidget.swift */,
 				63AE9B3B2B25ABE500D12C38 /* Assets.xcassets */,
 				63AE9B3D2B25ABE500D12C38 /* Info.plist */,
 			);
 			path = IntensivelyWidget;
+			sourceTree = "<group>";
+		};
+		63B2EAB32B30AEB900F15392 /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				63730F6C2AD28D3100BC8F35 /* DefaultsState.swift */,
+				63B2EAB12B30AD8700F15392 /* IntensivelyType.swift */,
+			);
+			path = UserDefaults;
 			sourceTree = "<group>";
 		};
 		63B3F94E2B29855A0096ABA9 /* Extensions */ = {
@@ -1321,6 +1339,7 @@
 				630248AF2AF51E6100D76D33 /* ImageSearchable.swift in Sources */,
 				6309478F2AE288690095BFEA /* Setting+Image.swift in Sources */,
 				635C3BCF2ADFEC6900994BD8 /* SetListVC+SearchDelegate.swift in Sources */,
+				63B2EAB52B30B1AB00F15392 /* IntensivelyEntry.swift in Sources */,
 				630248AB2AF519DB00D76D33 /* ResponseError.swift in Sources */,
 				63A9A3D12AF1FFCA00F9A147 /* ImageSearchVM.swift in Sources */,
 				633BD4B92AD7FCC9006D6955 /* CardVC+Delegate.swift in Sources */,
@@ -1434,7 +1453,7 @@
 				63A3D4482ACE3F9A00E6B10E /* BaseCell.swift in Sources */,
 				63B3F9522B2985BC0096ABA9 /* UIImageDownSample.swift in Sources */,
 				63A3D4392ACE3CCD00E6B10E /* CircleButton.swift in Sources */,
-				63730F6D2AD28D3100BC8F35 /* UserDefults.swift in Sources */,
+				63730F6D2AD28D3100BC8F35 /* DefaultsState.swift in Sources */,
 				639976BF2AEA0D7600561439 /* AddSetItemCellVM.swift in Sources */,
 				633BD4B02AD7DEB8006D6955 /* CardVC+Collectionable.swift in Sources */,
 				63A9A3CC2AF1FC3A00F9A147 /* ImageSearchDS.swift in Sources */,
@@ -1461,6 +1480,7 @@
 				632A48652ACCED6A00413AF4 /* API_Key.swift in Sources */,
 				632F91E12AF86CE4001784C0 /* ImageViewerVM.swift in Sources */,
 				6373B2AB2AE3CBF0009A39FA /* SplashController.swift in Sources */,
+				63B2EAB22B30AD8700F15392 /* IntensivelyType.swift in Sources */,
 				6357EA4C2ADBBB6F005ED852 /* ShowImageVC+Registration.swift in Sources */,
 				633BB4672AD6EB04005E8E09 /* UINavigationControllerExtensions.swift in Sources */,
 				630248AD2AF51C7500D76D33 /* ImageSearchResponse.swift in Sources */,
@@ -1668,6 +1688,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CardZip/CardZip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3W9F68ZTUJ;
@@ -1703,6 +1724,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CardZip/CardZip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3W9F68ZTUJ;
@@ -1737,6 +1759,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = IntensivelyWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3W9F68ZTUJ;
@@ -1754,9 +1777,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tistory.arpple.CardZip.IntensivelyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1765,6 +1791,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = IntensivelyWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3W9F68ZTUJ;
@@ -1782,9 +1809,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tistory.arpple.CardZip.IntensivelyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

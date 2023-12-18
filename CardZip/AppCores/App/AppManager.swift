@@ -13,6 +13,7 @@ extension App{
         @DefaultsState(\.likedSet) var liked
         @DefaultsState(\.descriptionLanguageCode) var descriptionLanguageCode
         @DefaultsState(\.termLanguageCode) var termLanguageCode
+        @DefaultsState(\.intensivelies,path: \.intensivelyShared) var intensivelies
         private init(){ }
         func gotoPrivacySettings() {
             guard let url = URL(string: UIApplication.openSettingsURLString),
@@ -54,9 +55,13 @@ extension App{
                 setItem.imagePath = image
                 setItem.title = "Pin Memorize Intensively".localized
                 setRepository?.updateHead(set: setTable, setItem: setItem)
+                Task{
+                    let usingItem = Array(setItem.cardList.shuffled().prefix(3)).map{v in
+                        IntensivelyType(term: v.title,descripotion: v.definition,image: v.imageID.first ?? "")
+                    }
+                    intensivelies = usingItem
+                }
             }
         }
-        
     }
-    
 }
