@@ -9,8 +9,9 @@ import Foundation
 import WidgetKit
 import SwiftUI
 struct IntensivelyEntry: TimelineEntry {
-    let date: Date
+    var date: Date
     let term: String
     let description:String
-    let image: Image
+    let cnt:Int
+    let image: Image?
 }

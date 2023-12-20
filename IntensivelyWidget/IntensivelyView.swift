@@ -10,34 +10,52 @@ import WidgetKit
 struct IntensivelyWidgetEntryView : View {
     var entry: Provider.Entry
     var body: some View {
-        VStack {
-            HStack{
-                Spacer()
-                Text("집중 단어").font(.title3.bold())
-                Text("\(0)개").font(.system(.title3,weight: .heavy))
-            }
-            if entry.background.isEmpty{
-                ForEach(0..<3,id:\.self){idx in
-                    HStack{
-                        Text("Term: ")
-                        Text("Milk")
-                        Text("Description: ")
-                        Text("")
-                    }
-                }
-            }else{
-                VStack(spacing:0){
-                    Image("SwiftUI")
+        VStack(alignment: .leading, spacing:4){
+            if let image = entry.image{
+                HStack{
+                    image
                         .resizable().scaledToFill()
                         .frame(width: 66,height:66)
-                    HStack{
-                        Text("SwiftUI")
-                        Text("스위프트 UI")
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    Spacer()
+                }
+                VStack(alignment:.leading,spacing: 4){
+                    Text(entry.term).font(.headline).fontWeight(.heavy)
+                        .minimumScaleFactor(0.9)
+                        .lineLimit(1)
+                    Text(entry.description).font(.system(size: 12))
+                        .multilineTextAlignment(.leading).padding(.bottom,-4)
+                        .minimumScaleFactor(0.9)
+                }
+            }else{
+                VStack(spacing:6){
+                    HStack(alignment: .firstTextBaseline, spacing:0){
+                        Text("집중 단어").foregroundStyle(.cardSecondary)
+                        Spacer()
+                        Text("\(entry.cnt)개")
+                    }.font(.system(size: 13)).fontWeight(.bold)
+                        
+                    Divider().frame(height: 1).foregroundStyle(.cardSecondary)
+                    VStack(alignment:.center,spacing: 4){
+                        Text(entry.term).font(.title2).fontWeight(.heavy)
+                            .minimumScaleFactor(0.666)
+                            .lineLimit(2)
+                        Text(entry.description).font(.system(size: 13))
+                            .multilineTextAlignment(.center).padding(.bottom,-4)
+                            .minimumScaleFactor(0.9)
                     }
                 }
             }
             Spacer()
-        }
+        }.overlay(alignment:.topTrailing){
+            if entry.image != nil{
+                VStack(alignment:.trailing, spacing:0){
+                    Text("집중 단어").foregroundStyle(.cardSecondary).fontWeight(.semibold)
+                    Text("\(entry.cnt)개")
+                }.font(.system(size: 13)).fontWeight(.bold)
+            }
+        }.padding(-4)
+        
     }
 }
 //                Text(entry.date, style: .time)
@@ -46,6 +64,6 @@ struct IntensivelyWidgetEntryView : View {
 //    IntensivelyWidget()
 //} timeline: {
 //    SimpleEntry(date: .now, emoji: "😀", background: "Metal")
-//     SimpleEntry(date: .now, emoji: "🤩",background: "ARKit")
+//    SimpleEntry(date: .now, emoji: "🤩",background: "Metal")
 //}
 

@@ -6,11 +6,12 @@
 //
 
 import Foundation
-
 struct IntensivelyType:Codable{
+    var cnt:Int
     var term: String = ""
     var descripotion: String = ""
-    var image: String = ""
+    var image: Data? = nil
+    
 }
 extension UserDefaults{
     var intensivelies: [IntensivelyType]?{

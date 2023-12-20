@@ -16,12 +16,7 @@ final class SplashController: BaseVC{
     weak var window: UIWindow?
     override func viewDidLoad() {
         super.viewDidLoad()
-//        DispatchQueue.main.async {
-//            Task{@MainActor in
-//                await App.MigrationHelper.shared?.imageMigration()
-//                print(ImageRC.shared.instance)
-//            }
-//        }
+
     }
     override func configureLayout() {
         super.configureLayout()
@@ -50,6 +45,7 @@ final class SplashController: BaseVC{
         
     }
     @MainActor func pushVC() async throws{
+        App.Manager.shared.updateLikes()
         let vc = MainVC()
         let nav = UINavigationController(rootViewController: vc)
         if let recent,let recentTable = repository?.getTableBy(tableID: recent){
@@ -58,9 +54,6 @@ final class SplashController: BaseVC{
             let setVC = SetVC()
             setVC.vm = setVM
             vc.navigationController?.pushViewController(setVC, animated: false)
-//            if setItem.cardCount > 0{
-//                Task{ setVC.selectAction() }
-//            }
         }
         window?.rootViewController = nav
         window?.makeKeyAndVisible()

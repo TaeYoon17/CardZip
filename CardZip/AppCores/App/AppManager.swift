@@ -55,11 +55,25 @@ extension App{
                 setItem.imagePath = image
                 setItem.title = "Pin Memorize Intensively".localized
                 setRepository?.updateHead(set: setTable, setItem: setItem)
-                Task{
-                    let usingItem = Array(setItem.cardList.shuffled().prefix(3)).map{v in
-                        IntensivelyType(term: v.title,descripotion: v.definition,image: v.imageID.first ?? "")
+                let usingItem = Array(setItem.cardList.shuffled().prefix(3))
+                updateIntensivelyWidget(usingItem: usingItem,cnt: setItem.cardList.count)
+            }
+        }
+        private func updateIntensivelyWidget(usingItem:[CardItem],cnt: Int){
+            Task{
+                let imageNames:[String?] = usingItem.map{$0.imageID.first}
+                var imageDatas:[Data?] = []
+                for name in imageNames{
+                    if let name{
+                        let image = try await UIImage.fetchBy(fileName: name,ofSize: .init(width: 144, height: 144))
+                        imageDatas.append(image.jpegData(compressionQuality: 1))
+                    }else{
+                        imageDatas.append(nil)
                     }
-                    intensivelies = usingItem
+                }
+                print(usingItem,imageDatas)
+                intensivelies = zip(usingItem,imageDatas).map{ item, imageData in
+                    IntensivelyType(cnt: cnt, term: item.title, descripotion: item.definition, image: imageData)
                 }
             }
         }
