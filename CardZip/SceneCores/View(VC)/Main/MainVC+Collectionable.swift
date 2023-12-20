@@ -18,7 +18,7 @@ extension MainVC: Collectionable{
         let pinnedItemRegi = pinnedRegistration
         let layoutHeaderRegi = layoutHeaderRegistration
 
-        dataSource = MainDataSource(vm: vm,collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+        dataSource = MainDataSource(vm: vm,collectionView: collectionView) {[weak self] collectionView, indexPath, itemIdentifier in
             guard let sectionType = SectionType(rawValue: indexPath.section) else {return .init()}
             switch sectionType{
             case .setList:
@@ -31,9 +31,9 @@ extension MainVC: Collectionable{
                 return collectionView.dequeueConfiguredReusableCell(using: pinnedItemRegi, for: indexPath, item: itemIdentifier)
             }
         }
-        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+        dataSource.supplementaryViewProvider = {[weak self] collectionView, kind, indexPath in
             guard let sectionType = SectionType(rawValue: indexPath.section) else {
-                fatalError("dㅣ게 안됨 ")
+                fatalError("이게 안됨 ")
             }
             switch kind{
             case UICollectionView.elementKindSectionHeader:

@@ -13,6 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @DefaultsState(\.likedSet) var liked
     let repository = CardSetRepository()
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        print("func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions")
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
@@ -43,6 +44,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
 
+    }
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        let intensivelyURL: String = "Card.Zip.Intensively"
+        guard let url = URLContexts.first?.url,
+              let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else { return }
+
+        if intensivelyURL == urlComponents.path {
+            let vc = SplashController(openType: .liked)
+            vc.window = window
+            //MARK: -- 메인 뷰 컨트롤러 메모리 삭제 안되는 문제 해결
+            if let navi = window?.rootViewController as? UINavigationController, let myVC = navi.viewControllers.first as? MainVC{
+                myVC.dataSource = nil
+            }
+            window?.rootViewController = vc
+            window?.makeKeyAndVisible()
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

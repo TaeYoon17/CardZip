@@ -30,6 +30,9 @@ extension MainVC{
                 }
             }.store(in: &subscription)
         }
+        deinit{
+            print("MainDataSource Deinit!!")
+        }
         func initStores(){
             let folderItems = (2...50).map{FolderListItem(title: "Try do this!", setNumber: $0)}
             let pinnedItems:[PinnedItem] = [.init(type: .recent, setItem: SetItem.getByTableId(recentSetTableId)),

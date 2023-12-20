@@ -18,9 +18,7 @@ struct FolderListItem: Identifiable{
     var title:String
     var setNumber: Int
 }
-
-final class MainVC: BaseVC {
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>
+extension MainVC{
     enum SectionType: Int, CaseIterable{
         case pinned,setList,folderList
         var title:String{
@@ -44,6 +42,9 @@ final class MainVC: BaseVC {
         let id : UUID
         var type: SectionType
     }
+}
+final class MainVC: BaseVC {
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section.ID,Item>
     lazy var collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: layout)
     var dataSource: MainDataSource!
     let vm = MainVM()
@@ -58,10 +59,7 @@ final class MainVC: BaseVC {
         }), for: .touchUpInside)
         return btn
     }()
-    lazy var addCardSetBtn = {
-        let btn = NewCardSetBtn()
-        return btn
-    }()
+    lazy var addCardSetBtn = NewCardSetBtn()
     lazy var addFolderBtn = AddFolderBtn()
     lazy var navStack = { [weak self] in
         let st = NavRightStack()
@@ -71,12 +69,15 @@ final class MainVC: BaseVC {
     }()
     let searchBtn = NavBarButton(systemName: "magnifyingglass")
     let moreBtn = NavBarButton(systemName: "ellipsis")
-    
+    deinit{
+        print("MainVC 삭제!!")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         vm.$isExist.sink {[weak self] val in
             guard let self else {return}
-            Task{
+            Task{@MainActor [weak self] in
+                guard let self else {return}
                 self.collectionView.collectionViewLayout = self.layout
             }
         }.store(in: &subscription)
@@ -108,8 +109,7 @@ final class MainVC: BaseVC {
     }
     override func configureConstraints() {
         super.configureConstraints()
-        collectionView.snp.makeConstraints { $0.edges.equalToSuperview()
-        }
+        collectionView.snp.makeConstraints { $0.edges.equalToSuperview()}
         addCardSetBtn.snp.makeConstraints { make in
             if App.Manager.shared.hasNotch(){
                 make.bottom.equalTo(view.safeAreaLayoutGuide).inset(8)

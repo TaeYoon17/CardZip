@@ -9,14 +9,25 @@ import SnapKit
 import UIKit
 import Lottie
 final class SplashController: BaseVC{
+    enum OpenType{
+        case recent
+        case liked
+    }
     @DefaultsState(\.recentSet) var recent
     @DefaultsState(\.likedSet) var liked
+    let openType:OpenType
     let repository = CardSetRepository()
     let animationView = LottieAnimationView()
     weak var window: UIWindow?
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
+    init(openType: OpenType = .recent){
+        self.openType = openType
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    deinit{
+        print("SplachController 삭제")
     }
     override func configureLayout() {
         super.configureLayout()
@@ -48,22 +59,27 @@ final class SplashController: BaseVC{
         App.Manager.shared.updateLikes()
         let vc = MainVC()
         let nav = UINavigationController(rootViewController: vc)
-        if let recent,let recentTable = repository?.getTableBy(tableID: recent){
-            let setItem = SetItem(table: recentTable)
-            let setVM = SetVM(setItem: setItem)
-            let setVC = SetVC()
-            setVC.vm = setVM
-            vc.navigationController?.pushViewController(setVC, animated: false)
+        let setVC = SetVC()
+        switch openType {
+        case .recent:
+            if let recent,let recentTable = repository?.getTableBy(tableID: recent){
+                let setItem = SetItem(table: recentTable)
+                let setVM = SetVM(setItem: setItem)
+                setVC.vm = setVM
+            }
+        case .liked:
+            if let liked,let likedTable = repository?.getTableBy(tableID: liked){
+                let setItem = SetItem(table: likedTable)
+                let setVM = SetVM(setItem: setItem)
+                setVC.vm = setVM
+            }
         }
+        vc.navigationController?.pushViewController(setVC, animated: false)
         window?.rootViewController = nav
         window?.makeKeyAndVisible()
         guard let window else { return }
         let options: UIView.AnimationOptions = .transitionCrossDissolve
         let duration: TimeInterval = 0.4
-        UIView.transition(with: window, duration: duration, options: options, animations: {}, completion:{[weak self] completed in
-            guard let self else {return}
-            // MARK: -- 앱 최초 시작시 바로 최근 학습 카드로 넘어가는 로직
-        })
     }
     
 }

@@ -12,7 +12,6 @@ extension UINavigationController{
     func appendView(type: SideType,view: UIView,topInset: CGFloat = 4){
         self.navigationBar.addSubview(view)
         view.snp.makeConstraints { make in
-
             if self.navigationBar.prefersLargeTitles{
                 make.top.equalToSuperview().inset(topInset)
             }else{

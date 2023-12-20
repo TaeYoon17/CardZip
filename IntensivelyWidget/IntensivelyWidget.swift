@@ -59,9 +59,7 @@ struct IntensivelyWidget: Widget {
                     })
             } else {
                 IntensivelyWidgetEntryView(entry: entry)
-                    .background {
-                        Color.bg
-                    }
+                    .background(.bg)
             }
         }
         .supportedFamilies([.systemSmall])

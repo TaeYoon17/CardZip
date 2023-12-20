@@ -55,7 +55,7 @@ struct IntensivelyWidgetEntryView : View {
                 }.font(.system(size: 13)).fontWeight(.bold)
             }
         }.padding(-4)
-        
+        .widgetURL(URL(string: "Card.Zip.Intensively"))
     }
 }
 //                Text(entry.date, style: .time)
