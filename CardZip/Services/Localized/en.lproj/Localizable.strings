@@ -103,3 +103,9 @@
 "TTS Japanese" = "Japanese";
 "TTS Korean" = "Korean";
 "TTS Spanish (Spain)" = "Spanish (Spain)";
+
+//MARK: -- 위젯 관련
+"Like cards" = "⭐️ Starred cards";
+"Focus" = "Starred";
+"Intensive memorization words" = "Intensive memorization words";
+"counts" = "cards";

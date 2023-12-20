@@ -15,10 +15,6 @@ extension String{
         }
         return displayTitle
     }
-    var localized:String{
-        let str = String(format: NSLocalizedString(self, comment: ""))
-        return str
-    }
     static func localized(_ str:String) -> String{
         
         return str.localized

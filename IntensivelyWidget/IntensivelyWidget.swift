@@ -63,8 +63,8 @@ struct IntensivelyWidget: Widget {
             }
         }
         .supportedFamilies([.systemSmall])
-        .configurationDisplayName("Liked Card Widget")
-        .description("")
+        .configurationDisplayName("Like cards".localized)
+        .description("Intensive memorization words".localized)
     }
 }
 //struct IntensivelyWidget_Previews: PreviewProvider{

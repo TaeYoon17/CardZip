@@ -150,6 +150,11 @@
 		6396CB1C2AFC682A00858139 /* ImageRC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6396CB1B2AFC682A00858139 /* ImageRC.swift */; };
 		6396CB1F2AFC6B8800858139 /* ReferenceCountable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6396CB1E2AFC6B8800858139 /* ReferenceCountable.swift */; };
 		6396CB212AFC6D2900858139 /* ReferenceCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6396CB202AFC6D2900858139 /* ReferenceCounter.swift */; };
+		6398FE302B333D5E00279BA3 /* API_Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632A48642ACCED6A00413AF4 /* API_Key.swift */; };
+		6398FE332B33408300279BA3 /* String+LocalizedExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6398FE322B33408300279BA3 /* String+LocalizedExtension.swift */; };
+		6398FE342B3340A400279BA3 /* String+LocalizedExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6398FE322B33408300279BA3 /* String+LocalizedExtension.swift */; };
+		6398FE352B33454200279BA3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 632A48BD2ACD0FA500413AF4 /* Localizable.strings */; };
+		6398FE372B33462800279BA3 /* PhotoServiceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6398FE362B33462800279BA3 /* PhotoServiceKey.swift */; };
 		639976BF2AEA0D7600561439 /* AddSetItemCellVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639976BE2AEA0D7600561439 /* AddSetItemCellVM.swift */; };
 		639976C32AEA68D300561439 /* UITextField+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639976C22AEA68D300561439 /* UITextField+Combine.swift */; };
 		639976C52AEA792A00561439 /* AddSetHeaderVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639976C42AEA792A00561439 /* AddSetHeaderVM.swift */; };
@@ -385,6 +390,8 @@
 		6396CB1B2AFC682A00858139 /* ImageRC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRC.swift; sourceTree = "<group>"; };
 		6396CB1E2AFC6B8800858139 /* ReferenceCountable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceCountable.swift; sourceTree = "<group>"; };
 		6396CB202AFC6D2900858139 /* ReferenceCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceCounter.swift; sourceTree = "<group>"; };
+		6398FE322B33408300279BA3 /* String+LocalizedExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+LocalizedExtension.swift"; sourceTree = "<group>"; };
+		6398FE362B33462800279BA3 /* PhotoServiceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoServiceKey.swift; sourceTree = "<group>"; };
 		639976BE2AEA0D7600561439 /* AddSetItemCellVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSetItemCellVM.swift; sourceTree = "<group>"; };
 		639976C22AEA68D300561439 /* UITextField+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Combine.swift"; sourceTree = "<group>"; };
 		639976C42AEA792A00561439 /* AddSetHeaderVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSetHeaderVM.swift; sourceTree = "<group>"; };
@@ -599,6 +606,7 @@
 			isa = PBXGroup;
 			children = (
 				632A48BD2ACD0FA500413AF4 /* Localizable.strings */,
+				6398FE322B33408300279BA3 /* String+LocalizedExtension.swift */,
 			);
 			path = Localized;
 			sourceTree = "<group>";
@@ -664,6 +672,7 @@
 			children = (
 				6373252B2B1E22AD009F9474 /* Extensions */,
 				63552A3F2AD51FDA00A7063A /* PhotoService.swift */,
+				6398FE362B33462800279BA3 /* PhotoServiceKey.swift */,
 			);
 			path = PhotoService;
 			sourceTree = "<group>";
@@ -1328,6 +1337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				634FF94C2B3305D40003575D /* Assets.xcassets in Resources */,
+				6398FE352B33454200279BA3 /* Localizable.strings in Resources */,
 				63D9F3552B32EA1000AE6831 /* Assets.xcassets in Resources */,
 				634FF94E2B33119B0003575D /* cardzip.png in Resources */,
 			);
@@ -1453,6 +1463,7 @@
 				6313317E2AD431EC00459515 /* CardRepository.swift in Sources */,
 				6357EA5D2ADC23F5005ED852 /* BackgroundConfigurations.swift in Sources */,
 				63E50EF62AD9820A003E0800 /* ErrorPolicy.swift in Sources */,
+				6398FE372B33462800279BA3 /* PhotoServiceKey.swift in Sources */,
 				631E53932ADAA42B0010E11E /* CardBackView.swift in Sources */,
 				63F27D3F2AE6019E007A11A0 /* MainDataSource.swift in Sources */,
 				63A9A3D32AF2425400F9A147 /* ImageSearchCell.swift in Sources */,
@@ -1478,6 +1489,7 @@
 				63A0CFC72AE9674D0060B5F9 /* AddSetVC+DS.swift in Sources */,
 				636571342AD6DC69008126C4 /* SetCardListCell.swift in Sources */,
 				6357EA592ADBE2F4005ED852 /* SettingVC+Delegate.swift in Sources */,
+				6398FE332B33408300279BA3 /* String+LocalizedExtension.swift in Sources */,
 				63C3EC322AF1F50600A426EC /* ImageSearchVC+Collectionable.swift in Sources */,
 				6357EA512ADBC3A4005ED852 /* DeletableImageCell.swift in Sources */,
 				63730F712AD2901800BC8F35 /* CardSetRepository.swift in Sources */,
@@ -1529,10 +1541,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				63D9F3502B32D8FC00AE6831 /* ImageLocalSaveExtension.swift in Sources */,
+				6398FE302B333D5E00279BA3 /* API_Key.swift in Sources */,
 				63D9F34E2B32D34900AE6831 /* DefaultsState.swift in Sources */,
 				63D04ACE2B2773F600D10520 /* IntensivelyView.swift in Sources */,
 				63AE9B3A2B25ABE400D12C38 /* IntensivelyWidget.swift in Sources */,
 				63D9F3522B32DBC200AE6831 /* IntensivelyEntry.swift in Sources */,
+				6398FE342B3340A400279BA3 /* String+LocalizedExtension.swift in Sources */,
 				63D9F3532B32E4D900AE6831 /* UIImageDownSample.swift in Sources */,
 				63D9F34B2B32D06C00AE6831 /* IntensivelyType.swift in Sources */,
 				63AE9B382B25ABE400D12C38 /* IntensivelyWidgetBundle.swift in Sources */,
@@ -1780,6 +1794,7 @@
 				CODE_SIGN_ENTITLEMENTS = IntensivelyWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 3W9F68ZTUJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = IntensivelyWidget/Info.plist;
@@ -1812,6 +1827,7 @@
 				CODE_SIGN_ENTITLEMENTS = IntensivelyWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 3W9F68ZTUJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = IntensivelyWidget/Info.plist;

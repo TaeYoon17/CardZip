@@ -30,9 +30,9 @@ struct IntensivelyWidgetEntryView : View {
             }else{
                 VStack(spacing:6){
                     HStack(alignment: .firstTextBaseline, spacing:0){
-                        Text("집중 단어").foregroundStyle(.cardSecondary)
+                        (Text("⭐️").font(.system(size: 9)).bold() + Text("Focus".localized)).foregroundStyle(.cardSecondary)
                         Spacer()
-                        Text("\(entry.cnt)개")
+                        (Text("\(entry.cnt) ")+Text("counts".localized))
                     }.font(.system(size: 13)).fontWeight(.bold)
                         
                     Divider().frame(height: 1).foregroundStyle(.cardSecondary)
@@ -50,12 +50,12 @@ struct IntensivelyWidgetEntryView : View {
         }.overlay(alignment:.topTrailing){
             if entry.image != nil{
                 VStack(alignment:.trailing, spacing:0){
-                    Text("집중 단어").foregroundStyle(.cardSecondary).fontWeight(.semibold)
-                    Text("\(entry.cnt)개")
+                    Text("Focus".localized).foregroundStyle(.cardSecondary).fontWeight(.semibold)
+                    (Text("\(entry.cnt) ")+Text("counts".localized))
                 }.font(.system(size: 13)).fontWeight(.bold)
             }
         }.padding(-4)
-        .widgetURL(URL(string: "Card.Zip.Intensively"))
+        .widgetURL(URL(string: API_Key.intensivelyWidgetKey))
     }
 }
 //                Text(entry.date, style: .time)

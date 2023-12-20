@@ -46,7 +46,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     }
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        let intensivelyURL: String = "Card.Zip.Intensively"
+        let intensivelyURL: String = API_Key.intensivelyWidgetKey
         guard let url = URLContexts.first?.url,
               let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else { return }
 
