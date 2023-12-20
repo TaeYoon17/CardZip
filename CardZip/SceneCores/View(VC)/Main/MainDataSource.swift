@@ -42,6 +42,7 @@ extension MainVC{
             ])
         }
         func updatePins(){
+            App.Manager.shared.updateLikes()
             let pinnedItems:[PinnedItem] = sectionStore.fetchByID(.pinned).itemsID.compactMap {
                 guard var pinnedItem = pinnedItemStore.fetchByID($0.id) else {return nil}
                 switch pinnedItem.type{

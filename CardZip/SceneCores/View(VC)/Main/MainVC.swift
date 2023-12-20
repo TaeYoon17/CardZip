@@ -104,7 +104,6 @@ final class MainVC: BaseVC {
     }
     override func configureLayout() {
         super.configureLayout()
-        
         [collectionView,settingBtn, addCardSetBtn].forEach({view.addSubview($0)})
     }
     override func configureConstraints() {
@@ -149,6 +148,5 @@ final class MainVC: BaseVC {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
         settingBtn.removeFromSuperview()
-        //        navStack.removeFromSuperview()
     }
 }
