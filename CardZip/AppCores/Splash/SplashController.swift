@@ -9,10 +9,7 @@ import SnapKit
 import UIKit
 import Lottie
 final class SplashController: BaseVC{
-    enum OpenType{
-        case recent
-        case liked
-    }
+    
     @DefaultsState(\.recentSet) var recent
     @DefaultsState(\.likedSet) var liked
     let openType:OpenType

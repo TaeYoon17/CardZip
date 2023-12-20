@@ -6,6 +6,10 @@
 //
 
 import UIKit
+enum OpenType{
+    case recent
+    case liked
+}
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -23,6 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
+//        connectionOptions.urlContexts
 //MARK: -- 앱을 깔고 처음 시작 할 때 코드
         if liked == nil{
             let card = CardSetTable(title: "Pin Memorize Intensively".localized, description: "")
@@ -39,11 +44,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if App.Manager.shared.termLanguageCode == nil{
             App.Manager.shared.termLanguageCode = .ko
         }
-        let vc = SplashController()
+        //MARK: -- 처음 위젯으로 앱을 열 때 좋아한 탭으로 열기
+        let openType:OpenType = if let url = connectionOptions.urlContexts.first?.url, let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true){
+            API_Key.intensivelyWidgetKey == urlComponents.path ? OpenType.liked : .recent
+        }else {
+            .recent
+        }
+        
+        let vc = SplashController(openType: openType)
         vc.window = window
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
-
     }
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         let intensivelyURL: String = API_Key.intensivelyWidgetKey
