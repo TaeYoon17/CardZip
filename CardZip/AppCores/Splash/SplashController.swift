@@ -63,15 +63,17 @@ final class SplashController: BaseVC{
                 let setItem = SetItem(table: recentTable)
                 let setVM = SetVM(setItem: setItem)
                 setVC.vm = setVM
+                vc.navigationController?.pushViewController(setVC, animated: false)
             }
         case .liked:
             if let liked,let likedTable = repository?.getTableBy(tableID: liked){
                 let setItem = SetItem(table: likedTable)
                 let setVM = SetVM(setItem: setItem)
                 setVC.vm = setVM
+                vc.navigationController?.pushViewController(setVC, animated: false)
             }
         }
-        vc.navigationController?.pushViewController(setVC, animated: false)
+        
         window?.rootViewController = nav
         window?.makeKeyAndVisible()
         guard let window else { return }
