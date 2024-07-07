@@ -31,8 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //MARK: -- 앱을 깔고 처음 시작 할 때 코드
         if liked == nil{
             let card = CardSetTable(title: "Pin Memorize Intensively".localized, description: "")
-            Task{
-                @MainActor in
+            Task{@MainActor in
                 let repository = CardSetRepository()
                 liked = card._id
                 _ = repository?.create(item: card)

@@ -33,9 +33,7 @@ extension AddSetVC{
                         }
                     }
                 }.store(in: &subscription)
-                titleField.textPublisher
-                    .assign(to: \.setItem.title, on: vm)
-                    .store(in: &subscription)
+                titleField.textPublisher.assign(to: \.setItem.title, on: vm).store(in: &subscription)
                 descriptionField.textPublisher
                     .assign(to: \.setItem.setDescription, on: vm)
                     .store(in: &subscription)

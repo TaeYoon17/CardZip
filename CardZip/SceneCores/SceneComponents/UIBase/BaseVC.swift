@@ -27,9 +27,7 @@ class BaseVC: UIViewController{
         configureView()
         view.addSubview(activitiIndicator)
     }
-    func configureLayout(){
-        
-    }
+    func configureLayout(){ }
     func configureConstraints(){ }
     func configureView(){ }
     func configureNavigation(){ }
