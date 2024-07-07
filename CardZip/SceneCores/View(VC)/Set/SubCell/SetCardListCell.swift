@@ -11,6 +11,7 @@ import Combine
 import AVFoundation
 // 권한 에러...?
 final class SetCardListCell: BaseCell{
+    private static let thumbnailCnt = 5
     var vm: SetCardListVM!{
         didSet{
             guard let vm else {return}
@@ -21,6 +22,25 @@ final class SetCardListCell: BaseCell{
                 self.checkBtn.isTapped = item.isChecked
                 termLabel.text = item.title
                 descriptionLabel.text = item.definition
+                Task{
+                    let minCnt = min(Self.thumbnailCnt,item.imageID.count)
+                    for idx in 0..<minCnt{
+                        if let image = try await ImageService.shared.fetchByCache(type: .file, name: item.imageID[idx]
+                                                                                  ,maxSize: .init(width: 360, height: 360)){
+                            await MainActor.run {
+                                self.imageViews[idx].image = image
+                            }
+                        }else{
+                            await MainActor.run { self.imageViews[idx].image = nil }
+                        }
+                    }
+                    for idx in minCnt..<Self.thumbnailCnt{
+                        if self.imageViews.count <= Self.thumbnailCnt { return }
+                        await MainActor.run {
+                            self.imageViews[idx].image = nil
+                        }
+                    }
+                }
             }.store(in: &subscription)
             self.checkBtn.publisher(for: .touchUpInside).sink { _ in
                 vm.cardItem.isChecked.toggle()
@@ -32,48 +52,6 @@ final class SetCardListCell: BaseCell{
             }.store(in: &subscription)
         }
     }
-    //    var cardItem: CardItem?{
-    //        didSet{
-    //            vm.cardItem = cardItem
-    //            if let sinker {
-    //                print("이게 계속 존재해서 문제였다")
-    //                sinker.cancel()
-    //            }
-    //            sinker = vm.$cardItem.sink {[weak self] item in
-    //                guard let self,let item else {return}
-    //                self.heartBtn.isTapped = item.isLike
-    //                self.checkBtn.isTapped = item.isChecked
-    //                termLabel.text = item.title
-    //                descriptionLabel.text = item.definition
-    //            }
-    ////            self.heartBtn.isTapped = cardItem?.isLike ?? false
-    ////            self.checkBtn.isTapped = cardItem?.isChecked ?? false
-    ////            termLabel.text = cardItem?.title
-    ////            descriptionLabel.text = cardItem?.definition
-    ////            self.checkBtn.addAction(.init(handler: { [weak self] _ in
-    ////                guard let self else {return}
-    ////                print("addAction checkbtn")
-    ////                vm.cardItem?.isChecked.toggle()
-    ////                vm.updateCardItem()
-    ////            }), for: .touchUpInside)
-    //
-    ////                        var heartAction = UIAction.init(handler: {[weak self] _ in
-    ////                            vm.cardItem?.isLike.toggle()
-    ////                            vm.updateCardItem()
-    ////                        })
-    ////                        var checkAction = UIAction.init {[weak self] _ in
-    ////                            vm.cardItem.isChecked.toggle()
-    ////                            vm.updateCardItem()
-    ////                        }
-    //        }
-    //    }
-    //    @objc func itemtapped(){
-    //        vm.cardItem?.isChecked.toggle()
-    //        vm.updateCardItem()
-    //    }
-    //    weak var setVM: SetVM!{
-    //        didSet{ vm.setVM = setVM }
-    //    }
     var subscription = Set<AnyCancellable>()
     var isSpeaker: Bool = false{
         didSet{ speakerBtn.isTapped = isSpeaker }
@@ -127,20 +105,40 @@ final class SetCardListCell: BaseCell{
         stView.alignment = .fill
         return stView
     }()
+    private var imageViews:[MaskImageView] = []
+    
+    private lazy var bottomImageStView: UIStackView = {
+        self.imageViews = (0..<Self.thumbnailCnt).map{ _ in MaskImageView()}
+        let stView = UIStackView(arrangedSubviews: self.imageViews)
+        imageViews.enumerated().forEach { idx, view in
+            view.snp.makeConstraints { make in
+                make.width.height.equalTo(36)
+            }
+            view.setAppearnce(nowIdx: idx, count: Self.thumbnailCnt)
+        }
+        stView.axis = .horizontal
+        stView.spacing = -8
+        stView.distribution = .fill
+        stView.alignment = .fill
+        return stView
+    }()
     override func configureLayout() {
         super.configureLayout()
-        [bottomBtnStView,mainStView].forEach{self.contentView.addSubview($0)}
+        [bottomBtnStView,bottomImageStView,mainStView].forEach{self.contentView.addSubview($0)}
     }
     override func configureConstraints() {
         mainStView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview().inset(12)
-            
             make.bottom.lessThanOrEqualTo(bottomBtnStView.snp.top).priority(.high)
             //            make.bottom.equalToSuperview().inset(12)
         }
         bottomBtnStView.snp.makeConstraints { make in
             make.bottom.trailing.equalToSuperview().inset(8)
         }
+        bottomImageStView.snp.makeConstraints { make in
+            make.leading.bottom.equalToSuperview().inset(8)
+        }
+        
         descriptionLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
         bottomBtnStView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         speakerBtn.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
@@ -200,6 +198,41 @@ final class SetCardListBtn: UIButton{
         config.contentInsets = .init(top: 6, leading: 6, bottom: 6, trailing: 6)
         configuration = config
         
+    }
+    required init?(coder: NSCoder) {
+        fatalError("Don't use storyboard")
+    }
+}
+
+fileprivate final class MaskImageView: UIView{
+    private let imgView = UIImageView()
+    private let backmaskView = UIView()
+    var image: UIImage!{
+        didSet{
+            imgView.image = image
+        }
+    }
+    init(){
+        super.init(frame: .zero)
+        backmaskView.backgroundColor = .bg
+        imgView.contentMode = .scaleAspectFill
+        addSubview(backmaskView)
+        addSubview(imgView)
+        backmaskView.backgroundColor = .bgSecond
+        imgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        backmaskView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    func setAppearnce(nowIdx:Int,count: Int){
+        imgView.contentMode = .scaleAspectFill
+        self.layer.cornerRadius = 18
+        self.layer.cornerCurve = .circular
+        self.clipsToBounds = true
+        imgView.layer.opacity = 0.4 + (1 - Float(nowIdx) / Float(count) ) * 0.6
+        self.layer.zPosition = CGFloat(100 - 10 * nowIdx)
     }
     required init?(coder: NSCoder) {
         fatalError("Don't use storyboard")

@@ -110,7 +110,7 @@ fileprivate extension SetListVC.SetListDataSource{
         var snapshot = NSDiffableDataSourceSnapshot<Section.ID,SetItem.ID>()
         snapshot.appendSections([.main])
         snapshot.appendItems(sectionModel.fetchByID(.main).subItems, toSection: .main)
-        apply(snapshot,animatingDifferences: true)
+        apply(snapshot,animatingDifferences: false)
     }
 }
 
