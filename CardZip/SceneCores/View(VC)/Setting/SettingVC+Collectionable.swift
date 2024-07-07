@@ -37,13 +37,11 @@ extension SettingVC:Collectionable{
         UICollectionView.CellRegistration {[weak self] (cell, indexPath, item) in
             guard let self else {return}
             let headerItem:Item = itemModel.fetchByID(item)
-            print(#function,headerItem)
             guard let headerSection = sectionModel.fetchByID(headerItem.parent) else {return}
             var content = cell.defaultContentConfiguration()
             content.text = headerSection.id.title.capitalized
             
             cell.contentConfiguration = content
-//            cell.accessories = [.outlineDisclosure()]
         }
     }
     var registration: UICollectionView.CellRegistration<SettingItemCell,Item.ID>{
@@ -62,7 +60,6 @@ extension SettingVC:Collectionable{
             case .image:
                 if item.rawValue == ImageType.access.rawValue{
                     accessories.append(.labelAccessory(text: self?.nowAuthorization.name ?? ""))
-                    
                 }
             case .speaker:
                 guard let speakerType = SettingType.Speaker(rawValue: item.rawValue) else {return}

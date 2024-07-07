@@ -56,7 +56,8 @@ final class AddSetVC: EditableVC{
     lazy var navCloseBtn = {
         let btn = NavBarButton(systemName: "xmark")
         btn.addAction(.init(handler: { [weak self] _ in
-            self?.closeBtnTapped() 
+            guard let self else { return }
+            self.closeBtnTapped()
         }),for: .touchUpInside)
         return btn
     }()

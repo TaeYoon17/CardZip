@@ -28,7 +28,6 @@ extension SettingVC{
     typealias InfoType = SettingType.Info
 }
 final class SettingVC: BaseVC{
-    
     var dataSource: UICollectionViewDiffableDataSource<SettingType,Item.ID>!
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     var sectionModel: AnyModelStore<Section>!
@@ -85,9 +84,7 @@ final class SettingVC: BaseVC{
             sectionSnapshot.expand([headerItem.id])
             dataSource.apply(sectionSnapshot,to: setting)
         }
-        Task{
-            reconfigureByLibraryStatus()
-        }
+        Task{ reconfigureByLibraryStatus() }
     }
     
     lazy var closeBtn = {

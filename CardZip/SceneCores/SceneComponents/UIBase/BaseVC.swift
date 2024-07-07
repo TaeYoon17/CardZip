@@ -41,7 +41,10 @@ class BaseVC: UIViewController{
         self.present(alert, animated: true)
     }
     func closeAction(){
-        if let navi = navigationController{ navi.popViewController(animated: true) }
+        if let navi = navigationController, navi.viewControllers.count > 1{
+            navi.popViewController(animated: true)
+            return
+        }
         self.dismiss(animated: true)
     }
 }
