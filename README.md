@@ -34,10 +34,6 @@
 | Widget | WidgetKit |
 | Others | Localization, TTS |
 
-# 전체 구조
-
-❗ 이미지 첨부하기
-
 ## 주요 제공 서비스
 
 ### 1. 단어 카드 및 카드 세트 CRUD
